@@ -25,6 +25,14 @@ public class ConstructorDict : MonoBehaviour
 
     public Rig rig;
 
+    public Transform rightArm, leftArm, head, rightLeg, leftLeg, hip;
+
+    public RuntimeAnimatorController FullBody => fullBody;
+    [SerializeField] private RuntimeAnimatorController fullBody;
+
+    public RuntimeAnimatorController UpperBody => upperBody;
+    [SerializeField] private RuntimeAnimatorController upperBody;
+
     private void OnDestroy()
     {
         if (Instance == this)
