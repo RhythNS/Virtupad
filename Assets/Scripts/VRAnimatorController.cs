@@ -64,7 +64,6 @@ public class VRAnimatorController : MonoBehaviour
         animator.SetFloat("directionY", Mathf.Lerp(prevDirY, Mathf.Clamp(headSetlocalSpeed.z, -1, 1), smoothing));
     }
 
-
     private void LateUpdate()
     {
         for (int i = 0; i < doubleTransforms.Count; i++)
