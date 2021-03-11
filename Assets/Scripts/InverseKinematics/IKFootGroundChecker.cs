@@ -4,6 +4,7 @@ public class IKFootGroundChecker : MonoBehaviour
 {
     public FootOffset leftFoot, rightFoot;
 
+    [SerializeField] private bool useAutoValues = true;
     private Animator animator;
 
     [System.Serializable]
@@ -24,12 +25,20 @@ public class IKFootGroundChecker : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        
+        if (useAutoValues)
+        {
+            leftFoot.posWeight = leftFoot.rotWeight = 1.0f;
+            leftFoot.offset = new Vector3(0.0f, 0.05f, 0.0f);
+            rightFoot.posWeight = rightFoot.rotWeight = 1.0f;
+            rightFoot.offset = new Vector3(0.0f, 0.05f, 0.0f);
+        }
     }
 
     private void OnAnimatorIK(int layerIndex)
     {
         DoFoot(AvatarIKGoal.LeftFoot, leftFoot);
-        DoFoot(AvatarIKGoal.LeftFoot, rightFoot);
+        DoFoot(AvatarIKGoal.RightFoot, rightFoot);
     }
 
     private void DoFoot(AvatarIKGoal goal, FootOffset foot)
