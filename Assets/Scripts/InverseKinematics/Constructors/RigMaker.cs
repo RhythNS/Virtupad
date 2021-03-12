@@ -21,8 +21,8 @@ public class RigMaker : MonoBehaviour
 
         PrepRig();
 
-        MakeArms();
         MakeControllingHead();
+        MakeArms();
         MakeAutoLegs();
 
         FinishRig();
@@ -34,9 +34,9 @@ public class RigMaker : MonoBehaviour
         character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
         PrepRig();
 
-        MakeArms();
-        MakeHead();
         MakeControllingHip();
+        MakeHead();
+        MakeArms();
         MakeAutoLegs();
 
         FinishRig();
@@ -49,9 +49,9 @@ public class RigMaker : MonoBehaviour
 
         PrepRig();
 
+        MakeControllingHead();
         MakeArms();
         MakeLegs();
-        MakeControllingHead();
 
         FinishRig();
     }
@@ -62,10 +62,10 @@ public class RigMaker : MonoBehaviour
         character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
         PrepRig();
 
+        MakeControllingHip();
+        MakeHead();
         MakeArms();
         MakeLegs();
-        MakeHead();
-        MakeControllingHip();
 
         FinishRig();
     }
@@ -104,12 +104,12 @@ public class RigMaker : MonoBehaviour
 
     private void MakeHead()
     {
-        ConstructorDict.Instance.head = MakeChain("Head", HumanBodyBones.Hips, HumanBodyBones.Head);
+        ConstructorDict.Instance.head = MakeChain("Head", HumanBodyBones.Spine, HumanBodyBones.Head);
     }
 
     private void MakeControllingHip()
     {
-        Transform rigTrans = ConstructorDict.Instance.hip = MakeOverrideTransform("Hip", HumanBodyBones.Hips);
+        Transform rigTrans = ConstructorDict.Instance.hip = MakeMultiRotation("Hip", HumanBodyBones.Hips);
 
         ControllingHip controllingHip = rigTrans.gameObject.AddComponent<ControllingHip>();
 
@@ -117,15 +117,6 @@ public class RigMaker : MonoBehaviour
         Vector3 offset = hipTrans.position - character.transform.position;
         controllingHip.offset = offset;
         controllingHip.animator = character;
-
-        /*
-        Transform vrHip = new GameObject("VR Hip").transform;
-
-        ControllingHip controllingHip = character.gameObject.AddComponent<ControllingHip>();
-        vrHip.transform.position = hipTrans.position;
-        controllingHip.hipTrans = hipTrans;
-        controllingHip.vrHip = vrHip;
-         */
     }
 
     private void MakeArms()
@@ -200,18 +191,19 @@ public class RigMaker : MonoBehaviour
     {
         GameObject multiRotObj = new GameObject(name);
         multiRotObj.transform.parent = transform;
+        GameObject targetObject = new GameObject(name + " source");
 
         MultiRotationConstraint multiRotation = multiRotObj.AddComponent<MultiRotationConstraint>();
         multiRotation.Reset();
         MultiRotationConstraintData data = multiRotation.data;
 
         WeightedTransformArray sourceObjects = data.sourceObjects;
-        sourceObjects.Add(new WeightedTransform(multiRotObj.transform, 1.0f));
+        sourceObjects.Add(new WeightedTransform(targetObject.transform, 1.0f));
         data.sourceObjects = sourceObjects;
         data.constrainedObject = character.GetBoneTransform(bone);
 
         multiRotation.data = data;
-        multiRotObj.transform.position = data.constrainedObject.position;
-        return multiRotObj.transform;
+        multiRotObj.transform.position = targetObject.transform.position = data.constrainedObject.position;
+        return targetObject.transform;
     }
 }

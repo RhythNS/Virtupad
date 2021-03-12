@@ -3,6 +3,7 @@ using UnityEngine;
 public class VRMapper : MonoBehaviour
 {
     public Transform PositionTransform;
+
     public bool IsFullBody { get; private set; } = false;
 
     public static VRMapper Instance { get; private set; }
