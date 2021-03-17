@@ -3,15 +3,43 @@ using UnityEngine.Animations.Rigging;
 
 public class RigMaker : MonoBehaviour
 {
+    public enum Config
+    {
+        ThreePoints, FourPoints, FivePoints, SixPoints
+    }
+
     private Animator character;
     private Rig rig;
     private RigBuilder builder;
 
+    /*
     private void Start()
     {
         Animator character = transform.parent.GetComponent<Animator>();
 
         Make6TrackingPointsCharacter(character);
+    }
+     */
+
+    public void MakeCharacter(Config config)
+    {
+        switch (config)
+        {
+            case Config.ThreePoints:
+                Make3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                break;
+            case Config.FourPoints:
+                Make4TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                break;
+            case Config.FivePoints:
+                Make5TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                break;
+            case Config.SixPoints:
+                Make6TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                break;
+            default:
+                throw new System.Exception("Could not find config " + config);
+        }
     }
 
     public void Make3TrackingPointsCharacter(Animator character)

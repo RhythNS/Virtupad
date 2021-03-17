@@ -36,20 +36,19 @@ public static class VRSetTracker
         }
     }
 
-    public static bool RegisterAutoAssignTrackers()
+    public static RigMaker.Config? AutoAssignTrackers()
     {
-        RegisterTrackers();
         List<VRTracker> trackers = VRDevicesDict.Instance.trackers;
 
         if (trackers.Count == 0)
-            return true;
+            return RigMaker.Config.ThreePoints;
 
         Debug.Log("Full body detected!");
 
         if (trackers.Count == 1)
         {
             trackers[0].TrackerType = VRTrackerType.Hip;
-            return true;
+            return RigMaker.Config.FourPoints;
         }
 
         List<VRTracker> toProcess = new List<VRTracker>();
@@ -58,19 +57,19 @@ public static class VRSetTracker
         if (trackers.Count == 2)
         {
             ProcessLegs(toProcess);
-            return true;
+            return RigMaker.Config.FivePoints;
         }
 
         if (trackers.Count == 3)
         {
             ProcessHip(toProcess);
             ProcessLegs(toProcess);
-            return true;
+            return RigMaker.Config.SixPoints;
         }
 
         Debug.LogWarning("Could not auto assign trackers! Too many trackers!");
 
-        return false;
+        return null;
     }
 
     private static void ProcessHip(List<VRTracker> toProcess)

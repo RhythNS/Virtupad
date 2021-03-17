@@ -11,6 +11,6 @@ public class VRTracker : MonoBehaviour
 
     private void Awake()
     {
-        TrackedObject = GetComponent<SteamVR_TrackedObject>();
+        TrackedObject = gameObject.AddComponent<SteamVR_TrackedObject>();
     }
 }

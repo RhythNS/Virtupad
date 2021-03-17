@@ -1,0 +1,12 @@
+{
+   "action_manifest_version" : 0,
+   "alias_info" : {},
+   "app_key" : "application.generated.unity.virtupad.exe",
+   "bindings" : {},
+   "category" : "steamvr_input",
+   "controller_type" : "vive_tracker",
+   "description" : "",
+   "name" : "application_generated_unity_virtupad_exe_binding_vive_tracker",
+   "options" : {},
+   "simulated_actions" : []
+}

@@ -6,7 +6,7 @@ public class IKFootSetter : MonoBehaviour
     private Transform rightFoot;
     private Transform leftFoot;
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         rightFoot = ConstructorDict.Instance.rightLeg;

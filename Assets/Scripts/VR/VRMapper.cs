@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class VRMapper : MonoBehaviour
 {
-    public Transform PositionTransform;
-
     public bool IsFullBody { get; private set; } = false;
     public static VRMapper Instance { get; private set; }
     public List<MapTransform> Maps { get; private set; } = new List<MapTransform>();
@@ -38,23 +36,27 @@ public class VRMapper : MonoBehaviour
         Instance = this;
     }
 
-    public void StartAutoSetup()
+    public void AddMap(Transform source, Transform constrain)
     {
-        StartCoroutine(AutoSetup());
-    }
+        for (int i = 0; i < Maps.Count; i++)
+        {
+            if (Maps[i].constrain == constrain || Maps[i].source == source)
+            {
+                throw new System.Exception(source.name + " or " + constrain.name + " is already mapped!");
+            }
+        }
 
-    private IEnumerator AutoSetup()
-    {
-        yield return new WaitForSeconds(3.0f);
-        VRSetTracker.RegisterAutoAssignTrackers();
-
+        Vector3 offsetPos = constrain.position - source.position;
+        Quaternion offsetRot = constrain.rotation * Quaternion.Inverse(source.rotation);
+        Maps.Add(new MapTransform(source, constrain, offsetPos, offsetRot));
     }
 
     private void Update()
     {
         for (int i = 0; i < Maps.Count; i++)
         {
-            // do the thing
+            Maps[i].constrain.position = Maps[i].source.position + Maps[i].offsetPos;
+            Maps[i].constrain.rotation = Maps[i].offsetRot * Maps[i].source.rotation;
         }
     }
 
@@ -63,5 +65,4 @@ public class VRMapper : MonoBehaviour
         if (Instance == this)
             Instance = null;
     }
-
 }

@@ -18,14 +18,18 @@ public class ConstructorDict : MonoBehaviour
         Instance = this;
     }
 
-    public Animator LoadingCharacterAnimator => loadingCharacterAnimator;
-    [SerializeField] private Animator loadingCharacterAnimator;
+    public Animator LoadingCharacterAnimator;
 
     public RigBuilder rigBuilder;
 
     public Rig rig;
 
     public Transform rightArm, leftArm, head, rightLeg, leftLeg, hip;
+
+    public RigMaker rigMaker;
+
+    public RuntimeAnimatorController TPoseController => tPoseController;
+    [SerializeField] private RuntimeAnimatorController tPoseController;
 
     public RuntimeAnimatorController FullBody => fullBody;
     [SerializeField] private RuntimeAnimatorController fullBody;
@@ -38,5 +42,4 @@ public class ConstructorDict : MonoBehaviour
         if (Instance == this)
             Instance = null;
     }
-
 }

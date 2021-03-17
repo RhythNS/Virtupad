@@ -5,7 +5,7 @@ public class IKHandSetter : MonoBehaviour
     private Animator animator;
     private Transform rightHand, leftHand;
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         rightHand = ConstructorDict.Instance.rightArm;

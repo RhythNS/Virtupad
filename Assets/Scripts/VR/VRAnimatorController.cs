@@ -14,7 +14,6 @@ public class VRAnimatorController : MonoBehaviour
 
     private Animator animator;
     private Vector3 previousPos;
-    private VRMapper vrMapper;
 
     [System.Serializable]
     struct DoubleTransform
@@ -42,22 +41,22 @@ public class VRAnimatorController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start()
-    {
-        vrMapper = VRMapper.Instance;
-    }
-
     // Update is called once per frame
     void Update()
     {
+        if (!VRDevicesDict.Instance.head)
+            return;
+
+        Transform headTrans = VRDevicesDict.Instance.head;
+
         float prevDirX = animator.GetFloat("directionX");
         float prevDirY = animator.GetFloat("directionY");
 
-        Vector3 headsetSpeed = (vrMapper.PositionTransform.position - previousPos) / Time.deltaTime;
+        Vector3 headsetSpeed = (headTrans.position - previousPos) / Time.deltaTime;
         headsetSpeed.y = 0;
         Vector3 headSetlocalSpeed = transform.InverseTransformDirection(headsetSpeed);
 
-        previousPos = vrMapper.PositionTransform.position;
+        previousPos = headTrans.position;
 
         animator.SetBool("isMoving", headSetlocalSpeed.magnitude > speedTreshold);
         animator.SetFloat("directionX", Mathf.Lerp(prevDirX, Mathf.Clamp(headSetlocalSpeed.x, -1, 1), smoothing));

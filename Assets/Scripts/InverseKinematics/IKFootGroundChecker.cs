@@ -22,7 +22,7 @@ public class IKFootGroundChecker : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         
