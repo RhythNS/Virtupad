@@ -75,7 +75,7 @@ public class VRAnimatorController : MonoBehaviour
 
     public void Register(HumanBodyBones humanBodyBones, Transform transform, bool useOffset)
     {
-        doubleTransforms.Add(new DoubleTransform(transform, animator.GetBoneTransform(humanBodyBones), useOffset));
+     //   doubleTransforms.Add(new DoubleTransform(transform, animator.GetBoneTransform(humanBodyBones), useOffset));
     }
 
     public void DeRegister(Transform transform)

@@ -19,7 +19,7 @@ public class RigMaker : MonoBehaviour
 
         Make6TrackingPointsCharacter(character);
     }
-     */
+    */
 
     public void MakeCharacter(Config config)
     {
@@ -193,7 +193,7 @@ public class RigMaker : MonoBehaviour
 
         chain.data = data;
         chainObj.transform.position = targetObject.transform.position = data.tip.position;
-        return chainObj.transform;
+        return targetObject.transform;
     }
 
     private Transform MakeOverrideTransform(string name, HumanBodyBones bone)

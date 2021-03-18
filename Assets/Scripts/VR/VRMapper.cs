@@ -6,7 +6,8 @@ public class VRMapper : MonoBehaviour
 {
     public bool IsFullBody { get; private set; } = false;
     public static VRMapper Instance { get; private set; }
-    public List<MapTransform> Maps { get; private set; } = new List<MapTransform>();
+
+    [SerializeField] private List<MapTransform> maps = new List<MapTransform>();
 
 
     [System.Serializable]
@@ -14,9 +15,9 @@ public class VRMapper : MonoBehaviour
     {
         public Transform source, constrain;
         public Vector3 offsetPos;
-        public Quaternion offsetRot;
+        public Vector3 offsetRot;
 
-        public MapTransform(Transform source, Transform constrain, Vector3 offsetPos, Quaternion offsetRot)
+        public MapTransform(Transform constrain, Transform source, Vector3 offsetPos, Vector3 offsetRot)
         {
             this.source = source;
             this.constrain = constrain;
@@ -36,27 +37,33 @@ public class VRMapper : MonoBehaviour
         Instance = this;
     }
 
-    public void AddMap(Transform source, Transform constrain)
+    public void AddMap(Transform constrain, Transform source, bool useOffset = true)
     {
-        for (int i = 0; i < Maps.Count; i++)
+        for (int i = 0; i < maps.Count; i++)
         {
-            if (Maps[i].constrain == constrain || Maps[i].source == source)
+            if (maps[i].constrain == constrain || maps[i].source == source)
             {
                 throw new System.Exception(source.name + " or " + constrain.name + " is already mapped!");
             }
         }
 
-        Vector3 offsetPos = constrain.position - source.position;
-        Quaternion offsetRot = constrain.rotation * Quaternion.Inverse(source.rotation);
-        Maps.Add(new MapTransform(source, constrain, offsetPos, offsetRot));
+        if (useOffset == false)
+        {
+            maps.Add(new MapTransform(constrain, source, Vector3.zero, Vector3.zero));
+        }
+        else
+        {
+            Vector3 offsetPos = constrain.position - source.position;
+            maps.Add(new MapTransform(constrain, source, offsetPos, constrain.rotation.eulerAngles));
+        }
     }
 
     private void Update()
     {
-        for (int i = 0; i < Maps.Count; i++)
+        for (int i = 0; i < maps.Count; i++)
         {
-            Maps[i].constrain.position = Maps[i].source.position + Maps[i].offsetPos;
-            Maps[i].constrain.rotation = Maps[i].offsetRot * Maps[i].source.rotation;
+            maps[i].constrain.position = maps[i].source.position + maps[i].offsetPos;
+            maps[i].constrain.rotation = maps[i].source.rotation * Quaternion.Euler(maps[i].offsetRot);
         }
     }
 

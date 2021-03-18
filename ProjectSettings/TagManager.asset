@@ -35,8 +35,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Only visible in vr
+  - Only visible in desktop
   m_SortingLayers:
   - name: Default
     uniqueID: 0

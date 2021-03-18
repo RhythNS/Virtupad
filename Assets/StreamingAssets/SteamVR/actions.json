@@ -157,6 +157,10 @@
       {
          "binding_url" : "application_generated_unity_virtupad_exe_binding_vive_tracker.json",
          "controller_type" : "vive_tracker"
+      },
+      {
+         "binding_url" : "application_generated_unity_virtupad_exe_binding_vive_tracker_handed.json",
+         "controller_type" : "vive_tracker_handed"
       }
    ],
    "localization" : [

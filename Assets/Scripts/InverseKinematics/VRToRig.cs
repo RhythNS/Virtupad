@@ -19,7 +19,7 @@ public static class VRToRig
 
     public static void AssignTrackers()
     {
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false);
         VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRDevicesDict.Instance.rightHand.transform);
         VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRDevicesDict.Instance.leftHand.transform);
 
@@ -56,7 +56,7 @@ public static class VRToRig
     public static void CharacterToVRPlayer()
     {
         ConstructorDict.Instance.LoadingCharacterAnimator.transform.position = Player.instance.transform.position;
-        Vector3 vrRot = Player.instance.transform.rotation.eulerAngles;
+        Vector3 vrRot = Player.instance.hmdTransform.rotation.eulerAngles;
         vrRot.x = 0.0f;
         vrRot.z = 0.0f;
         ConstructorDict.Instance.LoadingCharacterAnimator.transform.rotation = Quaternion.Euler(vrRot);

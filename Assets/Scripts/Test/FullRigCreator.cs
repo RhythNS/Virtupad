@@ -22,6 +22,7 @@ public class FullRigCreator : MonoBehaviour
     private IEnumerator AutoSetup()
     {
         Debug.Log("Starting rig constructor...");
+        
         if (VRAnimatorController.Instance)
             VRAnimatorController.Instance.enabled = false;
         VRSetTracker.RegisterTrackers();
@@ -38,6 +39,7 @@ public class FullRigCreator : MonoBehaviour
         VRToRig.PrepareRig();
         VRToRig.MakeCharacter(config.Value);
         VRToRig.AssignTrackers();
+
         if (VRAnimatorController.Instance)
             VRAnimatorController.Instance.enabled = true;
         Debug.Log("Finished rig constructor");
