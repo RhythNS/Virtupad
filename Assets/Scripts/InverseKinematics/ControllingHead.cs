@@ -4,16 +4,20 @@ public class ControllingHead : MonoBehaviour
 {
     public Animator animator;
     public Vector3 offset;
-    public Transform rigTrans;
+    public float turnSmoothness = 5.0f;
 
     private void FixedUpdate()
     {
-        rigTrans.rotation = transform.rotation;
-
         Vector3 currentPos = transform.position;
+
         animator.transform.position = currentPos - offset;
+
+        animator.transform.rotation = Quaternion.AngleAxis(transform.rotation.eulerAngles.y, Vector3.up);
+        /*
         float newRotY = transform.rotation.eulerAngles.y;
         Vector3 currentRot = animator.transform.rotation.eulerAngles;
         animator.transform.rotation = Quaternion.Euler(currentRot.x, newRotY, currentRot.z);
+         */
+        //animator.transform.forward = Vector3.Lerp(animator.transform.forward, Vector3.ProjectOnPlane(transform.up, Vector3.up).normalized, Time.deltaTime * turnSmoothness);
     }
 }

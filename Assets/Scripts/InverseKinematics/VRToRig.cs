@@ -19,9 +19,11 @@ public static class VRToRig
 
     public static void AssignTrackers()
     {
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false);
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRDevicesDict.Instance.rightHand.transform);
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRDevicesDict.Instance.leftHand.transform);
+        //VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false, false);
+        VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, headOffset);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRDevicesDict.Instance.rightHand.transform, false);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRDevicesDict.Instance.leftHand.transform, false);
 
         ConstructorDict.Instance.LoadingCharacterAnimator.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
@@ -39,7 +41,8 @@ public static class VRToRig
                     VRMapper.Instance.AddMap(ConstructorDict.Instance.rightLeg, trackers[i].transform);
                     break;
                 case VRTrackerType.Hip:
-                    VRMapper.Instance.AddMap(ConstructorDict.Instance.hip, trackers[i].transform);
+                    Transform hip = ConstructorDict.Instance.hip;
+                    VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, (trackers[i].transform.rotation * hip.rotation).eulerAngles);
                     break;
                 default:
                     throw new System.Exception("TrackerType not implemented: " + trackers[i].TrackerType);

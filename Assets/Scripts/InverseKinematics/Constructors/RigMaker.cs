@@ -123,11 +123,9 @@ public class RigMaker : MonoBehaviour
     {
         Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
 
-        ControllingHead controllingHead = new GameObject("VR Head").AddComponent<ControllingHead>();
-        controllingHead.transform.position = rigTrans.position;
+        ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
         controllingHead.animator = character;
-        controllingHead.offset = rigTrans.localPosition;
-        controllingHead.rigTrans = rigTrans;
+        controllingHead.offset = rigTrans.transform.position - character.transform.position;
     }
 
     private void MakeHead()
@@ -209,6 +207,8 @@ public class RigMaker : MonoBehaviour
         Transform boneTrans = character.GetBoneTransform(bone);
         data.constrainedObject = boneTrans;
         data.sourceObject = targetObject.transform;
+
+        data.space = OverrideTransformData.Space.World;
 
         overrideTransform.data = data;
         overObj.transform.position = targetObject.transform.position = boneTrans.position;

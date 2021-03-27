@@ -57,7 +57,7 @@ public class VRAnimatorController : MonoBehaviour
         Vector3 headSetlocalSpeed = transform.InverseTransformDirection(headsetSpeed);
 
         previousPos = headTrans.position;
-
+        
         animator.SetBool("isMoving", headSetlocalSpeed.magnitude > speedTreshold);
         animator.SetFloat("directionX", Mathf.Lerp(prevDirX, Mathf.Clamp(headSetlocalSpeed.x, -1, 1), smoothing));
         animator.SetFloat("directionY", Mathf.Lerp(prevDirY, Mathf.Clamp(headSetlocalSpeed.z, -1, 1), smoothing));

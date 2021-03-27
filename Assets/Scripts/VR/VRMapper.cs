@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +9,7 @@ public class VRMapper : MonoBehaviour
 
     [SerializeField] private List<MapTransform> maps = new List<MapTransform>();
 
-
-    [System.Serializable]
+    [Serializable]
     public struct MapTransform
     {
         public Transform source, constrain;
@@ -37,25 +36,64 @@ public class VRMapper : MonoBehaviour
         Instance = this;
     }
 
-    public void AddMap(Transform constrain, Transform source, bool useOffset = true)
+    public void AddMap(Transform constrain, Transform source, bool usePosOffset = true, bool useRotationOffset = true)
+    {
+        if (MapCheck(constrain, source) == false)
+            return;
+
+        Vector3 offsetPos = constrain.position - source.position;
+        maps.Add(new MapTransform(constrain, source, usePosOffset ? offsetPos : Vector3.zero,
+            useRotationOffset ? constrain.rotation.eulerAngles : Vector3.zero));
+    }
+
+    public void AddMap(Transform constrain, Transform source, Vector3 posOffset, Vector3 rotOffset)
+    {
+        if (MapCheck(constrain, source) == false)
+            return;
+
+        maps.Add(new MapTransform(constrain, source, posOffset, rotOffset));
+    }
+
+    public void AddMap(Transform constrain, Transform source, VRMapperSpecificOffset specificOffset)
+    {
+        if (specificOffset == VRMapperSpecificOffset.None)
+        {
+            AddMap(constrain, source, false, false);
+            return;
+        }
+
+        if (MapCheck(constrain, source) == false)
+            return;
+
+        Vector3 offsetPos = constrain.position - source.position;
+        Vector3 offsetRot = constrain.rotation.eulerAngles;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.PosX) == false)
+            offsetPos.x = 0.0f;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.PosY) == false)
+            offsetPos.y = 0.0f;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.PosZ) == false)
+            offsetPos.z = 0.0f;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.RotX) == false)
+            offsetRot.x = 0.0f;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.RotY) == false)
+            offsetRot.y = 0.0f;
+        if (specificOffset.HasFlag(VRMapperSpecificOffset.RotZ) == false)
+            offsetRot.z = 0.0f;
+
+        maps.Add(new MapTransform(constrain, source, offsetPos, offsetRot));
+    }
+
+    private bool MapCheck(Transform constrain, Transform source)
     {
         for (int i = 0; i < maps.Count; i++)
         {
             if (maps[i].constrain == constrain || maps[i].source == source)
             {
-                throw new System.Exception(source.name + " or " + constrain.name + " is already mapped!");
+                Debug.LogError(source.name + " or " + constrain.name + " is already mapped!");
+                return false;
             }
         }
-
-        if (useOffset == false)
-        {
-            maps.Add(new MapTransform(constrain, source, Vector3.zero, Vector3.zero));
-        }
-        else
-        {
-            Vector3 offsetPos = constrain.position - source.position;
-            maps.Add(new MapTransform(constrain, source, offsetPos, constrain.rotation.eulerAngles));
-        }
+        return true;
     }
 
     private void Update()
