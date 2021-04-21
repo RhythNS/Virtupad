@@ -7,7 +7,8 @@ public class FingerAdder : MonoBehaviour
 
     private void Start()
     {
-        VRAnimatorController.Instance.Register(bone, transform, useOffset);
+        if (VRAnimatorController.Instance)
+            VRAnimatorController.Instance.Register(bone, transform, useOffset);
     }
 
     private void OnDestroy()

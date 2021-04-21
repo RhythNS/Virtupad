@@ -8,6 +8,7 @@ public class VRMapper : MonoBehaviour
     public static VRMapper Instance { get; private set; }
 
     [SerializeField] private List<MapTransform> maps = new List<MapTransform>();
+    [SerializeField] private List<MapTrackerTransform> trackerMaps = new List<MapTrackerTransform>();
 
     [Serializable]
     public struct MapTransform
@@ -17,6 +18,22 @@ public class VRMapper : MonoBehaviour
         public Vector3 offsetRot;
 
         public MapTransform(Transform constrain, Transform source, Vector3 offsetPos, Vector3 offsetRot)
+        {
+            this.source = source;
+            this.constrain = constrain;
+            this.offsetPos = offsetPos;
+            this.offsetRot = offsetRot;
+        }
+    }
+
+    [Serializable]
+    public struct MapTrackerTransform
+    {
+        public Transform source, constrain;
+        public Vector3 offsetPos;
+        public Quaternion offsetRot;
+
+        public MapTrackerTransform(Transform constrain, Transform source, Vector3 offsetPos, Quaternion offsetRot)
         {
             this.source = source;
             this.constrain = constrain;
@@ -83,11 +100,28 @@ public class VRMapper : MonoBehaviour
         maps.Add(new MapTransform(constrain, source, offsetPos, offsetRot));
     }
 
+    public void AddMapTracker(Transform constrain, Transform source)
+    {
+        if (MapCheck(constrain, source) == false)
+            return;
+
+        Vector3 offsetPos = constrain.position - source.position;
+        trackerMaps.Add(new MapTrackerTransform(constrain, source, offsetPos, constrain.rotation * Quaternion.Inverse(source.rotation)));
+    }
+
     private bool MapCheck(Transform constrain, Transform source)
     {
         for (int i = 0; i < maps.Count; i++)
         {
             if (maps[i].constrain == constrain || maps[i].source == source)
+            {
+                Debug.LogError(source.name + " or " + constrain.name + " is already mapped!");
+                return false;
+            }
+        }
+        for (int i = 0; i < trackerMaps.Count; i++)
+        {
+            if (trackerMaps[i].constrain == constrain || trackerMaps[i].source == source)
             {
                 Debug.LogError(source.name + " or " + constrain.name + " is already mapped!");
                 return false;
@@ -102,6 +136,11 @@ public class VRMapper : MonoBehaviour
         {
             maps[i].constrain.position = maps[i].source.position + maps[i].offsetPos;
             maps[i].constrain.rotation = maps[i].source.rotation * Quaternion.Euler(maps[i].offsetRot);
+        }
+        for (int i = 0; i < trackerMaps.Count; i++)
+        {
+            trackerMaps[i].constrain.position = trackerMaps[i].source.position + trackerMaps[i].offsetPos;
+            trackerMaps[i].constrain.rotation = trackerMaps[i].source.rotation * trackerMaps[i].offsetRot;
         }
     }
 

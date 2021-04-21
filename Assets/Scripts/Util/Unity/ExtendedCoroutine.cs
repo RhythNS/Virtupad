@@ -39,6 +39,7 @@ public class ExtendedCoroutine
 
     public void Stop(bool invokeOnFinished = true)
     {
+        IsFinshed = true;
         if (Coroutine != null)
             onScript.StopCoroutine(Coroutine);
         if (invokeOnFinished && onFinished != null)

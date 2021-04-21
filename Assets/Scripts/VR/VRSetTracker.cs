@@ -90,15 +90,26 @@ public static class VRSetTracker
         if (toProcess.Count != 2)
             throw new Exception("Tracker count not 2! Was: " + toProcess.Count);
 
-        if (toProcess[0].transform.localPosition.x < toProcess[1].transform.localPosition.x)
-        {
-            toProcess[0].TrackerType = VRTrackerType.LeftFoot;
-            toProcess[1].TrackerType = VRTrackerType.RightFoot;
-        }
-        else
+        /* Not sure how to do this mathematically better.
+         * We get the right directional vector of the head and compare it with the direction
+         * of tracker zero and one. Whatever has a smaller angle must be the right foot.
+         */
+        Transform head = VRDevicesDict.Instance.head;
+        Vector3 rightDir = head.right;
+        Vector3 zeroTrackerDir = (toProcess[0].transform.position - head.position).normalized;
+        Vector3 oneTrackerDir = (toProcess[1].transform.position - head.position).normalized;
+        float zeroAngle = Vector3.Angle(rightDir, zeroTrackerDir);
+        float oneAngle = Vector3.Angle(rightDir, oneTrackerDir);
+
+        if (zeroAngle < oneAngle)
         {
             toProcess[0].TrackerType = VRTrackerType.RightFoot;
             toProcess[1].TrackerType = VRTrackerType.LeftFoot;
+        }
+        else
+        {
+            toProcess[0].TrackerType = VRTrackerType.LeftFoot;
+            toProcess[1].TrackerType = VRTrackerType.RightFoot;
         }
 
         toProcess.Clear();

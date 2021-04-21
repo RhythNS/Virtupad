@@ -42,7 +42,10 @@ public static class VRToRig
                     break;
                 case VRTrackerType.Hip:
                     Transform hip = ConstructorDict.Instance.hip;
-                    VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, (trackers[i].transform.rotation * hip.rotation).eulerAngles);
+                    //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, (trackers[i].transform.rotation * hip.rotation).eulerAngles);
+                    //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, Quaternion.Inverse(trackers[i].transform.rotation * hip.rotation).eulerAngles);
+                    //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, Quaternion.Inverse(trackers[i].transform.rotation).eulerAngles);
+                    VRMapper.Instance.AddMapTracker(hip, trackers[i].transform);
                     break;
                 default:
                     throw new System.Exception("TrackerType not implemented: " + trackers[i].TrackerType);

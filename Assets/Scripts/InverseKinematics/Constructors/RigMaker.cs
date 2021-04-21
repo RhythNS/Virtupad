@@ -12,15 +12,6 @@ public class RigMaker : MonoBehaviour
     private Rig rig;
     private RigBuilder builder;
 
-    /*
-    private void Start()
-    {
-        Animator character = transform.parent.GetComponent<Animator>();
-
-        Make6TrackingPointsCharacter(character);
-    }
-    */
-
     public void MakeCharacter(Config config)
     {
         switch (config)
