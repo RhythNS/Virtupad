@@ -1,0 +1,25 @@
+{
+    "name": "Virtupad",
+    "rootNamespace": "",
+    "references": [
+        "uDD-Scripts",
+        "SteamVR",
+        "VRM",
+        "VRM.Samples",
+        "UniHumanoid",
+        "UniGLTF",
+        "VRMShaders.GLTF.IO.Runtime",
+        "Unity.Animation.Rigging",
+        "Unity.TextMeshPro",
+        "Unity.XR.OpenVR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
