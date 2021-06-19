@@ -1,27 +1,20 @@
+using System.Collections;
 using System.IO;
 using UniGLTF;
-using UniHumanoid;
 using UnityEngine;
 using VRM;
-using VRM.Samples;
 
 public class VRMTestLoader : MonoBehaviour
 {
-    private HumanPoseTransfer loadedPose;
-    private AIUEO lipSync;
-    private Blinker blink;
-    private VRMBlendShapeProxy m_proxy;
-
     [SerializeField] private string path = "V:\\VRM Models\\vroid\\Vivi.vrm";
-
-    [SerializeField] private HumanPoseTransfer humanPoseSource = default;
-
+    [SerializeField] private GameObject currentLoadedModel = default;
     [SerializeField] private GameObject lookAtObject = default;
+    [SerializeField] private RuntimeAnimatorController animatorController;
+    [SerializeField] private VRMMetaObject meta = default;
 
-    [SerializeField] VRMMetaObject meta = default;
-
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.2f);
         LoadModel(path);
     }
 
@@ -88,39 +81,30 @@ public class VRMTestLoader : MonoBehaviour
     public void SetModel(GameObject go)
     {
         // cleanup
-        var loaded = loadedPose;
-        loadedPose = null;
-
-        if (loaded != null)
+        if (currentLoadedModel != null)
         {
-            Debug.LogFormat("destroy {0}", loaded);
-            GameObject.Destroy(loaded.gameObject);
+            Debug.LogFormat("destroy {0}", currentLoadedModel.name);
+            GameObject.Destroy(currentLoadedModel);
+            currentLoadedModel = null;
         }
 
-        if (go != null)
+        if (go == null)
+            return;
+        
+        VRMLookAtHead lookAt = go.GetComponent<VRMLookAtHead>();
+        if (lookAt != null)
         {
-            var lookAt = go.GetComponent<VRMLookAtHead>();
-            if (lookAt != null)
-            {
-                loadedPose = go.AddComponent<HumanPoseTransfer>();
-                loadedPose.Source = humanPoseSource;
-                loadedPose.SourceType = HumanPoseTransfer.HumanPoseTransferSourceType.HumanPoseTransfer;
+            go.AddComponent<Blinker>();
 
-                lipSync = go.AddComponent<AIUEO>();
-                blink = go.AddComponent<Blinker>();
-
-                lookAt.Target = lookAtObject.transform;
-                lookAt.UpdateType = UpdateType.LateUpdate; // after HumanPoseTransfer's setPose
-            }
-
-            var animation = go.GetComponent<Animation>();
-            if (animation && animation.clip != null)
-            {
-                animation.Play(animation.clip.name);
-            }
-
-            m_proxy = go.GetComponent<VRMBlendShapeProxy>();
+            lookAt.Target = lookAtObject.transform;
+            lookAt.UpdateType = UpdateType.LateUpdate; // after HumanPoseTransfer's setPose
         }
+
+        go.GetComponent<VRMFirstPerson>().Setup();
+
+        go.GetComponent<Animator>().runtimeAnimatorController = animatorController;
+        go.AddComponent<VRAnimatorController>();
+        go.AddComponent<FullRigCreator>();
     }
 
 }

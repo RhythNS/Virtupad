@@ -24,7 +24,7 @@ public class InteractBase : MonoBehaviour
 
     public void Select(Interactable interactable)
     {
-
+        interactable.Select();
     }
 
     public void DeSelect()
@@ -32,7 +32,7 @@ public class InteractBase : MonoBehaviour
         if (LastSelected == null)
             return;
 
-        //  LastSelected.DeSelect();
+        LastSelected.DeSelect();
         LastSelected = null;
     }
 

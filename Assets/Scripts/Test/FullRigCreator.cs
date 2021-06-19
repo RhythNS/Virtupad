@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class FullRigCreator : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
     [SerializeField] private float waitTime = 3.0f;
 
     private void Update()
@@ -30,7 +29,7 @@ public class FullRigCreator : MonoBehaviour
         if (config.HasValue == false)
             yield break;
 
-        ConstructorDict.Instance.LoadingCharacterAnimator = animator;
+        ConstructorDict.Instance.LoadingCharacterAnimator = GetComponent<Animator>();
         VRToRig.CharacterToTPose();
         VRToRig.CharacterToVRPlayer();
 
