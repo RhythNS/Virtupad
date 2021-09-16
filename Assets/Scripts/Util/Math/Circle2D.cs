@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// A 2d Circle.
+/// </summary>
 [System.Serializable]
 public class Circle2D : MonoBehaviour
 {

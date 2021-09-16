@@ -17,6 +17,13 @@ MonoBehaviour:
   rightHand: {fileID: 3355354362040556962}
   trackers: []
   steamVRObjects: {fileID: 3355354362029695106}
+  positionInput:
+    actionPath: /actions/default/in/Walking
+    needsReinit: 0
+  lookingInput:
+    actionPath: /actions/default/in/Looking
+    needsReinit: 0
+  playerHeight: 1.9
 --- !u!1001 &1981437040623568582
 PrefabInstance:
   m_ObjectHideFlags: 0

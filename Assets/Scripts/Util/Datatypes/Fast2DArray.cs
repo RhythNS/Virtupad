@@ -52,7 +52,8 @@ public class Fast2DArray<T> : IEnumerable<T>
     /// <summary>
     /// Returns this Fast2DArray as a standard array.
     /// </summary>
-    public T[] AsArray {
+    public T[] AsArray
+    {
         get => array;
     }
 
@@ -66,19 +67,23 @@ public class Fast2DArray<T> : IEnumerable<T>
     /// </summary>
     /// <param name="xSize">The new x-size.</param>
     /// <param name="ySize">The new y-size.</param>
-    public void Resize(int xSize, int ySize) {
+    public void Resize(int xSize, int ySize)
+    {
         Fast2DArray<T> newArray = new Fast2DArray<T>(xSize, ySize);
 
-        for (int x = 0; x < xSize; x++) {
-            for (int y = 0; y < ySize; y++) {
-                if (InBounds(x, y)) {
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                if (InBounds(x, y))
+                {
                     newArray[x, y] = this[x, y];
                 }
             }
         }
 
-        this.XSize = xSize;
-        this.YSize = ySize;
+        XSize = xSize;
+        YSize = ySize;
 
         array = newArray.AsArray;
     }

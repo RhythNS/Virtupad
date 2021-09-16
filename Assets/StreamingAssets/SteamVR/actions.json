@@ -58,6 +58,14 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/default/in/Walking",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/default/in/Looking",
+      "type": "vector2"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     }

@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Helper class related to math methods.
+/// </summary>
 public abstract class MathUtil
 {
     public static bool InRangeInclusive(float min, float max, float val)
@@ -18,10 +21,10 @@ public abstract class MathUtil
         => min == 0 ? (value / max) : (value - min) / (max - min);
 
     public static Vector3 RandomVector3(Vector3 min, Vector3 max)
-        => new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, min.y), Random.Range(min.z, max.z));
+        => new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, max.y), Random.Range(min.z, max.z));
 
     public static Vector2 RandomVector2(Vector2 min, Vector2 max)
-        => new Vector2(Random.Range(min.x, max.x), Random.Range(min.y, min.y));
+        => new Vector2(Random.Range(min.x, max.x), Random.Range(min.y, max.y));
 
     public static Vector2 VectorClamp(Vector2 value, Vector2 min, Vector2 max)
     {

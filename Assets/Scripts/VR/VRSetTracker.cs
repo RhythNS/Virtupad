@@ -7,7 +7,7 @@ public static class VRSetTracker
 {
     public static void RegisterTrackers()
     {
-        List<VRTracker> trackers = VRDevicesDict.Instance.trackers;
+        List<VRTracker> trackers = VRController.Instance.trackers;
 
         for (int i = 0; i < trackers.Count; i++)
         {
@@ -26,7 +26,7 @@ public static class VRSetTracker
                     continue;
 
                 GameObject tracker = new GameObject("Tracker");
-                tracker.transform.parent = VRDevicesDict.Instance.SteamVRObjects;
+                tracker.transform.parent = VRController.Instance.SteamVRObjects;
                 tracker.SetActive(true);
 
                 VRTracker vrTracker = tracker.AddComponent<VRTracker>();
@@ -38,7 +38,7 @@ public static class VRSetTracker
 
     public static RigMaker.Config? AutoAssignTrackers()
     {
-        List<VRTracker> trackers = VRDevicesDict.Instance.trackers;
+        List<VRTracker> trackers = VRController.Instance.trackers;
 
         if (trackers.Count == 0)
             return RigMaker.Config.ThreePoints;
@@ -94,7 +94,7 @@ public static class VRSetTracker
          * We get the right directional vector of the head and compare it with the direction
          * of tracker zero and one. Whatever has a smaller angle must be the right foot.
          */
-        Transform head = VRDevicesDict.Instance.head;
+        Transform head = VRController.Instance.head;
         Vector3 rightDir = head.right;
         Vector3 zeroTrackerDir = (toProcess[0].transform.position - head.position).normalized;
         Vector3 oneTrackerDir = (toProcess[1].transform.position - head.position).normalized;

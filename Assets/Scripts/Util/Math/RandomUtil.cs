@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Helper class for methods related to random.
+/// </summary>
 public static class RandomUtil
 {
     /// <summary>
@@ -18,6 +21,4 @@ public static class RandomUtil
     /// <param name="array">The list to take the random element from.</param>
     /// <returns>The random element.</returns>
     public static T Element<T>(List<T> array) => array[Random.Range(0, array.Count)];
-
-
 }

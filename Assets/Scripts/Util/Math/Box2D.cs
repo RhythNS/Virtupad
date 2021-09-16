@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// A 2D box.
+/// </summary>
 public class Box2D
 {
     public float x, y, width, height;

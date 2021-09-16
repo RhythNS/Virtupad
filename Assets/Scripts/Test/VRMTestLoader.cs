@@ -90,21 +90,9 @@ public class VRMTestLoader : MonoBehaviour
 
         if (go == null)
             return;
-        
-        VRMLookAtHead lookAt = go.GetComponent<VRMLookAtHead>();
-        if (lookAt != null)
-        {
-            go.AddComponent<Blinker>();
 
-            lookAt.Target = lookAtObject.transform;
-            lookAt.UpdateType = UpdateType.LateUpdate; // after HumanPoseTransfer's setPose
-        }
-
-        go.GetComponent<VRMFirstPerson>().Setup();
-
-        go.GetComponent<Animator>().runtimeAnimatorController = animatorController;
-        go.AddComponent<VRAnimatorController>();
-        go.AddComponent<FullRigCreator>();
+        go.AddComponent<VRMController>();
+        go.AddComponent<VRMMouthMover>();
     }
 
 }

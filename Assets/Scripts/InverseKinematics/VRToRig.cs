@@ -21,13 +21,13 @@ public static class VRToRig
     {
         //VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false, false);
         VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, headOffset);
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRDevicesDict.Instance.rightHand.transform, false);
-        VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRDevicesDict.Instance.leftHand.transform, false);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRController.Instance.head, headOffset);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHand.transform, false);
+        VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHand.transform, false);
 
         ConstructorDict.Instance.LoadingCharacterAnimator.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
-        List<VRTracker> trackers = VRDevicesDict.Instance.trackers;
+        List<VRTracker> trackers = VRController.Instance.trackers;
         for (int i = 0; i < trackers.Count; i++)
         {
             switch (trackers[i].TrackerType)

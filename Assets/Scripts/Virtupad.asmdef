@@ -11,7 +11,8 @@
         "VRMShaders.GLTF.IO.Runtime",
         "Unity.Animation.Rigging",
         "Unity.TextMeshPro",
-        "Unity.XR.OpenVR"
+        "Unity.XR.OpenVR",
+        "SteamVR_Actions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

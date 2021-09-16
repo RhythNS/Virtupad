@@ -51,6 +51,7 @@ public class RigMaker : MonoBehaviour
     {
         this.character = character;
         character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
+
         PrepRig();
 
         MakeControllingHip();
@@ -79,6 +80,7 @@ public class RigMaker : MonoBehaviour
     {
         this.character = character;
         character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
+
         PrepRig();
 
         MakeControllingHip();

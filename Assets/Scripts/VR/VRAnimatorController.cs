@@ -44,10 +44,10 @@ public class VRAnimatorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!VRDevicesDict.Instance.head)
+        if (!VRController.Instance.head)
             return;
 
-        Transform headTrans = VRDevicesDict.Instance.head;
+        Transform headTrans = VRController.Instance.head;
 
         float prevDirX = animator.GetFloat("directionX");
         float prevDirY = animator.GetFloat("directionY");

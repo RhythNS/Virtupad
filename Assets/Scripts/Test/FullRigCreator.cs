@@ -32,6 +32,7 @@ public class FullRigCreator : MonoBehaviour
         ConstructorDict.Instance.LoadingCharacterAnimator = GetComponent<Animator>();
         VRToRig.CharacterToTPose();
         VRToRig.CharacterToVRPlayer();
+        VRController.Instance.SizeToModelHeight(VRMController.Instance.Height);
 
         yield return new WaitForSeconds(waitTime);
 
@@ -39,9 +40,8 @@ public class FullRigCreator : MonoBehaviour
         VRToRig.MakeCharacter(config.Value);
         VRToRig.AssignTrackers();
 
-        if (VRAnimatorController.Instance)
-            VRAnimatorController.Instance.enabled = true;
+        VRMController.Instance.OnTakenControl();
+
         Debug.Log("Finished rig constructor");
     }
-
 }
