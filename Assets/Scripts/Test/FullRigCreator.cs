@@ -30,6 +30,8 @@ public class FullRigCreator : MonoBehaviour
             yield break;
 
         ConstructorDict.Instance.LoadingCharacterAnimator = GetComponent<Animator>();
+        ConstructorDict.Instance.vrmController = GetComponent<VRMController>();
+
         VRToRig.CharacterToTPose();
         VRToRig.CharacterToVRPlayer();
         VRController.Instance.SizeToModelHeight(VRMController.Instance.Height);

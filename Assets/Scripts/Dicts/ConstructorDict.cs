@@ -28,6 +28,8 @@ public class ConstructorDict : MonoBehaviour
 
     public RigMaker rigMaker;
 
+    public VRMController vrmController;
+
     public RuntimeAnimatorController TPoseController => tPoseController;
     [SerializeField] private RuntimeAnimatorController tPoseController;
 

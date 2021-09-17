@@ -92,7 +92,6 @@ public class VRMTestLoader : MonoBehaviour
             return;
 
         go.AddComponent<VRMController>();
-        go.AddComponent<VRMMouthMover>();
     }
 
 }

@@ -20,7 +20,7 @@ public static class VRToRig
     public static void AssignTrackers()
     {
         //VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false, false);
-        VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
+        VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY;// | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
         VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRController.Instance.head, headOffset);
         VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHand.transform, false);
         VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHand.transform, false);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using VRM;
 
 public class RigMaker : MonoBehaviour
 {
@@ -11,13 +12,17 @@ public class RigMaker : MonoBehaviour
     private Animator character;
     private Rig rig;
     private RigBuilder builder;
+    private static readonly bool useAlternative = true;
 
     public void MakeCharacter(Config config)
     {
         switch (config)
         {
             case Config.ThreePoints:
-                Make3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                if (useAlternative)
+                    MakeAlternative3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                else
+                    Make3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
                 break;
             case Config.FourPoints:
                 Make4TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
@@ -31,6 +36,20 @@ public class RigMaker : MonoBehaviour
             default:
                 throw new System.Exception("Could not find config " + config);
         }
+    }
+
+    public void MakeAlternative3TrackingPointsCharacter(Animator character)
+    {
+        this.character = character;
+        character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
+
+        PrepRig();
+
+        MakeAlternativeControllingHead();
+        MakeArms();
+        MakeAutoLegs();
+
+        FinishRig();
     }
 
     public void Make3TrackingPointsCharacter(Animator character)
@@ -119,6 +138,17 @@ public class RigMaker : MonoBehaviour
         ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
         controllingHead.animator = character;
         controllingHead.offset = rigTrans.transform.position - character.transform.position;
+    }
+    
+    private void MakeAlternativeControllingHead()
+    {
+        Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
+
+        VRMFirstPerson firstPerson = ConstructorDict.Instance.vrmController.VRMFirstPerson;
+
+        ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
+        controllingHead.animator = character;
+        controllingHead.offset = (firstPerson.FirstPersonBone.position + firstPerson.FirstPersonOffset) - character.transform.position;
     }
 
     private void MakeHead()

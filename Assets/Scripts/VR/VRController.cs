@@ -56,7 +56,7 @@ public class VRController : MonoBehaviour
         transform.position += movementSpeed * Time.fixedDeltaTime * movement;
 
         axis = lookingInput.axis;
-        player.rotation *= Quaternion.Euler(0.0f, axis.x, 0.0f);
+        player.rotation *= Quaternion.Euler(0.0f, axis.x * rotatingSpeed, 0.0f);
     }
 
     private void OnDestroy()
