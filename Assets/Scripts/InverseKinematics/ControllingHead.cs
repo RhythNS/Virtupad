@@ -10,9 +10,10 @@ public class ControllingHead : MonoBehaviour
     {
         Vector3 currentPos = transform.position;
 
-        animator.transform.position = currentPos - offset;
-
         animator.transform.rotation = Quaternion.AngleAxis(transform.rotation.eulerAngles.y, Vector3.up);
+
+        float angle = Vector3.SignedAngle(animator.transform.forward, Vector3.forward, Vector3.up);
+        animator.transform.position = currentPos - (Quaternion.Euler(0.0f, -angle, 0.0f) * offset);
         /*
         float newRotY = transform.rotation.eulerAngles.y;
         Vector3 currentRot = animator.transform.rotation.eulerAngles;
