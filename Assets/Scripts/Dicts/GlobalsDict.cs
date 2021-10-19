@@ -16,6 +16,13 @@ public class GlobalsDict : MonoBehaviour
             Destroy(this);
             return;
         }
+
+        if (!Player)
+        {
+            Debug.LogWarning("Player was not assigned! Searching for him instead!");
+            player = FindObjectOfType<Player>();
+        }
+
         Instance = this;
     }
 

@@ -156,10 +156,6 @@ PrefabInstance:
       propertyPath: m_text
       value: Shift
       objectReference: {fileID: 0}
-    - target: {fileID: 6658453449132552562, guid: fddd3e04e2a966146ae771f3f79ba637, type: 3}
-      propertyPath: m_fontSize
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 6659031505453911707, guid: fddd3e04e2a966146ae771f3f79ba637, type: 3}
       propertyPath: m_RootOrder
       value: 0

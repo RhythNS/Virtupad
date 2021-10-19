@@ -83,7 +83,10 @@ public class Interacter : MonoBehaviour
 
         Vector3[] positions = new Vector3[2];
         positions[0] = ownPos;
-        positions[1] = closestInteractable == null ? ownPos + transform.forward * maxRange : closestInteractable.transform.position;
+        positions[1] =
+            closestInteractable == null || closestInteractable.SnapToObject == false
+            ? ownPos + transform.forward * maxRange
+            : closestInteractable.transform.position;
         lineRenderer.SetPositions(positions);
 
         lastSelectedInteractable = closestInteractable;

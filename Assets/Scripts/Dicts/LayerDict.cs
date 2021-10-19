@@ -10,6 +10,14 @@ public class LayerDict : MonoBehaviour
     public int OnlyVisibleInDesktopLayer => onlyVisibleInDesktopLayer;
     [SerializeField] private int onlyVisibleInDesktopLayer;
 
+    public int MaskEverythingButPlayer => ~(1 << playerCollider | 1 << playerHands);
+
+    public int PlayerCollider => playerCollider;
+    [SerializeField] private int playerCollider;
+
+    public int PlayerHands => playerHands;
+    [SerializeField] private int playerHands;
+
     private void Awake()
     {
         if (Instance)

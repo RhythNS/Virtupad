@@ -56,9 +56,10 @@ MonoBehaviour:
   leftLeg: {fileID: 0}
   hip: {fileID: 0}
   rigMaker: {fileID: 0}
+  vrmController: {fileID: 0}
   tPoseController: {fileID: 9100000, guid: c0c564f8cd0b84c4ba1b76cf4ba80ec2, type: 2}
   fullBody: {fileID: 9100000, guid: 927782a2531ae0b4e94306050dfbcf02, type: 2}
-  upperBody: {fileID: 9100000, guid: 059d22bc4652f8b4aab586b74865b631, type: 2}
+  upperBody: {fileID: 9100000, guid: dd0cb670fb7de88479e5cb2d18ee6908, type: 2}
 --- !u!114 &8683602039922489663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,6 +74,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onlyVisibleInVRLayer: 9
   onlyVisibleInDesktopLayer: 10
+  handLayer: 26
 --- !u!114 &8683602039922489648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,3 +100,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c4c8426af6e4444b0558b2b8819a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}

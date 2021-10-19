@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using VRM;
 
@@ -8,21 +9,15 @@ using VRM;
 public class VRMMouthMover : MonoBehaviour
 {
     public static float micLoudness;
-    
+
     public float testSound;
-    
+
     private string microphoneDeviceName;
     private AudioClip clipRecord;
     private int sampleWindow = 128;
     private float[] waveData;
 
     private VRMBlendShapeProxy blendShapes;
-
-    private void Start()
-    {
-        blendShapes = GetComponent<VRMBlendShapeProxy>();
-        waveData = new float[sampleWindow];
-    }
 
     void InitMic()
     {
@@ -65,22 +60,39 @@ public class VRMMouthMover : MonoBehaviour
         return levelMax;
     }
 
-    private void Update()
+    private IEnumerator UpdateMouth()
     {
-        micLoudness = GetMaxLevelOfCurrentSample();
-        testSound = micLoudness;
-        blendShapes.ImmediatelySetValue(BlendShapeKey.CreateFromPreset(BlendShapePreset.A), testSound);
+        float prevSound = 0.0f;
+        const float length = 0.1f;
+
+        while (true)
+        {
+            micLoudness = Mathf.Min(1.0f, GetMaxLevelOfCurrentSample() * 2.0f);
+            testSound = micLoudness;
+
+            float timer = 0.0f;
+            while (timer < length)
+            {
+                blendShapes.ImmediatelySetValue(BlendShapeKey.CreateFromPreset(BlendShapePreset.A), Mathf.Min(1.0f, Mathf.Lerp(prevSound, micLoudness, length / timer)));
+                yield return null;
+                timer += Time.deltaTime;
+            }
+        }
     }
 
     private void OnEnable()
     {
+        blendShapes = GetComponent<VRMBlendShapeProxy>();
+        waveData = new float[sampleWindow];
         InitMic();
         Debug.Log("VRMMouthMover is using this microphone: " + microphoneDeviceName);
+        StartCoroutine(UpdateMouth());
     }
 
     private void OnDisable()
     {
         StopMicrophone();
+        StopAllCoroutines();
     }
 
     private void OnDestroy()

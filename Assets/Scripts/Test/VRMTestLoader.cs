@@ -6,19 +6,49 @@ using VRM;
 
 public class VRMTestLoader : MonoBehaviour
 {
-    [SerializeField] private string path = "V:\\VRM Models\\vroid\\Vivi.vrm";
+    [SerializeField] private string[] paths;
+    [SerializeField] private int selectedPath;
+
     [SerializeField] private GameObject currentLoadedModel = default;
     [SerializeField] private GameObject lookAtObject = default;
     [SerializeField] private RuntimeAnimatorController animatorController;
     [SerializeField] private VRMMetaObject meta = default;
 
-    private IEnumerator Start()
+    public static VRMTestLoader Instance { get; private set; }
+
+    private void Awake()
     {
-        yield return new WaitForSeconds(0.2f);
-        LoadModel(path);
+        if (Instance)
+        {
+            Debug.LogWarning("VRMTestLoader already in scene. Deleting myself!");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
     }
 
-    async void LoadModel(string path)
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+
+    void Start() => StartCoroutine(InnerSpawnModel(paths[selectedPath], true, Vector3.zero, Quaternion.identity));
+
+    public void SpawnModel(int modelIndex, Vector3 position, Quaternion rotation) 
+        => StartCoroutine(InnerSpawnModel(paths[modelIndex], false, position, rotation));
+
+    public void SpawnModel(string path, Vector3 position, Quaternion rotation) 
+        => StartCoroutine(InnerSpawnModel(path, false, position, rotation));
+
+    private IEnumerator InnerSpawnModel(string path, bool isMain, Vector3 position, Quaternion rotation)
+    {
+        yield return new WaitForSeconds(0.2f);
+        LoadModel(path, isMain, position, rotation);
+    }
+
+    private async void LoadModel(string path, bool isMain, Vector3 position, Quaternion rotation)
     {
         Debug.LogFormat("{0}", path);
         var ext = Path.GetExtension(path).ToLower();
@@ -37,7 +67,7 @@ public class VRMTestLoader : MonoBehaviour
                     context.EnableUpdateWhenOffscreen();
                     context.ShowMeshes();
                     context.DisposeOnGameObjectDestroyed();
-                    SetModel(context.Root);
+                    SetModel(context.Root, isMain, position, rotation);
                     break;
                 }
 
@@ -53,7 +83,7 @@ public class VRMTestLoader : MonoBehaviour
                     context.EnableUpdateWhenOffscreen();
                     context.ShowMeshes();
                     context.DisposeOnGameObjectDestroyed();
-                    SetModel(context.Root);
+                    SetModel(context.Root, isMain, position, rotation);
                     break;
                 }
 
@@ -68,7 +98,7 @@ public class VRMTestLoader : MonoBehaviour
                     context.EnableUpdateWhenOffscreen();
                     context.ShowMeshes();
                     context.DisposeOnGameObjectDestroyed();
-                    SetModel(context.Root);
+                    SetModel(context.Root, isMain, position, rotation);
                     break;
                 }
 
@@ -78,8 +108,13 @@ public class VRMTestLoader : MonoBehaviour
         }
     }
 
-    public void SetModel(GameObject go)
+    private void SetModel(GameObject go, bool isMain, Vector3 position, Quaternion rotation)
     {
+        go.transform.SetPositionAndRotation(position, rotation);
+
+        if (isMain == false)
+            return;
+
         // cleanup
         if (currentLoadedModel != null)
         {
