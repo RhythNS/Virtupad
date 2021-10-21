@@ -41,12 +41,12 @@ public class VRAnimatorController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!VRController.Instance.head)
             return;
 
+        /*
         Transform headTrans = VRController.Instance.head;
 
         float prevDirX = animator.GetFloat("directionX");
@@ -61,6 +61,25 @@ public class VRAnimatorController : MonoBehaviour
         animator.SetBool("isMoving", headSetlocalSpeed.magnitude > speedTreshold);
         animator.SetFloat("directionX", Mathf.Lerp(prevDirX, Mathf.Clamp(headSetlocalSpeed.x, -1, 1), smoothing));
         animator.SetFloat("directionY", Mathf.Lerp(prevDirY, Mathf.Clamp(headSetlocalSpeed.z, -1, 1), smoothing));
+         */
+
+
+        Transform headTrans = VRController.Instance.head;
+        Vector3 headsetSpeed = (headTrans.position - previousPos) / Time.deltaTime;
+        Vector3 headSetlocalSpeed = transform.InverseTransformDirection(headsetSpeed);
+
+        previousPos = headTrans.position;
+
+        float dirX = headSetlocalSpeed.x * VRController.invMovementSpeed;
+        float dirY = headSetlocalSpeed.z * VRController.invMovementSpeed;
+
+        if (float.IsNaN(dirX))
+            dirX = 0.0f;
+        if (float.IsInfinity(dirY))
+            dirY = 0.0f;
+
+        animator.SetFloat("directionX", dirX, 0.1f, Time.deltaTime);
+        animator.SetFloat("directionY", dirY, 0.1f, Time.deltaTime);
     }
 
     private void LateUpdate()
@@ -75,7 +94,7 @@ public class VRAnimatorController : MonoBehaviour
 
     public void Register(HumanBodyBones humanBodyBones, Transform transform, bool useOffset)
     {
-     //   doubleTransforms.Add(new DoubleTransform(transform, animator.GetBoneTransform(humanBodyBones), useOffset));
+        //   doubleTransforms.Add(new DoubleTransform(transform, animator.GetBoneTransform(humanBodyBones), useOffset));
     }
 
     public void DeRegister(Transform transform)

@@ -21,8 +21,9 @@ public class VRController : MonoBehaviour
 
     public float playerHeight = 1.9f;
 
-    private readonly float movementSpeed = 1.0f;
-    private readonly float rotatingSpeed = 1.0f;
+    public static readonly float movementSpeed = 1.0f;
+    public static readonly float invMovementSpeed = 1.0f / movementSpeed;
+    public static readonly float rotatingSpeed = 1.0f;
 
     private void Awake()
     {
@@ -46,14 +47,14 @@ public class VRController : MonoBehaviour
         transform.localScale = new Vector3(toScale, toScale, toScale);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Vector2 axis = positionInput.axis;
         Vector3 movement = new Vector3(axis.x, 0.0f, axis.y);
         movement = head.rotation * movement;
         movement.y = 0.0f;
         movement.Normalize();
-        transform.position += movementSpeed * Time.fixedDeltaTime * movement;
+        transform.position += movementSpeed * Time.deltaTime * movement;
 
         axis = lookingInput.axis;
         player.rotation *= Quaternion.Euler(0.0f, axis.x * rotatingSpeed, 0.0f);
