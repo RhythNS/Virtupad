@@ -22,7 +22,11 @@ public class InteractBase : MonoBehaviour
 
     public void Select(Interactable interactable)
     {
+        if (LastSelected != null)
+            LastSelected.DeSelect();
+
         interactable.Select();
+        LastSelected = interactable;
     }
 
     public void DeSelect()
@@ -34,11 +38,9 @@ public class InteractBase : MonoBehaviour
         LastSelected = null;
     }
 
-
     private void OnDestroy()
     {
         if (Instance == this)
             Instance = null;
     }
-
 }

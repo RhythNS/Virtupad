@@ -8,6 +8,8 @@ public class Interacter : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float maxRange;
 
+    private bool lastInteractableWasUI = false;
+
     private Interactable lastSelectedInteractable;
     private bool started = false;
     private float timer;
@@ -54,7 +56,8 @@ public class Interacter : MonoBehaviour
         Debug.Log("Interact with " + (lastSelectedInteractable == null ? "nothing" : lastSelectedInteractable.name));
     }
 
-    private void FixedUpdate()
+    private void Update()
+    //private void FixedUpdate()
     {
         if (started == false)
             return;
