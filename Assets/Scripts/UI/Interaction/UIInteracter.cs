@@ -13,41 +13,62 @@ public class UIInteracter : BaseInputModule
 
     [SerializeField] private float dragThreshold = 0.5f;
 
-    private bool handledAbort = false;
-    private bool currentlyUsing = false;
-    private Transform onHand;
+    [SerializeField] private bool handledAbort = true;
+    [SerializeField] private bool currentlyUsing = false;
+    private Interacter onInteracter;
 
     private Vector2 scrollDelta = Vector2.zero;
 
     private float pressedDistance;
     private PointerEventData eventData;
     private Vector3 lastHit;
-    private State currentState;
+    private State currentState = State.Up;
 
-    public bool Activate(Transform onHand)
+    public bool Activate(Interacter onInteracter)
     {
+        if (this.onInteracter == onInteracter)
+            return true;
+
         if (currentlyUsing == true || handledAbort == false)
-            return false;
+        {
+            if (this.onInteracter.Started == true)
+                return false;
+
+            Interactable closestInteractable = this.onInteracter.GetClosestInteractable();
+            if (closestInteractable != null && closestInteractable is UIInteractable)
+                return false;
+        }
 
         currentlyUsing = true;
         handledAbort = false;
-        this.onHand = onHand;
+        UnSubscribeFromButton();
+        this.onInteracter = onInteracter;
+        SubscribeToButton();
         return true;
     }
 
     public void Deactivate()
     {
         currentlyUsing = false;
+        UnSubscribeFromButton();
+        onInteracter = null;
     }
 
-    public void OnDown()
+    private void SubscribeToButton()
     {
-        currentState = State.JustDown;
+        if (onInteracter != null)
+            onInteracter.DownChanged += OnDownChanged;
     }
 
-    public void OnUp()
+    private void UnSubscribeFromButton()
     {
-        currentState = State.JustUp;
+        if (onInteracter != null)
+            onInteracter.DownChanged -= OnDownChanged;
+    }
+
+    public void OnDownChanged(bool changed)
+    {
+        currentState = changed ? State.JustDown : State.JustUp;
     }
 
     public override void Process()
@@ -83,8 +104,8 @@ public class UIInteracter : BaseInputModule
 
         if (currentlyUsing == true || currentState == State.JustDown || currentState == State.JustUp)
         {
-            pointerPos = onHand.position;
-            direction = onHand.forward;
+            pointerPos = onInteracter.transform.position;
+            direction = onInteracter.transform.forward;
         }
         else
         {
@@ -102,6 +123,7 @@ public class UIInteracter : BaseInputModule
         RaycastResult raycastResult = FindFirstRaycast(m_RaycastResultCache);
 
         Ray ray = new Ray(pointerPos, direction);
+        Debug.DrawRay(pointerPos, direction, Color.black);
         Vector3 hit = ray.GetPoint(raycastResult.distance);
         eventData.delta = new Vector2((hit - lastHit).sqrMagnitude, 0);
         lastHit = hit;

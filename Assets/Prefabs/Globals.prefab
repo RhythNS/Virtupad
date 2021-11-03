@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8683602039922489661}
   - component: {fileID: 8683602039922489662}
   - component: {fileID: 8683602039922489663}
-  - component: {fileID: 8683602039922489648}
   - component: {fileID: 5994798561738827276}
   m_Layer: 0
   m_Name: Globals
@@ -74,20 +73,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onlyVisibleInVRLayer: 9
   onlyVisibleInDesktopLayer: 10
-  handLayer: 26
---- !u!114 &8683602039922489648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8683602039922489649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9a28186f3e6444e9b970b827c3737b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeBeforeQuickDeselectInSeconds: 1
+  playerCollider: 0
+  playerHands: 0
 --- !u!114 &5994798561738827276
 MonoBehaviour:
   m_ObjectHideFlags: 0

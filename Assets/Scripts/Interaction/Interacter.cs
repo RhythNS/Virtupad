@@ -8,11 +8,12 @@ public class Interacter : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float maxRange;
 
-    private bool lastInteractableWasUI = false;
+    public bool Started { get; private set; } = false;
+    public float MaxRange => maxRange;
+
+    public event BoolChanged DownChanged;
 
     private Interactable lastSelectedInteractable;
-    private bool started = false;
-    private float timer;
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class Interacter : MonoBehaviour
 
     private void ActiveChanged(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource, bool active)
     {
+        DownChanged?.Invoke(active);
         if (active)
             StartInteract(fromAction, fromSource);
         else
@@ -32,50 +34,46 @@ public class Interacter : MonoBehaviour
 
     private void StartInteract(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        timer = 0.0f;
         lineRenderer.enabled = true;
-        started = true;
+        enabled = true;
     }
 
     private void StopInteract(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         lineRenderer.enabled = false;
-        started = false;
+        Started = false;
+        enabled = false;
 
         if (lastSelectedInteractable == null)
-        {
-            if (timer < InteractBase.Instance.TimeBeforeQuickDeselectInSeconds)
-            {
-                InteractBase.Instance.DeSelect();
-            }
             return;
-        }
 
-        InteractBase.Instance.Select(lastSelectedInteractable);
-
-        Debug.Log("Interact with " + (lastSelectedInteractable == null ? "nothing" : lastSelectedInteractable.name));
+        lastSelectedInteractable.Select();
+        lastSelectedInteractable.LeaveHover(this);
+        lastSelectedInteractable = null;
     }
 
     private void Update()
-    //private void FixedUpdate()
     {
-        if (started == false)
-            return;
+        Interactable closestInteractable = GetClosestInteractable();
+        UpdateLineRenderer(closestInteractable);
+        IssueEvents(closestInteractable);
 
-        timer += Time.deltaTime;
+        lastSelectedInteractable = closestInteractable;
+    }
 
-        RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, maxRange);
+    public Interactable GetClosestInteractable()
+    {
+        RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, maxRange, ~0);
 
         Interactable closestInteractable = null;
         float closestLength = float.MaxValue;
         Vector3 ownPos = transform.position;
-
         for (int i = 0; i < raycastHits.Length; i++)
         {
             if (raycastHits[i].collider.TryGetComponent(out Interactable interactable) == false)
                 continue;
 
-            float lengthAway = (ownPos - interactable.transform.position).sqrMagnitude;
+            float lengthAway = (ownPos - raycastHits[i].point).sqrMagnitude;
 
             if (closestInteractable != null && lengthAway > closestLength)
                 continue;
@@ -84,6 +82,12 @@ public class Interacter : MonoBehaviour
             closestLength = lengthAway;
         }
 
+        return closestInteractable;
+    }
+
+    private void UpdateLineRenderer(Interactable closestInteractable)
+    {
+        Vector3 ownPos = transform.position;
         Vector3[] positions = new Vector3[2];
         positions[0] = ownPos;
         positions[1] =
@@ -91,7 +95,25 @@ public class Interacter : MonoBehaviour
             ? ownPos + transform.forward * maxRange
             : closestInteractable.transform.position;
         lineRenderer.SetPositions(positions);
+    }
 
-        lastSelectedInteractable = closestInteractable;
+    private void IssueEvents(Interactable closestInteractable)
+    {
+        // is it the same since last frame?
+        if (lastSelectedInteractable == closestInteractable)
+        {
+            // have we selected anything?
+            if (closestInteractable)
+                closestInteractable.StayHover(this);
+            return;
+        }
+
+        // not the same
+        // have we selected something in the last frame?
+        if (lastSelectedInteractable)
+            lastSelectedInteractable.LeaveHover(this);
+        // have we selected something this frame?
+        if (closestInteractable)
+            closestInteractable.BeginHover(this);
     }
 }

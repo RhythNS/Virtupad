@@ -8,10 +8,6 @@ public class PlayAnimation : Interactable
     [SerializeField] private string animationName;
     [SerializeField] private PlayMode mode;
 
-    public override void DeSelect()
-    {
-    }
-
     public override void Select()
     {
         toControl.Play(animationName);

@@ -8,6 +8,7 @@ public class InteractBase : MonoBehaviour
     [SerializeField] private float timeBeforeQuickDeselectInSeconds = 1.0f;
 
     public Interactable LastSelected { get; private set; } = null;
+    public UIInteracter UIInteracter { get; private set; } = null;
 
     private void Awake()
     {
@@ -18,13 +19,11 @@ public class InteractBase : MonoBehaviour
             return;
         }
         Instance = this;
+        UIInteracter = GetComponent<UIInteracter>();
     }
 
     public void Select(Interactable interactable)
     {
-        if (LastSelected != null)
-            LastSelected.DeSelect();
-
         interactable.Select();
         LastSelected = interactable;
     }
@@ -34,7 +33,6 @@ public class InteractBase : MonoBehaviour
         if (LastSelected == null)
             return;
 
-        LastSelected.DeSelect();
         LastSelected = null;
     }
 

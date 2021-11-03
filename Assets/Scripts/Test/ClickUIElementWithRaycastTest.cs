@@ -1,13 +1,9 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ClickUIElementWithRaycastTest : MonoBehaviour
 {
     [SerializeField] private Vector3 direction;
     [SerializeField] private float distance;
-
-    //https://github.com/Sergey-Shamov/Unity-VR-InputModule/blob/master/VRControllerInputModule.cs
 
     void Update()
     {

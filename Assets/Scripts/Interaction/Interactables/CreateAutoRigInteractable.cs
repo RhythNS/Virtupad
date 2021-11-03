@@ -4,10 +4,4 @@ public class CreateAutoRigInteractable : Interactable
     {
         FindObjectOfType<FullRigCreator>()?.StartAutoSetup();
     }
-
-    public override void DeSelect()
-    {
-
-    }
-
 }
