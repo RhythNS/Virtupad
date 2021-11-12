@@ -16,20 +16,17 @@ public class UIInteractable : Interactable
 
     protected override void OnBeginHover()
     {
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ExecuteEvents.Execute(gameObject, ped, ExecuteEvents.pointerEnterHandler);
+        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerEnterHandler);
     }
 
     protected override void OnLeaveHover()
     {
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ExecuteEvents.Execute(gameObject, ped, ExecuteEvents.pointerExitHandler);
+        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerExitHandler);
     }
 
     public override void Select()
     {
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ExecuteEvents.Execute(gameObject, ped, ExecuteEvents.pointerClickHandler);
+        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerClickHandler);
     }
 
     public void AutoSize()

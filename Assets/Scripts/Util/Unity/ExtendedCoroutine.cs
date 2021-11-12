@@ -27,7 +27,7 @@ public class ExtendedCoroutine
     /// <param name="enumerator">The content of the coroutine.</param>
     /// <param name="onFinished">Callback when the coroutine finished.</param>
     /// <param name="startNow">Wheter the coroutine should start now.</param>
-    public ExtendedCoroutine(MonoBehaviour onScript, IEnumerator enumerator, Action onFinished = null, bool startNow = false)
+    public ExtendedCoroutine(MonoBehaviour onScript, IEnumerator enumerator, Action onFinished = null, bool startNow = true)
     {
         this.onScript = onScript;
         this.enumerator = enumerator;

@@ -54,20 +54,21 @@ public class Interacter : MonoBehaviour
 
     private void Update()
     {
-        Interactable closestInteractable = GetClosestInteractable();
-        UpdateLineRenderer(closestInteractable);
+        Interactable closestInteractable = GetClosestInteractable(out Vector3 impactPoint);
+        UpdateLineRenderer(closestInteractable, impactPoint);
         IssueEvents(closestInteractable);
 
         lastSelectedInteractable = closestInteractable;
     }
 
-    public Interactable GetClosestInteractable()
+    public Interactable GetClosestInteractable(out Vector3 impactPoint)
     {
         RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, maxRange, ~0);
 
         Interactable closestInteractable = null;
         float closestLength = float.MaxValue;
         Vector3 ownPos = transform.position;
+        impactPoint = Vector3.zero;
         for (int i = 0; i < raycastHits.Length; i++)
         {
             if (raycastHits[i].collider.TryGetComponent(out Interactable interactable) == false)
@@ -80,21 +81,25 @@ public class Interacter : MonoBehaviour
 
             closestInteractable = interactable;
             closestLength = lengthAway;
+            impactPoint = raycastHits[i].point;
         }
 
         return closestInteractable;
     }
 
-    private void UpdateLineRenderer(Interactable closestInteractable)
+    private void UpdateLineRenderer(Interactable closestInteractable, Vector3 impactPoint)
     {
         Vector3 ownPos = transform.position;
-        Vector3[] positions = new Vector3[2];
-        positions[0] = ownPos;
-        positions[1] =
-            closestInteractable == null || closestInteractable.SnapToObject == false
-            ? ownPos + transform.forward * maxRange
-            : closestInteractable.transform.position;
-        lineRenderer.SetPositions(positions);
+
+        Vector3 toPos;
+        if (closestInteractable == null)
+            toPos = ownPos + transform.forward * maxRange;
+        else if (closestInteractable.SnapToObject)
+            toPos = closestInteractable.transform.position;
+        else
+            toPos = impactPoint;
+
+        lineRenderer.SetPositions(new Vector3[2] { ownPos, toPos });
     }
 
     private void IssueEvents(Interactable closestInteractable)

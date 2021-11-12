@@ -5,7 +5,7 @@ public abstract class Interactable : MonoBehaviour
 {
     public bool SnapToObject { get; protected set; } = true;
 
-    [SerializeField] private List<Interacter> currentlyInteracting = new List<Interacter>();
+    private List<Interacter> currentlyInteracting = new List<Interacter>();
 
     public abstract void Select();
 
