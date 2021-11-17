@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 8683602039922489663}
   - component: {fileID: 5994798561738827276}
   - component: {fileID: 3689714305140074729}
+  - component: {fileID: 4331071301417253539}
+  - component: {fileID: 5820792145414276492}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -141,3 +143,36 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4331071301417253539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fab36b9915dda40a1babf910437746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiMoveInput:
+    actionPath: /actions/default/in/MoveUIElement
+    needsReinit: 0
+  uiSelectInput:
+    actionPath: /actions/default/in/SelectUIElement
+    needsReinit: 0
+--- !u!114 &5820792145414276492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b271162edb2522f4a92540d6f34b7449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deltaLengthSquaredRequired: 0.04
+  timeUntilRepeat: 1
+  timeAfterRepeat: 0.7

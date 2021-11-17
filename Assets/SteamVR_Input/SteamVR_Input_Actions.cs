@@ -47,6 +47,10 @@ namespace Valve.VR
         
         private static SteamVR_Action_Vector2 p_default_Looking;
         
+        private static SteamVR_Action_Vector2 p_default_MoveUIElement;
+        
+        private static SteamVR_Action_Boolean p_default_SelectUIElement;
+        
         private static SteamVR_Action_Vibration p_default_Haptic;
         
         public static SteamVR_Action_Boolean default_InteractUI
@@ -169,6 +173,22 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Vector2 default_MoveUIElement
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_MoveUIElement.GetCopy<SteamVR_Action_Vector2>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean default_SelectUIElement
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_SelectUIElement.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         public static SteamVR_Action_Vibration default_Haptic
         {
             get
@@ -195,6 +215,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Interact,
                     SteamVR_Actions.default_Walking,
                     SteamVR_Actions.default_Looking,
+                    SteamVR_Actions.default_MoveUIElement,
+                    SteamVR_Actions.default_SelectUIElement,
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
@@ -211,7 +233,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_ChangeInteractable,
                     SteamVR_Actions.default_Interact,
                     SteamVR_Actions.default_Walking,
-                    SteamVR_Actions.default_Looking};
+                    SteamVR_Actions.default_Looking,
+                    SteamVR_Actions.default_MoveUIElement,
+                    SteamVR_Actions.default_SelectUIElement};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[] {
@@ -227,12 +251,14 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_ChangeInteractable,
-                    SteamVR_Actions.default_Interact};
+                    SteamVR_Actions.default_Interact,
+                    SteamVR_Actions.default_SelectUIElement};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
                     SteamVR_Actions.default_Squeeze};
             Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
                     SteamVR_Actions.default_Walking,
-                    SteamVR_Actions.default_Looking};
+                    SteamVR_Actions.default_Looking,
+                    SteamVR_Actions.default_MoveUIElement};
             Valve.VR.SteamVR_Input.actionsVector3 = new Valve.VR.SteamVR_Action_Vector3[0];
             Valve.VR.SteamVR_Input.actionsSkeleton = new Valve.VR.SteamVR_Action_Skeleton[] {
                     SteamVR_Actions.default_SkeletonLeftHand,
@@ -249,7 +275,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_ChangeInteractable,
                     SteamVR_Actions.default_Interact,
                     SteamVR_Actions.default_Walking,
-                    SteamVR_Actions.default_Looking};
+                    SteamVR_Actions.default_Looking,
+                    SteamVR_Actions.default_MoveUIElement,
+                    SteamVR_Actions.default_SelectUIElement};
         }
         
         private static void PreInitActions()
@@ -269,6 +297,8 @@ namespace Valve.VR
             SteamVR_Actions.p_default_Interact = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Interact")));
             SteamVR_Actions.p_default_Walking = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/default/in/Walking")));
             SteamVR_Actions.p_default_Looking = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/default/in/Looking")));
+            SteamVR_Actions.p_default_MoveUIElement = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/default/in/MoveUIElement")));
+            SteamVR_Actions.p_default_SelectUIElement = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SelectUIElement")));
             SteamVR_Actions.p_default_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/default/out/Haptic")));
         }
     }

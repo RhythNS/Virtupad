@@ -4,9 +4,11 @@ using UnityEngine.EventSystems;
 public class UIElement : MonoBehaviour
 {
     [System.Serializable]
+    [System.Flags]
     public enum EventInterception
     {
-        Passthrough, Recieve, RecieveAndPassthrough
+        Passthrough = 1 << 0,
+        Recieve = 1 << 1
     }
 
     public Vector2Int uiPos;
@@ -14,7 +16,7 @@ public class UIElement : MonoBehaviour
     private Fast2DArray<UIElement> children;
     private UIElement selected = null;
 
-    [SerializeField] private EventInterception eventInterception = EventInterception.Passthrough;
+    [SerializeField] [BitMask(typeof(EventInterception))] private EventInterception eventInterception = EventInterception.Passthrough;
 
     private void Awake()
     {
@@ -34,7 +36,7 @@ public class UIElement : MonoBehaviour
 
         if (children == null)
         {
-            children = new Fast2DArray<UIElement>(pos.x, pos.y);
+            children = new Fast2DArray<UIElement>(pos.x + 1, pos.y + 1);
             children[pos.x, pos.y] = element;
             return;
         }
@@ -117,25 +119,25 @@ public class UIElement : MonoBehaviour
             if (isHori)
             {
                 for (int y = 0; y < children.YSize; y++)
-                    InnerMoveSelf(in currentPos, currentPos.x, y, ref bestElement, ref bestPos);
+                    GetBetterElement(in currentPos, currentPos.x, y, ref bestElement, ref bestPos);
             }
             else
             {
                 for (int x = 0; x < children.XSize; x++)
-                    InnerMoveSelf(in currentPos, x, currentPos.y, ref bestElement, ref bestPos);
+                    GetBetterElement(in currentPos, x, currentPos.y, ref bestElement, ref bestPos);
             }
         }
 
         if (bestElement == null)
             return false;
 
-        selected.Deselect();
-        bestElement.Select();
+        selected.FireDeselectEvent();
+        bestElement.FireSelectEvent();
         selected = bestElement;
         return true;
     }
 
-    private void InnerMoveSelf(in Vector2Int currentPos, int x, int y, ref UIElement bestElement, ref float bestPos)
+    private void GetBetterElement(in Vector2Int currentPos, int x, int y, ref UIElement bestElement, ref float bestPos)
     {
         UIElement newElement = children[x, y];
         if (newElement == null)
@@ -149,46 +151,62 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    public void ChildSelect(UIElement element)
+    private void ChildSelect(UIElement element)
     {
-        selected = element;
+        if (selected == element)
+            return;
+        if (selected != null)
+            selected.FireDeselectEvent(false);
 
+        selected = element;
+        selected.FireSelectEvent(false);
+
+        SelectUpwards();
+    }
+
+    private void SelectUpwards()
+    {
         if (parent)
             parent.ChildSelect(this);
         else
+        {
+            FireSelectEvent(false);
             UIMoveManager.Instance.OnElementSelected(this);
-    }
-
-    public void Deselect()
-    {
-        OnEvent(ExecuteEvents.pointerExitHandler);
+        }
     }
 
     public void Select()
     {
-        OnEvent(ExecuteEvents.pointerEnterHandler);
+        SelectUpwards();
     }
 
-    public void OnEvent<T>(ExecuteEvents.EventFunction<T> eventFunction) where T : IEventSystemHandler
+    public void DeSelect()
     {
-        switch (eventInterception)
-        {
-            case EventInterception.Recieve:
-                UIEventThrower.GameobjectUIEvent(gameObject, eventFunction);
-                break;
+        FireDeselectEvent();
 
-            case EventInterception.Passthrough:
-                PassEvent(eventFunction);
-                break;
+        if (parent && parent.selected == this)
+            parent.selected = null;
+    }
 
-            case EventInterception.RecieveAndPassthrough:
-                if (PassEvent(eventFunction))
-                    UIEventThrower.GameobjectUIEvent(gameObject, eventFunction);
-                break;
+    public void FireDeselectEvent(bool shouldPassEvent = true)
+    {
+        OnEvent(ExecuteEvents.pointerExitHandler, shouldPassEvent);
+    }
 
-            default:
-                break;
-        }
+    public void FireSelectEvent(bool shouldPassEvent = true)
+    {
+        OnEvent(ExecuteEvents.pointerEnterHandler, shouldPassEvent);
+    }
+
+    public void OnEvent<T>(ExecuteEvents.EventFunction<T> eventFunction, bool shouldPassEvent = true) where T : IEventSystemHandler
+    {
+        bool passedEvent = true;
+
+        if (shouldPassEvent && eventInterception.HasFlag(EventInterception.Passthrough))
+            passedEvent = PassEvent(eventFunction);
+
+        if (passedEvent && eventInterception.HasFlag(EventInterception.Recieve))
+            UIEventThrower.GameobjectUIEvent(gameObject, eventFunction);
     }
 
     private bool PassEvent<T>(ExecuteEvents.EventFunction<T> eventFunction) where T : IEventSystemHandler

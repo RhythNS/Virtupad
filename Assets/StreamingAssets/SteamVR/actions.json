@@ -66,6 +66,15 @@
       "type": "vector2"
     },
     {
+      "name": "/actions/default/in/MoveUIElement",
+      "type": "vector2",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/default/in/SelectUIElement",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     }

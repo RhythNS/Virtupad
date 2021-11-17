@@ -5,28 +5,34 @@ using UnityEngine.EventSystems;
 using UnityEditor;
 #endif
 
+[RequireComponent(typeof(UIElement))]
 public class UIInteractable : Interactable
 {
     [SerializeField] private bool useAutoSize = true;
+    [SerializeField] private UIElement element;
 
     public virtual void Awake()
     {
         SnapToObject = false;
+        element = GetComponent<UIElement>();
     }
 
     protected override void OnBeginHover()
     {
-        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerEnterHandler);
+        element.Select();
+        // UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerEnterHandler);
     }
 
     protected override void OnLeaveHover()
     {
-        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerExitHandler);
+        element.DeSelect();
+        // UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerExitHandler);
     }
 
     public override void Select()
     {
-        UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerClickHandler);
+        element.OnEvent(ExecuteEvents.pointerClickHandler);
+        // UIEventThrower.GameobjectUIEvent(gameObject, ExecuteEvents.pointerClickHandler);
     }
 
     public void AutoSize()

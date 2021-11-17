@@ -23,6 +23,12 @@ MonoBehaviour:
   lookingInput:
     actionPath: /actions/default/in/Looking
     needsReinit: 0
+  uiMoveInput:
+    actionPath: /actions/default/in/MoveUIElement
+    needsReinit: 0
+  uiSelectInput:
+    actionPath: /actions/default/in/SelectUIElement
+    needsReinit: 0
   playerHeight: 1.9
 --- !u!1001 &1981437040623568582
 PrefabInstance:
