@@ -173,7 +173,7 @@ public class UISwipeMover : UIMover
             return null;
 
         if (Mathf.Abs(difVec.x) > Mathf.Abs(difVec.y))
-            return difVec.x > 0 ? Direction.Left : Direction.Right;
+            return difVec.x > 0 ? Direction.Right : Direction.Left;
         else
             return difVec.y > 0 ? Direction.Up : Direction.Down;
     }

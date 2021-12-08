@@ -20,6 +20,8 @@ public class Interacter : MonoBehaviour
         lineRenderer.enabled = false;
         lineRenderer.useWorldSpace = true;
 
+        enabled = false;
+
         interactButton.AddOnChangeListener(ActiveChanged, listenForSource);
     }
 

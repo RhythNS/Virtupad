@@ -7,6 +7,7 @@ public class UIMoveManager : MonoBehaviour
 {
     public static UIMoveManager Instance { get; private set; }
 
+    public UIElement LowestPrevSelected { get; private set; }
     public UIElement SelectedElement { get; private set; }
     public UIMover UIMover { get; private set; }
 
@@ -51,8 +52,10 @@ public class UIMoveManager : MonoBehaviour
         UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
     }
 
-    public void OnElementSelected(UIElement element)
+    public void OnElementSelected(UIElement element, UIElement mostLowestSelected)
     {
+        LowestPrevSelected = mostLowestSelected;
+
         if (element == SelectedElement)
             return;
 
@@ -67,7 +70,13 @@ public class UIMoveManager : MonoBehaviour
         Debug.Log("UI wants to move " + direction);
 
         if (SelectedElement == null)
-            return false;
+        {
+            if (LowestPrevSelected == null)
+                return false;
+
+            LowestPrevSelected.Select();
+            return true;
+        }
 
         return SelectedElement.Move(direction);
     }

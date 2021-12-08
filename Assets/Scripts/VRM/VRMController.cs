@@ -10,7 +10,8 @@ public class VRMController : MonoBehaviour
     public VRMFirstPerson VRMFirstPerson { get; private set; }
     public FullRigCreator FullRigCreator { get; private set; }
     public VRMLookTarget VRMLookTarget { get; private set; }
-    public VRMMouthMover VRMMouthMover { get; private set; }
+    //public VRMMouthMover VRMMouthMover { get; private set; }
+    public VRMSalsa VRMSalsa { get; private set; }
     public float Height { get; private set; }
 
     private void Awake()
@@ -55,7 +56,8 @@ public class VRMController : MonoBehaviour
 
         VRAnimatorController = gameObject.AddComponent<VRAnimatorController>();
         FullRigCreator = gameObject.AddComponent<FullRigCreator>();
-        VRMMouthMover = gameObject.AddComponent<VRMMouthMover>();
+        //VRMMouthMover = gameObject.AddComponent<VRMMouthMover>();
+        VRMSalsa = gameObject.AddComponent<VRMSalsa>();
         VRAnimatorController.enabled = false;
     }
 

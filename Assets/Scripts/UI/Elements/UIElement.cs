@@ -14,9 +14,9 @@ public class UIElement : MonoBehaviour
     public Vector2Int uiPos;
     public UIElement parent;
     private Fast2DArray<UIElement> children;
-    private UIElement selected = null;
+    [SerializeField] private UIElement selected = null;
 
-    [SerializeField] [BitMask(typeof(EventInterception))] private EventInterception eventInterception = EventInterception.Passthrough;
+    [SerializeField, BitMask(typeof(EventInterception))] private EventInterception eventInterception = EventInterception.Recieve | EventInterception.Passthrough;
 
     private void Awake()
     {
@@ -151,41 +151,48 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    private void ChildSelect(UIElement element)
+    private void ChildSelection(UIElement newSelected, UIElement invoker, bool select)
     {
-        if (selected == element)
-            return;
-        if (selected != null)
-            selected.FireDeselectEvent(false);
+        if (selected != newSelected)
+        {
+            if (selected != null)
+                selected.FireDeselectEvent();
 
-        selected = element;
-        selected.FireSelectEvent(false);
+            selected = newSelected;
+            if (selected)
+                selected.FireSelectionEvent(select, false);
+        }
 
-        SelectUpwards();
+        SelectionUpwards(invoker, select);
     }
 
-    private void SelectUpwards()
+    private void SelectionUpwards(UIElement invoker, bool select)
     {
         if (parent)
-            parent.ChildSelect(this);
+            parent.ChildSelection(select ? this : null, invoker, select);
         else
         {
             FireSelectEvent(false);
-            UIMoveManager.Instance.OnElementSelected(this);
+            UIMoveManager.Instance.OnElementSelected(select ? this : null, invoker);
         }
     }
 
     public void Select()
     {
-        SelectUpwards();
+        SelectionUpwards(this, true);
     }
 
     public void DeSelect()
     {
-        FireDeselectEvent();
+        SelectionUpwards(this, false);
+    }
 
-        if (parent && parent.selected == this)
-            parent.selected = null;
+    public void FireSelectionEvent(bool select, bool shouldPassEvent = true)
+    {
+        if (select)
+            OnEvent(ExecuteEvents.pointerEnterHandler, shouldPassEvent);
+        else
+            OnEvent(ExecuteEvents.pointerExitHandler, shouldPassEvent);
     }
 
     public void FireDeselectEvent(bool shouldPassEvent = true)
