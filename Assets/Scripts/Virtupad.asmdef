@@ -12,7 +12,8 @@
         "Unity.Animation.Rigging",
         "Unity.TextMeshPro",
         "Unity.XR.OpenVR",
-        "SteamVR_Actions"
+        "SteamVR_Actions",
+        "SalsaAddons"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
