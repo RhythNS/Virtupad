@@ -169,6 +169,9 @@
             },
             {
                "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/mainmenu"
+                  },
                   "position" : {
                      "output" : "/actions/default/in/walking"
                   }
@@ -178,6 +181,9 @@
             },
             {
                "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/mainmenu"
+                  },
                   "position" : {
                      "output" : "/actions/default/in/looking"
                   }
@@ -216,7 +222,7 @@
    "category" : "steamvr_input",
    "controller_type" : "knuckles",
    "description" : "",
-   "name" : "Konfiguration „[Testing] Virtupad“ für Index Controller gespeichert",
+   "name" : "Konfiguration „Virtupad [Testing]“ für Index Controller gespeichert",
    "options" : {},
    "simulated_actions" : []
 }

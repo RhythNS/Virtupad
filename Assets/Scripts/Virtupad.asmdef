@@ -13,7 +13,8 @@
         "Unity.TextMeshPro",
         "Unity.XR.OpenVR",
         "SteamVR_Actions",
-        "SalsaAddons"
+        "SalsaAddons",
+        "SimpleFileBrowser.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

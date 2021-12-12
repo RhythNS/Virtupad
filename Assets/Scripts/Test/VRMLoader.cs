@@ -1,10 +1,11 @@
 using System.Collections;
 using System.IO;
+using System.Threading.Tasks;
 using UniGLTF;
 using UnityEngine;
 using VRM;
 
-public class VRMTestLoader : MonoBehaviour
+public class VRMLoader : MonoBehaviour
 {
     [SerializeField] private string[] paths;
     [SerializeField] private int selectedPath;
@@ -14,13 +15,13 @@ public class VRMTestLoader : MonoBehaviour
     [SerializeField] private RuntimeAnimatorController animatorController;
     [SerializeField] private VRMMetaObject meta = default;
 
-    public static VRMTestLoader Instance { get; private set; }
+    public static VRMLoader Instance { get; private set; }
 
     private void Awake()
     {
         if (Instance)
         {
-            Debug.LogWarning("VRMTestLoader already in scene. Deleting myself!");
+            Debug.LogWarning("VRMLoader already in scene. Deleting myself!");
             Destroy(this);
             return;
         }
@@ -44,11 +45,11 @@ public class VRMTestLoader : MonoBehaviour
 
     private IEnumerator InnerSpawnModel(string path, bool isMain, Vector3 position, Quaternion rotation)
     {
-        yield return new WaitForSeconds(0.2f);
-        LoadModel(path, isMain, position, rotation);
+        Task task = LoadModel(path, isMain, position, rotation);
+        yield return new WaitUntil(() => task.IsCompleted);
     }
 
-    private async void LoadModel(string path, bool isMain, Vector3 position, Quaternion rotation)
+    private async Task LoadModel(string path, bool isMain, Vector3 position, Quaternion rotation)
     {
         Debug.LogFormat("{0}", path);
         var ext = Path.GetExtension(path).ToLower();

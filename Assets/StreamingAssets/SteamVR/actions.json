@@ -75,6 +75,10 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/default/in/mainMenu",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     }

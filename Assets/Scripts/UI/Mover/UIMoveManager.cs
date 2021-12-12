@@ -9,10 +9,13 @@ public class UIMoveManager : MonoBehaviour
 
     public UIElement LowestPrevSelected { get; private set; }
     public UIElement SelectedElement { get; private set; }
-    public UIMover UIMover { get; private set; }
+
+    public UIMover UIMover { get => uIMover; private set => uIMover = value; }
+    [SerializeField] private UIMover uIMover;
 
     [SerializeField] private SteamVR_Action_Vector2 uiMoveInput;
     [SerializeField] private SteamVR_Action_Boolean uiSelectInput;
+    [SerializeField] private SteamVR_Action_Boolean uiMainMenuInput;
 
     private void Awake()
     {
@@ -27,11 +30,11 @@ public class UIMoveManager : MonoBehaviour
 
     private void Start()
     {
-        UIMover = GetComponent<UIMover>();
-        if (UIMover == null)
+        if (UIMover == null && TryGetComponent(out uIMover) == false)
             return;
 
         UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
+        uiMainMenuInput.AddOnStateDownListener(OnMainMenuDown, SteamVR_Input_Sources.Any);
     }
 
     public void AddMover(Type type)
@@ -50,6 +53,17 @@ public class UIMoveManager : MonoBehaviour
 
         UIMover = (UIMover)gameObject.AddComponent(type);
         UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+            OnMainMenuDown(null, SteamVR_Input_Sources.Waist);
+    }
+
+    private void OnMainMenuDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        UIPanelManager.Instance.OnMainMenuToggle();
     }
 
     public void OnElementSelected(UIElement element, UIElement mostLowestSelected)
@@ -93,5 +107,7 @@ public class UIMoveManager : MonoBehaviour
             Instance = null;
         if (UIMover)
             UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
+
+        uiMainMenuInput.RemoveAllListeners(SteamVR_Input_Sources.Any);
     }
 }

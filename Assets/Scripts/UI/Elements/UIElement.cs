@@ -13,13 +13,16 @@ public class UIElement : MonoBehaviour
 
     public Vector2Int uiPos;
     public UIElement parent;
-    private Fast2DArray<UIElement> children;
-    [SerializeField] private UIElement selected = null;
+    protected Fast2DArray<UIElement> children;
+    protected UIControllerIntercept controllerIntercept;
+    [SerializeField] protected UIElement selected = null;
 
-    [SerializeField, BitMask(typeof(EventInterception))] private EventInterception eventInterception = EventInterception.Recieve | EventInterception.Passthrough;
+    [SerializeField, BitMask(typeof(EventInterception))] protected EventInterception eventInterception = EventInterception.Recieve | EventInterception.Passthrough;
 
     private void Awake()
     {
+        controllerIntercept = GetComponent<UIControllerIntercept>();
+
         if (parent)
             parent.AddChild(this);
     }
@@ -56,6 +59,17 @@ public class UIElement : MonoBehaviour
         }
 
         children[pos.x, pos.y] = element;
+    }
+
+    public virtual bool InterceptAction(UIControllerAction action)
+    {
+        if (controllerIntercept != null && controllerIntercept.Intercept(action) == true)
+            return true;
+
+        if (selected != null)
+            return selected.InterceptAction(action);
+
+        return false;
     }
 
     public bool Move(Direction direction)

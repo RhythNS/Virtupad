@@ -6,6 +6,12 @@ public class CurveDict : MonoBehaviour
 
     public AnimationCurve SelectedPosCurve => selectedPosCurve;
     [SerializeField] private AnimationCurve selectedPosCurve;
+    
+    public AnimationCurve UIInAnimation => uiIntAnimation;
+    [SerializeField] private AnimationCurve uiIntAnimation;
+    
+    public AnimationCurve UIOutAnimation => uiOutAnimation;
+    [SerializeField] private AnimationCurve uiOutAnimation;
 
     private void Awake()
     {

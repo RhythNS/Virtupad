@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &362507343157221516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3181915062139243127}
+  - component: {fileID: 4823271704897985510}
+  m_Layer: 0
+  m_Name: UISwipeMover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3181915062139243127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362507343157221516}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8683602039922489661}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4823271704897985510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362507343157221516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b271162edb2522f4a92540d6f34b7449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deltaLengthSquaredRequired: 0.04
+  timeUntilRepeat: 1
+  timeAfterRepeat: 0.7
 --- !u!1 &8683602039922489649
 GameObject:
   m_ObjectHideFlags: 0
@@ -15,7 +61,7 @@ GameObject:
   - component: {fileID: 5994798561738827276}
   - component: {fileID: 3689714305140074729}
   - component: {fileID: 4331071301417253539}
-  - component: {fileID: 5820792145414276492}
+  - component: {fileID: 1374518952343709538}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -33,7 +79,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 10.411536, y: 2.1036062, z: 1.0080477}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3181915062139243127}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -143,6 +190,72 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  uiIntAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.01
+      inSlope: 0.07662235
+      outSlope: 0.07662235
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.10344351
+    - serializedVersion: 3
+      time: 0.5926301
+      value: 0.39236566
+      inSlope: 1.8391161
+      outSlope: 1.8391161
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.9309414
+      value: 1.0159649
+      inSlope: 2.133487
+      outSlope: 2.6743798
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.074314356
+      outWeight: 0.3076546
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 4.357964
+      outSlope: 4.357964
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1684387
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  uiOutAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &4331071301417253539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,13 +268,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6fab36b9915dda40a1babf910437746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uIMover: {fileID: 4823271704897985510}
   uiMoveInput:
     actionPath: /actions/default/in/MoveUIElement
     needsReinit: 0
   uiSelectInput:
     actionPath: /actions/default/in/SelectUIElement
     needsReinit: 0
---- !u!114 &5820792145414276492
+  uiMainMenuInput:
+    actionPath: /actions/default/in/mainMenu
+    needsReinit: 0
+--- !u!114 &1374518952343709538
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,9 +287,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8683602039922489649}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b271162edb2522f4a92540d6f34b7449, type: 3}
+  m_Script: {fileID: 11500000, guid: 13a42365cf74d224fa899978ba04ece1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deltaLengthSquaredRequired: 0.04
-  timeUntilRepeat: 1
-  timeAfterRepeat: 0.7
+  menuStack: []
+  root: {fileID: 0}

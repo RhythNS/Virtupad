@@ -113,6 +113,28 @@ public static class EnumeratorUtil
         } while (timer < seconds);
     }
 
+    public static IEnumerator ScaleInSecondsCurve(Transform transform, Vector3 scale, AnimationCurve curve, float seconds)
+    {
+        Vector3 oldScale = transform.localScale;
+        Vector3 newScale = scale;
+
+        float timer = 0;
+        float perc = 0.0f;
+        bool timerFinished = false;
+        while (timerFinished == false)
+        {
+            yield return null;
+            timer += Time.deltaTime;
+            perc = timer / seconds;
+            if (perc > 1.0f)
+            {
+                perc = 1.0f;
+                timerFinished = true;
+            }
+            transform.localScale = Vector3.LerpUnclamped(oldScale, newScale, curve.Evaluate(perc / seconds));
+        }
+    }
+
     /// <summary>
     /// Fades a canvas group to an alpha value specified by an animation curve in given seconds.
     /// </summary>

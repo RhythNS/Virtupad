@@ -30,7 +30,7 @@ public class SpawnVRMTest : MonoBehaviour
     {
         for (int i = 0; i < collections.Length; i++)
         {
-            VRMTestLoader.Instance.SpawnModel(collections[i].index, collections[i].position, collections[i].rotation);
+            VRMLoader.Instance.SpawnModel(collections[i].index, collections[i].position, collections[i].rotation);
             yield return new WaitForSeconds(timeBetween);
         }
     }
