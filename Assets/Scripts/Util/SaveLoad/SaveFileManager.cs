@@ -5,10 +5,21 @@
 /// </summary>
 public class SaveFileManager : MonoBehaviour
 {
+    public static SaveFileManager Instance { get; private set; }
+
+
     [SerializeField] public SaveGame saveGame;
 
     private void Awake()
     {
+        if (Instance)
+        {
+            Debug.LogWarning("SaveFileManager already in scene. Deleting myself!");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+
         saveGame = Saver.Load();
     }
 
@@ -19,4 +30,11 @@ public class SaveFileManager : MonoBehaviour
     {
         Saver.Save(saveGame);
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
 }

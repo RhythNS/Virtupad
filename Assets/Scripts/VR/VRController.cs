@@ -65,4 +65,10 @@ public class VRController : MonoBehaviour
         if (Instance == this)
             Instance = null;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward);
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -15,11 +16,18 @@ public static class Saver
     {
         string toSaveTo = Application.persistentDataPath + "/save.game";
 
-        using (FileStream fileStream = File.Exists(toSaveTo) == true ? File.OpenWrite(toSaveTo) : File.Create(toSaveTo))
+        try
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fileStream, saveGame);
-            fileStream.Close();
+            using (FileStream fileStream = File.Exists(toSaveTo) == true ? File.OpenWrite(toSaveTo) : File.Create(toSaveTo))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fileStream, saveGame);
+                fileStream.Close();
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning(string.Join(Environment.NewLine, e.Message, e.StackTrace));
         }
     }
 
@@ -30,15 +38,24 @@ public static class Saver
     {
         string toSaveTo = Application.persistentDataPath + "/save.game";
 
-        if (File.Exists(toSaveTo) == false)
-            return null;
-
-        using (FileStream fileStream = File.OpenRead(toSaveTo))
+        try
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            SaveGame toRet = formatter.Deserialize(fileStream) as SaveGame;
-            fileStream.Close();
-            return toRet;
+            if (File.Exists(toSaveTo) == false)
+                return new SaveGame();
+
+            using (FileStream fileStream = File.OpenRead(toSaveTo))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                SaveGame toRet = formatter.Deserialize(fileStream) as SaveGame;
+                fileStream.Close();
+                return toRet;
+
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning(string.Join(Environment.NewLine, e.Message, e.StackTrace));
+            return new SaveGame();
         }
     }
 }

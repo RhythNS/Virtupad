@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -27,7 +28,7 @@ public class UIElement : MonoBehaviour
             parent.AddChild(this);
     }
 
-    private void AddChild(UIElement element)
+    protected virtual void AddChild(UIElement element)
     {
         if (element.uiPos.x < 0 || element.uiPos.y < 0)
         {
@@ -72,7 +73,7 @@ public class UIElement : MonoBehaviour
         return false;
     }
 
-    public bool Move(Direction direction)
+    public virtual bool Move(Direction direction)
     {
         if (children != null)
         {
@@ -191,17 +192,17 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    public void Select()
+    public virtual void Select()
     {
         SelectionUpwards(this, true);
     }
 
-    public void DeSelect()
+    public virtual void DeSelect()
     {
         SelectionUpwards(this, false);
     }
 
-    public void FireSelectionEvent(bool select, bool shouldPassEvent = true)
+    public virtual void FireSelectionEvent(bool select, bool shouldPassEvent = true)
     {
         if (select)
             OnEvent(ExecuteEvents.pointerEnterHandler, shouldPassEvent);
@@ -209,17 +210,17 @@ public class UIElement : MonoBehaviour
             OnEvent(ExecuteEvents.pointerExitHandler, shouldPassEvent);
     }
 
-    public void FireDeselectEvent(bool shouldPassEvent = true)
+    public virtual void FireDeselectEvent(bool shouldPassEvent = true)
     {
         OnEvent(ExecuteEvents.pointerExitHandler, shouldPassEvent);
     }
 
-    public void FireSelectEvent(bool shouldPassEvent = true)
+    public virtual void FireSelectEvent(bool shouldPassEvent = true)
     {
         OnEvent(ExecuteEvents.pointerEnterHandler, shouldPassEvent);
     }
 
-    public void OnEvent<T>(ExecuteEvents.EventFunction<T> eventFunction, bool shouldPassEvent = true) where T : IEventSystemHandler
+    public virtual void OnEvent<T>(ExecuteEvents.EventFunction<T> eventFunction, bool shouldPassEvent = true) where T : IEventSystemHandler
     {
         bool passedEvent = true;
 
