@@ -5,16 +5,24 @@ using UnityEngine.EventSystems;
 using UnityEditor;
 #endif
 
-[RequireComponent(typeof(UIElement))]
 public class UIInteractable : Interactable
 {
     [SerializeField] private bool useAutoSize = true;
-    [SerializeField] private UIElement element;
+    [SerializeField] protected UIPrimitiveElement element;
 
     public virtual void Awake()
     {
         SnapToObject = false;
-        element = GetComponent<UIElement>();
+
+        if (element == null)
+            element = GetComponent<UIPrimitiveElement>();
+
+        element.OnInitEvent += OnInit;
+    }
+
+    private void OnInit()
+    {
+        AutoSize();
     }
 
     protected override void OnBeginHover()
@@ -50,10 +58,16 @@ public class UIInteractable : Interactable
         Rect rect = trans.rect;
         collider.size = rect.size;
     }
+
+    private void OnDestroy()
+    {
+        if (element)
+            element.OnInitEvent -= OnInit;
+    }
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(UIInteractable))]
+[CustomEditor(typeof(UIInteractable), true)]
 public class VRUIColliderCreatorEditor : Editor
 {
     public override void OnInspectorGUI()

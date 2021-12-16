@@ -19,12 +19,12 @@ public abstract class Interactable : MonoBehaviour
 
     protected virtual void OnBeginHover() { }
 
-    public void StayHover(Interacter interacter)
+    public void StayHover(Interacter interacter, Vector3 impactPoint)
     {
-        OnStayHover();
+        OnStayHover(impactPoint);
     }
 
-    protected virtual void OnStayHover() { }
+    protected virtual void OnStayHover(Vector3 impactPoint) { }
 
     public void LeaveHover(Interacter interacter)
     {

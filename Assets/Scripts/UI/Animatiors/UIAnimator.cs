@@ -10,8 +10,8 @@ public class UIAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     [SerializeField] protected Vector3 localEndPoint;
-    [SerializeField] protected float percentagePerSecond = 100.0f;
-    [SerializeField] private Transform toAnimate;
+    [SerializeField] protected float percentagePerSecond = 1.0f;
+    [SerializeField] private UIPrimitiveElement toAnimate;
 
     protected Vector3 startPoint;
     protected Vector3 endPoint;
@@ -22,25 +22,40 @@ public class UIAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     protected ExtendedCoroutine moveCoroutine;
 
+    private bool wasInited = false;
+
     protected virtual AnimationCurve GetCurve() => CurveDict.Instance.SelectedPosCurve;
 
     protected virtual void Awake()
     {
         if (!toAnimate)
-            toAnimate = transform;
+            toAnimate = transform.GetComponent<UIPrimitiveElement>();
 
-        startPoint = toAnimate.localPosition;
-        endPoint = toAnimate.localPosition + localEndPoint;
+        toAnimate.OnInitEvent += OnInit;
+    }
+
+    private void OnInit()
+    {
+        startPoint = toAnimate.transform.localPosition;
+        endPoint = startPoint + localEndPoint;
+
+        wasInited = true;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (wasInited == false)
+            return;
+
         currentState = State.MovingClicked;
         StartMoveCoroutine();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (wasInited == false)
+            return;
+
         currentState = State.MovingIdle;
         StartMoveCoroutine();
     }
@@ -80,14 +95,20 @@ public class UIAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                     break;
             }
 
-            toAnimate.localPosition = Vector3.Lerp(startPoint, endPoint, GetCurve().Evaluate(atPercentage));
+            toAnimate.transform.localPosition = Vector3.Lerp(startPoint, endPoint, GetCurve().Evaluate(atPercentage));
             yield return null;
         }
     }
 
+    private void OnDestroy()
+    {
+        if (toAnimate)
+            toAnimate.OnInitEvent -= OnInit;
+    }
+
     protected void OnDrawGizmos()
     {
-        Transform toShow = toAnimate ? toAnimate : transform;
+        Transform toShow = toAnimate ? toAnimate.transform : transform;
         Gizmos.color = Color.red;
         Vector3 endPoint = toShow.TransformPoint(localEndPoint);
         Gizmos.DrawLine(toShow.position, endPoint);

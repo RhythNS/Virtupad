@@ -2,15 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIElementSwitcher : UIElement
+public class UIElementSwitcher : UIPrimitiveElement
 {
     public int Length => switchingChildren.Count;
-    [SerializeField] private List<UIElement> switchingChildren = new List<UIElement>();
+    [SerializeField] private List<UIPrimitiveElement> switchingChildren = new List<UIPrimitiveElement>();
 
     public int AtChild => atChild;
     [SerializeField] private int atChild = 0;
-
-    [SerializeField] private int defaultChild = 0;
 
     private void Start()
     {
@@ -30,11 +28,19 @@ public class UIElementSwitcher : UIElement
 
         switchingChildren[atChild].gameObject.SetActive(false);
         switchingChildren[atChild = newIndex].gameObject.SetActive(true);
+
+        // maybe play animation
+        switchingChildren[atChild].OnInit();
     }
 
-    private int NormalizeChildValue(ref int value) => value = Mathf.Min(switchingChildren.Count - 1, Mathf.Max(0, defaultChild));
+    public override void OnInit()
+    {
+        switchingChildren[atChild].OnInit();
+    }
 
-    protected override void AddChild(UIElement element)
+    private int NormalizeChildValue(ref int value) => value = Mathf.Min(switchingChildren.Count - 1, Mathf.Max(0, value));
+
+    protected override void AddChild(UIPrimitiveElement element)
     {
         base.AddChild(element);
 

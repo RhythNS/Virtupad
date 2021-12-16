@@ -103,6 +103,9 @@ GameObject:
   - component: {fileID: 6571161354833234130}
   - component: {fileID: 6571161354833234128}
   - component: {fileID: 6571161354833234159}
+  - component: {fileID: 8463594553156283903}
+  - component: {fileID: 6167914955329522103}
+  - component: {fileID: 1760377302842875421}
   m_Layer: 5
   m_Name: UILoadVRMElement
   m_TagString: Untagged
@@ -151,8 +154,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809984a8e6c8f3742aa2d4d9e110cf3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiPos: {x: 0, y: 0}
+  parent: {fileID: 0}
+  selected: {fileID: 0}
+  eventInterception: 3
   previewImage: {fileID: 6571161354340466470}
   nameText: {fileID: 6571161355394124964}
+  vrmPrefabOverride: {fileID: 0}
 --- !u!114 &6571161354833234128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +247,49 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!65 &8463594553156283903
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6571161354833234157}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 203.4882, y: 155.96509, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6167914955329522103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6571161354833234157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b686c29ff9670469daad15be388aeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useAutoSize: 1
+  element: {fileID: 6571161354833234130}
+--- !u!114 &1760377302842875421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6571161354833234157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9020641b70d419145bb74de659f322f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localEndPoint: {x: 0, y: 0, z: 0.03}
+  percentagePerSecond: 1
+  toAnimate: {fileID: 6571161354833234130}
+  atPercentage: 0
 --- !u!1 &6571161355258184950
 GameObject:
   m_ObjectHideFlags: 0

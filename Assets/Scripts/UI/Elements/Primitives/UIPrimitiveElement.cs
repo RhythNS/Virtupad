@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIElement : MonoBehaviour
+public class UIPrimitiveElement : MonoBehaviour
 {
     [System.Serializable]
     [System.Flags]
@@ -13,10 +13,12 @@ public class UIElement : MonoBehaviour
     }
 
     public Vector2Int uiPos;
-    public UIElement parent;
-    protected Fast2DArray<UIElement> children;
+    public UIPrimitiveElement parent;
+    public event VoidEvent OnInitEvent;
+
+    protected Fast2DArray<UIPrimitiveElement> children;
     protected UIControllerIntercept controllerIntercept;
-    [SerializeField] protected UIElement selected = null;
+    [SerializeField] protected UIPrimitiveElement selected = null;
 
     [SerializeField, BitMask(typeof(EventInterception))] protected EventInterception eventInterception = EventInterception.Recieve | EventInterception.Passthrough;
 
@@ -28,7 +30,24 @@ public class UIElement : MonoBehaviour
             parent.AddChild(this);
     }
 
-    protected virtual void AddChild(UIElement element)
+    public virtual void OnInit()
+    {
+        OnInitEvent?.Invoke();
+
+        if (children == null)
+            return;
+
+        for (int x = 0; x < children.XSize; x++)
+        {
+            for (int y = 0; y < children.YSize; y++)
+            {
+                if (children[x, y] != null)
+                    children[x, y].OnInit();
+            }
+        }
+    }
+
+    protected virtual void AddChild(UIPrimitiveElement element)
     {
         if (element.uiPos.x < 0 || element.uiPos.y < 0)
         {
@@ -40,7 +59,7 @@ public class UIElement : MonoBehaviour
 
         if (children == null)
         {
-            children = new Fast2DArray<UIElement>(pos.x + 1, pos.y + 1);
+            children = new Fast2DArray<UIPrimitiveElement>(pos.x + 1, pos.y + 1);
             children[pos.x, pos.y] = element;
             return;
         }
@@ -122,7 +141,7 @@ public class UIElement : MonoBehaviour
         }
 
         Vector2Int currentPos = selected.uiPos;
-        UIElement bestElement = null;
+        UIPrimitiveElement bestElement = null;
         while (bestElement == null)
         {
             currentPos += coordDirection;
@@ -152,9 +171,9 @@ public class UIElement : MonoBehaviour
         return true;
     }
 
-    private void GetBetterElement(in Vector2Int currentPos, int x, int y, ref UIElement bestElement, ref float bestPos)
+    private void GetBetterElement(in Vector2Int currentPos, int x, int y, ref UIPrimitiveElement bestElement, ref float bestPos)
     {
-        UIElement newElement = children[x, y];
+        UIPrimitiveElement newElement = children[x, y];
         if (newElement == null)
             return;
 
@@ -166,7 +185,7 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    private void ChildSelection(UIElement newSelected, UIElement invoker, bool select)
+    private void ChildSelection(UIPrimitiveElement newSelected, UIPrimitiveElement invoker, bool select)
     {
         if (selected != newSelected)
         {
@@ -181,7 +200,7 @@ public class UIElement : MonoBehaviour
         SelectionUpwards(invoker, select);
     }
 
-    private void SelectionUpwards(UIElement invoker, bool select)
+    private void SelectionUpwards(UIPrimitiveElement invoker, bool select)
     {
         if (parent)
             parent.ChildSelection(select ? this : null, invoker, select);

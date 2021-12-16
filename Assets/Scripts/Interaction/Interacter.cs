@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Valve.VR;
 
 public class Interacter : MonoBehaviour
@@ -56,37 +57,38 @@ public class Interacter : MonoBehaviour
 
     private void Update()
     {
-        Interactable closestInteractable = GetClosestInteractable(out Vector3 impactPoint);
+        Interactable closestInteractable = GetClosest<Interactable>(out Vector3 impactPoint);
+
         UpdateLineRenderer(closestInteractable, impactPoint);
-        IssueEvents(closestInteractable);
+        IssueEvents(closestInteractable, impactPoint);
 
         lastSelectedInteractable = closestInteractable;
     }
 
-    public Interactable GetClosestInteractable(out Vector3 impactPoint)
+    public T GetClosest<T>(out Vector3 impactPoint)
     {
         RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, maxRange, ~0);
 
-        Interactable closestInteractable = null;
+        T closest = default;
         float closestLength = float.MaxValue;
         Vector3 ownPos = transform.position;
         impactPoint = Vector3.zero;
         for (int i = 0; i < raycastHits.Length; i++)
         {
-            if (raycastHits[i].collider.TryGetComponent(out Interactable interactable) == false)
+            if (raycastHits[i].collider.TryGetComponent(out T interactable) == false)
                 continue;
 
             float lengthAway = (ownPos - raycastHits[i].point).sqrMagnitude;
 
-            if (closestInteractable != null && lengthAway > closestLength)
+            if (closest != null && lengthAway > closestLength)
                 continue;
 
-            closestInteractable = interactable;
+            closest = interactable;
             closestLength = lengthAway;
             impactPoint = raycastHits[i].point;
         }
 
-        return closestInteractable;
+        return closest;
     }
 
     private void UpdateLineRenderer(Interactable closestInteractable, Vector3 impactPoint)
@@ -104,14 +106,14 @@ public class Interacter : MonoBehaviour
         lineRenderer.SetPositions(new Vector3[2] { ownPos, toPos });
     }
 
-    private void IssueEvents(Interactable closestInteractable)
+    private void IssueEvents(Interactable closestInteractable, Vector3 impactPoint)
     {
         // is it the same since last frame?
         if (lastSelectedInteractable == closestInteractable)
         {
             // have we selected anything?
             if (closestInteractable)
-                closestInteractable.StayHover(this);
+                closestInteractable.StayHover(this, impactPoint);
             return;
         }
 

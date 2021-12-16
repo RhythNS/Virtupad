@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using VRM;
 using static LastLoadedVRMs;
 
-public class UILoadVRMElement : MonoBehaviour
+public class UILoadVRMElement : UIPrimitiveElement
 {
     [SerializeField] private Image previewImage;
     [SerializeField] private TMP_Text nameText;

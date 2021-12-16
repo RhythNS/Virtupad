@@ -1,6 +1,6 @@
 {
     "name": "Virtupad",
-    "rootNamespace": "",
+    "rootNamespace": "Virtupad",
     "references": [
         "uDD-Scripts",
         "SteamVR",

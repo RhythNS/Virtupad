@@ -7,8 +7,8 @@ public class UIMoveManager : MonoBehaviour
 {
     public static UIMoveManager Instance { get; private set; }
 
-    public UIElement LowestPrevSelected { get; private set; }
-    public UIElement SelectedElement { get; private set; }
+    public UIPrimitiveElement LowestPrevSelected { get; private set; }
+    public UIPrimitiveElement SelectedElement { get; private set; }
 
     public UIMover UIMover { get => uIMover; private set => uIMover = value; }
     [SerializeField] private UIMover uIMover;
@@ -66,7 +66,7 @@ public class UIMoveManager : MonoBehaviour
         UIPanelManager.Instance.OnMainMenuToggle();
     }
 
-    public void OnElementSelected(UIElement element, UIElement mostLowestSelected)
+    public void OnElementSelected(UIPrimitiveElement element, UIPrimitiveElement mostLowestSelected)
     {
         LowestPrevSelected = mostLowestSelected;
 

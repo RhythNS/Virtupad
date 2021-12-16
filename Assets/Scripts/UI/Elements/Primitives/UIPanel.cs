@@ -1,4 +1,4 @@
-public abstract class UIPanel : UIElement, UIControllerIntercept
+public abstract class UIPanel : UIPrimitiveElement, UIControllerIntercept
 {
     public virtual void CloseRequest()
     {

@@ -60,8 +60,13 @@ public class UIRoot : UIPanel
         hideOrShowingCoroutine = new ExtendedCoroutine(this,
             EnumeratorUtil.ScaleInSecondsCurve
                 (transform, normalScale, CurveDict.Instance.UIInAnimation, animationTime),
-            startNow: true
+            OnAnimationFinished, true
             );
+    }
+
+    private void OnAnimationFinished()
+    {
+        OnInit();
     }
 
     private void OnHidden()

@@ -23,6 +23,8 @@ public class UIVRMSelector : UIPanel
     [SerializeField] private UILoadVRMElement prefabElement;
     [SerializeField] private GameObject noCustomModelsFound;
 
+    [SerializeField] private FileBrowser fileBrowser;
+
     private int atPage = 0;
 
     private void Awake()
@@ -34,6 +36,8 @@ public class UIVRMSelector : UIPanel
             return;
         }
         Instance = this;
+
+        FileBrowser.OverideInstance(fileBrowser);
     }
 
     private void OnEnable()
@@ -118,10 +122,9 @@ public class UIVRMSelector : UIPanel
 
     public void ShowFileDialog()
     {
+        (parent as UIElementSwitcher).SwitchChild((int)MidPanelSwitcherIndexes.FileBrowser);
         FileBrowser.SetFilters(true, new FileBrowser.Filter("VRM model files", ".vrm"));
         FileBrowser.ShowLoadDialog(OnFileSuccess, OnFileCancel, FileBrowser.PickMode.Files);
-        (parent as UIElementSwitcher).SwitchChild((int)MidPanelSwitcherIndexes.FileBrowser);
-        gameObject.SetActive(false);
     }
 
     private void OnFileSuccess(string[] paths)
