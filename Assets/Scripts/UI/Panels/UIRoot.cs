@@ -1,76 +1,84 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class UIRoot : UIPanel
+namespace Virtupad
 {
-    [SerializeField] private Vector3 normalScale;
-    [SerializeField] private Vector3 closingScale = new Vector3(0.01f, 0.01f, 0.01f);
-    [SerializeField] private float animationTime = 0.3f;
-
-    [SerializeField] private Vector3 forwardTrackingPosition = new Vector3(0.0f, 1.0f, 1.5f);
-    [SerializeField] private Quaternion trackingRotation;
-
-    private ExtendedCoroutine hideOrShowingCoroutine;
-    private Transform toTrack;
-
-    private void Awake()
+    public class UIRoot : UIPanel
     {
-        trackingRotation = transform.rotation;
-        normalScale = transform.localScale;
-        transform.localScale = closingScale;
-        gameObject.SetActive(false);
-    }
+        [SerializeField] private Vector3 normalScale;
+        [SerializeField] private Vector3 closingScale = new Vector3(0.01f, 0.01f, 0.01f);
+        [SerializeField] private float animationTime = 0.3f;
 
-    private void OnEnable()
-    {
-        toTrack = VRController.Instance?.transform;
+        [SerializeField] private Vector3 forwardTrackingPosition = new Vector3(0.0f, 1.0f, 1.5f);
+        [SerializeField] private Quaternion trackingRotation;
 
-        if (toTrack == null)
-            return;
-    }
+        private ExtendedCoroutine hideOrShowingCoroutine;
+        private Transform toTrack;
 
-    private void Update()
-    {
-        if (toTrack == null)
-            return;
+        private void Awake()
+        {
+            trackingRotation = transform.rotation;
+            normalScale = transform.localScale;
+            transform.localScale = closingScale;
+            gameObject.SetActive(false);
+        }
 
-        transform.position = toTrack.position + toTrack.TransformDirection(forwardTrackingPosition);
-        transform.rotation = toTrack.rotation * trackingRotation;
-    }
+        private void OnEnable()
+        {
+            toTrack = VRController.Instance?.transform;
 
-    public override void LooseFocus(bool closing)
-    {
-        if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
-            hideOrShowingCoroutine.Stop(false);
+            if (toTrack == null)
+                return;
+        }
 
-        hideOrShowingCoroutine = new ExtendedCoroutine(this,
-            EnumeratorUtil.ScaleInSecondsCurve
-                (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationTime),
-            OnHidden,
-            true
-            );
-    }
+        private void Update()
+        {
+            if (toTrack == null)
+                return;
 
-    public override void RegainFocus(UIRegainFocusMessage msg)
-    {
-        gameObject.SetActive(true);
+            transform.position = toTrack.position + toTrack.TransformDirection(forwardTrackingPosition);
+            transform.rotation = toTrack.rotation * trackingRotation;
+        }
 
-        if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
-            hideOrShowingCoroutine.Stop(false);
+        public override void LooseFocus(bool closing)
+        {
+            if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
+                hideOrShowingCoroutine.Stop(false);
 
-        hideOrShowingCoroutine = new ExtendedCoroutine(this,
-            EnumeratorUtil.ScaleInSecondsCurve
-                (transform, normalScale, CurveDict.Instance.UIInAnimation, animationTime),
-            OnAnimationFinished, true
-            );
-    }
+            hideOrShowingCoroutine = new ExtendedCoroutine(this,
+                EnumeratorUtil.ScaleInSecondsCurve
+                    (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationTime),
+                OnHidden,
+                true
+                );
+        }
 
-    private void OnAnimationFinished()
-    {
-        OnInit();
-    }
+        public override void RegainFocus(UIRegainFocusMessage msg)
+        {
+            gameObject.SetActive(true);
 
-    private void OnHidden()
-    {
-        gameObject.SetActive(false);
+            if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
+                hideOrShowingCoroutine.Stop(false);
+
+            hideOrShowingCoroutine = new ExtendedCoroutine(this,
+                EnumeratorUtil.ScaleInSecondsCurve
+                    (transform, normalScale, CurveDict.Instance.UIInAnimation, animationTime),
+                OnAnimationFinished, true
+                );
+        }
+
+        private void OnAnimationFinished()
+        {
+            OnInit();
+        }
+
+        private void OnHidden()
+        {
+            gameObject.SetActive(false);
+
+            List<Interacter> interacters = GlobalsDict.Instance.Interacters;
+            for (int i = 0; i < interacters.Count; i++)
+                interacters[i].StopRequest();
+        }
     }
 }

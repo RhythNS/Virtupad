@@ -2,259 +2,262 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using VRM;
 
-public class RigMaker : MonoBehaviour
+namespace Virtupad
 {
-    public enum Config
+    public class RigMaker : MonoBehaviour
     {
-        ThreePoints, FourPoints, FivePoints, SixPoints
-    }
-
-    private Animator character;
-    private Rig rig;
-    private RigBuilder builder;
-    private static readonly bool useAlternative = true;
-
-    public void MakeCharacter(Config config)
-    {
-        switch (config)
+        public enum Config
         {
-            case Config.ThreePoints:
-                if (useAlternative)
-                    MakeAlternative3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
-                else
-                    Make3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
-                break;
-            case Config.FourPoints:
-                Make4TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
-                break;
-            case Config.FivePoints:
-                Make5TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
-                break;
-            case Config.SixPoints:
-                Make6TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
-                break;
-            default:
-                throw new System.Exception("Could not find config " + config);
+            ThreePoints, FourPoints, FivePoints, SixPoints
         }
-    }
 
-    public void MakeAlternative3TrackingPointsCharacter(Animator character)
-    {
-        this.character = character;
-        character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
+        private Animator character;
+        private Rig rig;
+        private RigBuilder builder;
+        private static readonly bool useAlternative = true;
 
-        PrepRig();
+        public void MakeCharacter(Config config)
+        {
+            switch (config)
+            {
+                case Config.ThreePoints:
+                    if (useAlternative)
+                        MakeAlternative3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                    else
+                        Make3TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                    break;
+                case Config.FourPoints:
+                    Make4TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                    break;
+                case Config.FivePoints:
+                    Make5TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                    break;
+                case Config.SixPoints:
+                    Make6TrackingPointsCharacter(ConstructorDict.Instance.LoadingCharacterAnimator);
+                    break;
+                default:
+                    throw new System.Exception("Could not find config " + config);
+            }
+        }
 
-        MakeAlternativeControllingHead();
-        MakeArms();
-        MakeAutoLegs();
+        public void MakeAlternative3TrackingPointsCharacter(Animator character)
+        {
+            this.character = character;
+            character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
-        FinishRig();
-    }
+            PrepRig();
 
-    public void Make3TrackingPointsCharacter(Animator character)
-    {
-        this.character = character;
-        character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
+            MakeAlternativeControllingHead();
+            MakeArms();
+            MakeAutoLegs();
 
-        PrepRig();
+            FinishRig();
+        }
 
-        MakeControllingHead();
-        MakeArms();
-        MakeAutoLegs();
+        public void Make3TrackingPointsCharacter(Animator character)
+        {
+            this.character = character;
+            character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
-        FinishRig();
-    }
+            PrepRig();
 
-    public void Make4TrackingPointsCharacter(Animator character)
-    {
-        this.character = character;
-        character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
+            MakeControllingHead();
+            MakeArms();
+            MakeAutoLegs();
 
-        PrepRig();
+            FinishRig();
+        }
 
-        MakeControllingHip();
-        MakeHead();
-        MakeArms();
-        MakeAutoLegs();
+        public void Make4TrackingPointsCharacter(Animator character)
+        {
+            this.character = character;
+            character.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
-        FinishRig();
-    }
+            PrepRig();
 
-    public void Make5TrackingPointsCharacter(Animator character)
-    {
-        this.character = character;
-        character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
+            MakeControllingHip();
+            MakeHead();
+            MakeArms();
+            MakeAutoLegs();
 
-        PrepRig();
+            FinishRig();
+        }
 
-        MakeControllingHead();
-        MakeArms();
-        MakeLegs();
+        public void Make5TrackingPointsCharacter(Animator character)
+        {
+            this.character = character;
+            character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
 
-        FinishRig();
-    }
+            PrepRig();
 
-    public void Make6TrackingPointsCharacter(Animator character)
-    {
-        this.character = character;
-        character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
+            MakeControllingHead();
+            MakeArms();
+            MakeLegs();
 
-        PrepRig();
+            FinishRig();
+        }
 
-        MakeControllingHip();
-        MakeHead();
-        MakeArms();
-        MakeLegs();
+        public void Make6TrackingPointsCharacter(Animator character)
+        {
+            this.character = character;
+            character.runtimeAnimatorController = ConstructorDict.Instance.FullBody;
 
-        FinishRig();
-    }
+            PrepRig();
 
-    private void PrepRig()
-    {
-        character.enabled = false;
+            MakeControllingHip();
+            MakeHead();
+            MakeArms();
+            MakeLegs();
 
-        rig = ConstructorDict.Instance.rig = gameObject.AddComponent<Rig>();
-    }
+            FinishRig();
+        }
 
-    private void FinishRig()
-    {
-        builder = ConstructorDict.Instance.rigBuilder = character.gameObject.AddComponent<RigBuilder>();
-        builder.layers.Clear();
-        builder.layers.Add(new RigLayer(rig, true));
+        private void PrepRig()
+        {
+            character.enabled = false;
 
-        builder.Build();
-        character.Rebind();
+            rig = ConstructorDict.Instance.rig = gameObject.AddComponent<Rig>();
+        }
 
-        character.enabled = true;
+        private void FinishRig()
+        {
+            builder = ConstructorDict.Instance.rigBuilder = character.gameObject.AddComponent<RigBuilder>();
+            builder.layers.Clear();
+            builder.layers.Add(new RigLayer(rig, true));
 
-        Destroy(this);
-    }
+            builder.Build();
+            character.Rebind();
 
-    private void MakeControllingHead()
-    {
-        Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
+            character.enabled = true;
 
-        ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
-        controllingHead.animator = character;
-        controllingHead.offset = rigTrans.transform.position - character.transform.position;
-    }
-    
-    private void MakeAlternativeControllingHead()
-    {
-        Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
+            Destroy(this);
+        }
 
-        VRMFirstPerson firstPerson = ConstructorDict.Instance.vrmController.VRMFirstPerson;
+        private void MakeControllingHead()
+        {
+            Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
 
-        ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
-        controllingHead.animator = character;
-        controllingHead.offset = (firstPerson.FirstPersonBone.position + firstPerson.FirstPersonOffset) - character.transform.position;
-    }
+            ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
+            controllingHead.animator = character;
+            controllingHead.offset = rigTrans.transform.position - character.transform.position;
+        }
 
-    private void MakeHead()
-    {
-        ConstructorDict.Instance.head = MakeChain("Head", HumanBodyBones.Spine, HumanBodyBones.Head);
-    }
+        private void MakeAlternativeControllingHead()
+        {
+            Transform rigTrans = ConstructorDict.Instance.head = MakeOverrideTransform("Head", HumanBodyBones.Head);
 
-    private void MakeControllingHip()
-    {
-        Transform rigTrans = ConstructorDict.Instance.hip = MakeMultiRotation("Hip", HumanBodyBones.Hips);
+            VRMFirstPerson firstPerson = ConstructorDict.Instance.vrmController.VRMFirstPerson;
 
-        ControllingHip controllingHip = rigTrans.gameObject.AddComponent<ControllingHip>();
+            ControllingHead controllingHead = rigTrans.gameObject.AddComponent<ControllingHead>();
+            controllingHead.animator = character;
+            controllingHead.offset = (firstPerson.FirstPersonBone.position + firstPerson.FirstPersonOffset) - character.transform.position;
+        }
 
-        Transform hipTrans = character.GetBoneTransform(HumanBodyBones.Hips);
-        Vector3 offset = hipTrans.position - character.transform.position;
-        controllingHip.offset = offset;
-        controllingHip.animator = character;
-    }
+        private void MakeHead()
+        {
+            ConstructorDict.Instance.head = MakeChain("Head", HumanBodyBones.Spine, HumanBodyBones.Head);
+        }
 
-    private void MakeArms()
-    {
-        ConstructorDict.Instance.leftArm = MakeBodyPart("Left Arm", HumanBodyBones.LeftHand);
-        ConstructorDict.Instance.rightArm = MakeBodyPart("Right Arm", HumanBodyBones.RightHand);
-        character.gameObject.AddComponent<IKHandSetter>();
-    }
+        private void MakeControllingHip()
+        {
+            Transform rigTrans = ConstructorDict.Instance.hip = MakeMultiRotation("Hip", HumanBodyBones.Hips);
 
-    private void MakeLegs()
-    {
-        ConstructorDict.Instance.leftLeg = MakeBodyPart("Left Leg", HumanBodyBones.LeftFoot);
-        ConstructorDict.Instance.rightLeg = MakeBodyPart("Right Leg", HumanBodyBones.RightFoot);
-        character.gameObject.AddComponent<IKFootSetter>();
-    }
+            ControllingHip controllingHip = rigTrans.gameObject.AddComponent<ControllingHip>();
 
-    private void MakeAutoLegs()
-    {
-        character.gameObject.AddComponent<IKFootGroundChecker>();
-    }
+            Transform hipTrans = character.GetBoneTransform(HumanBodyBones.Hips);
+            Vector3 offset = hipTrans.position - character.transform.position;
+            controllingHip.offset = offset;
+            controllingHip.animator = character;
+        }
 
-    private Transform MakeBodyPart(string name, HumanBodyBones bone)
-    {
-        GameObject bodyObject = new GameObject(name);
-        bodyObject.transform.parent = transform;
-        Transform boneTrans = character.GetBoneTransform(bone);
-        bodyObject.transform.position = boneTrans.position;
-        bodyObject.transform.rotation = boneTrans.rotation;
-        return bodyObject.transform;
-    }
+        private void MakeArms()
+        {
+            ConstructorDict.Instance.leftArm = MakeBodyPart("Left Arm", HumanBodyBones.LeftHand);
+            ConstructorDict.Instance.rightArm = MakeBodyPart("Right Arm", HumanBodyBones.RightHand);
+            character.gameObject.AddComponent<IKHandSetter>();
+        }
 
-    private Transform MakeChain(string name, HumanBodyBones root, HumanBodyBones tip)
-    {
-        GameObject chainObj = new GameObject(name);
-        chainObj.transform.parent = transform;
+        private void MakeLegs()
+        {
+            ConstructorDict.Instance.leftLeg = MakeBodyPart("Left Leg", HumanBodyBones.LeftFoot);
+            ConstructorDict.Instance.rightLeg = MakeBodyPart("Right Leg", HumanBodyBones.RightFoot);
+            character.gameObject.AddComponent<IKFootSetter>();
+        }
 
-        GameObject targetObject = new GameObject(name + " source");
+        private void MakeAutoLegs()
+        {
+            character.gameObject.AddComponent<IKFootGroundChecker>();
+        }
 
-        ChainIKConstraint chain = chainObj.AddComponent<ChainIKConstraint>();
-        chain.Reset();
-        ChainIKConstraintData data = chain.data;
+        private Transform MakeBodyPart(string name, HumanBodyBones bone)
+        {
+            GameObject bodyObject = new GameObject(name);
+            bodyObject.transform.parent = transform;
+            Transform boneTrans = character.GetBoneTransform(bone);
+            bodyObject.transform.position = boneTrans.position;
+            bodyObject.transform.rotation = boneTrans.rotation;
+            return bodyObject.transform;
+        }
 
-        data.root = character.GetBoneTransform(root);
-        data.tip = character.GetBoneTransform(tip);
-        data.target = targetObject.transform;
+        private Transform MakeChain(string name, HumanBodyBones root, HumanBodyBones tip)
+        {
+            GameObject chainObj = new GameObject(name);
+            chainObj.transform.parent = transform;
 
-        chain.data = data;
-        chainObj.transform.position = targetObject.transform.position = data.tip.position;
-        return targetObject.transform;
-    }
+            GameObject targetObject = new GameObject(name + " source");
 
-    private Transform MakeOverrideTransform(string name, HumanBodyBones bone)
-    {
-        GameObject overObj = new GameObject(name);
-        overObj.transform.parent = transform;
-        GameObject targetObject = new GameObject(name + " source");
+            ChainIKConstraint chain = chainObj.AddComponent<ChainIKConstraint>();
+            chain.Reset();
+            ChainIKConstraintData data = chain.data;
 
-        OverrideTransform overrideTransform = overObj.AddComponent<OverrideTransform>();
-        overrideTransform.Reset();
-        OverrideTransformData data = overrideTransform.data;
+            data.root = character.GetBoneTransform(root);
+            data.tip = character.GetBoneTransform(tip);
+            data.target = targetObject.transform;
 
-        Transform boneTrans = character.GetBoneTransform(bone);
-        data.constrainedObject = boneTrans;
-        data.sourceObject = targetObject.transform;
+            chain.data = data;
+            chainObj.transform.position = targetObject.transform.position = data.tip.position;
+            return targetObject.transform;
+        }
 
-        data.space = OverrideTransformData.Space.World;
+        private Transform MakeOverrideTransform(string name, HumanBodyBones bone)
+        {
+            GameObject overObj = new GameObject(name);
+            overObj.transform.parent = transform;
+            GameObject targetObject = new GameObject(name + " source");
 
-        overrideTransform.data = data;
-        overObj.transform.position = targetObject.transform.position = boneTrans.position;
-        return targetObject.transform;
-    }
+            OverrideTransform overrideTransform = overObj.AddComponent<OverrideTransform>();
+            overrideTransform.Reset();
+            OverrideTransformData data = overrideTransform.data;
 
-    private Transform MakeMultiRotation(string name, HumanBodyBones bone)
-    {
-        GameObject multiRotObj = new GameObject(name);
-        multiRotObj.transform.parent = transform;
-        GameObject targetObject = new GameObject(name + " source");
+            Transform boneTrans = character.GetBoneTransform(bone);
+            data.constrainedObject = boneTrans;
+            data.sourceObject = targetObject.transform;
 
-        MultiRotationConstraint multiRotation = multiRotObj.AddComponent<MultiRotationConstraint>();
-        multiRotation.Reset();
-        MultiRotationConstraintData data = multiRotation.data;
+            data.space = OverrideTransformData.Space.World;
 
-        WeightedTransformArray sourceObjects = data.sourceObjects;
-        sourceObjects.Add(new WeightedTransform(targetObject.transform, 1.0f));
-        data.sourceObjects = sourceObjects;
-        data.constrainedObject = character.GetBoneTransform(bone);
+            overrideTransform.data = data;
+            overObj.transform.position = targetObject.transform.position = boneTrans.position;
+            return targetObject.transform;
+        }
 
-        multiRotation.data = data;
-        multiRotObj.transform.position = targetObject.transform.position = data.constrainedObject.position;
-        return targetObject.transform;
+        private Transform MakeMultiRotation(string name, HumanBodyBones bone)
+        {
+            GameObject multiRotObj = new GameObject(name);
+            multiRotObj.transform.parent = transform;
+            GameObject targetObject = new GameObject(name + " source");
+
+            MultiRotationConstraint multiRotation = multiRotObj.AddComponent<MultiRotationConstraint>();
+            multiRotation.Reset();
+            MultiRotationConstraintData data = multiRotation.data;
+
+            WeightedTransformArray sourceObjects = data.sourceObjects;
+            sourceObjects.Add(new WeightedTransform(targetObject.transform, 1.0f));
+            data.sourceObjects = sourceObjects;
+            data.constrainedObject = character.GetBoneTransform(bone);
+
+            multiRotation.data = data;
+            multiRotObj.transform.position = targetObject.transform.position = data.constrainedObject.position;
+            return targetObject.transform;
+        }
     }
 }

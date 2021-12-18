@@ -13,7 +13,7 @@ namespace Virtupad
         void Start()
         {
             Debug.Log("There is a debug presser on " + gameObject.name + " with key: " + key);
-            
+
             element = GetComponent<UIPrimitiveElement>();
             if (element == null || fireOnElementInit == false)
                 return;
@@ -28,7 +28,8 @@ namespace Virtupad
 
         private void OnDestroy()
         {
-            element.OnInitEvent -= OnInit;
+            if (element)
+                element.OnInitEvent -= OnInit;
         }
 
         void Update()

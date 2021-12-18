@@ -1,21 +1,24 @@
-public class UIRegainFocusMessage
+namespace Virtupad
 {
-    public enum RegainFocusMessageType
+    public class UIRegainFocusMessage
     {
-        Accept,
-        Abort,
-        Restore,
-        None
-    };
+        public enum RegainFocusMessageType
+        {
+            Accept,
+            Abort,
+            Restore,
+            None
+        };
 
-    public RegainFocusMessageType messageType;
+        public RegainFocusMessageType messageType;
 
-    public UIRegainFocusMessage(RegainFocusMessageType messageType)
-    {
-        this.messageType = messageType;
+        public UIRegainFocusMessage(RegainFocusMessageType messageType)
+        {
+            this.messageType = messageType;
+        }
+
+        public static UIRegainFocusMessage GetBasic(RegainFocusMessageType type) => new UIRegainFocusMessage(type);
+
+        public static UIRegainFocusMessage Empty => new UIRegainFocusMessage(RegainFocusMessageType.None);
     }
-
-    public static UIRegainFocusMessage GetBasic(RegainFocusMessageType type) => new UIRegainFocusMessage(type);
-
-    public static UIRegainFocusMessage Empty => new UIRegainFocusMessage(RegainFocusMessageType.None);
 }

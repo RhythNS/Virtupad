@@ -1,49 +1,52 @@
-public abstract class UIPanel : UIPrimitiveElement, UIControllerIntercept
+namespace Virtupad
 {
-    public virtual void CloseRequest()
+    public abstract class UIPanel : UIPrimitiveElement, UIControllerIntercept
     {
-        NotifyClose(UIRegainFocusMessage.Empty);
-    }
-
-    public virtual void LooseFocus(bool closing)
-    {
-
-    }
-
-    public virtual void RegainFocus(UIRegainFocusMessage msg)
-    {
-
-    }
-
-    public bool Intercept(UIControllerAction controllerAction)
-    {
-        if (controllerAction == UIControllerAction.Cancel)
+        public virtual void CloseRequest()
         {
-            CloseRequest();
-            return true;
+            NotifyClose(UIRegainFocusMessage.Empty);
         }
 
-        return false;
-    }
+        public virtual void LooseFocus(bool closing)
+        {
 
-    public override bool InterceptAction(UIControllerAction action)
-    {
-        if (selected != null)
-            return selected.InterceptAction(action);
+        }
 
-        if (controllerIntercept != null && controllerIntercept.Intercept(action) == true)
-            return true;
+        public virtual void RegainFocus(UIRegainFocusMessage msg)
+        {
 
-        return false;
-    }
+        }
 
-    public void NotifyClose(UIRegainFocusMessage msg)
-    {
-        UIPanelManager.Instance.OnMenuClosed(this, msg);
-    }
+        public bool Intercept(UIControllerAction controllerAction)
+        {
+            if (controllerAction == UIControllerAction.Cancel)
+            {
+                CloseRequest();
+                return true;
+            }
 
-    public void NotifyOpen()
-    {
-        UIPanelManager.Instance.OnMenuOpened(this);
+            return false;
+        }
+
+        public override bool InterceptAction(UIControllerAction action)
+        {
+            if (selected != null)
+                return selected.InterceptAction(action);
+
+            if (controllerIntercept != null && controllerIntercept.Intercept(action) == true)
+                return true;
+
+            return false;
+        }
+
+        public void NotifyClose(UIRegainFocusMessage msg)
+        {
+            UIPanelManager.Instance.OnMenuClosed(this, msg);
+        }
+
+        public void NotifyOpen()
+        {
+            UIPanelManager.Instance.OnMenuOpened(this);
+        }
     }
 }

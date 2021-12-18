@@ -1,47 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class ConstructorDict : MonoBehaviour
+namespace Virtupad
 {
-    public static ConstructorDict Instance { get; private set; }
-
-    private void Awake()
+    public class ConstructorDict : MonoBehaviour
     {
-        if (Instance)
+        public static ConstructorDict Instance { get; private set; }
+
+        private void Awake()
         {
-            Debug.LogWarning("ConstructorDict already in scene. Deleting myself!");
-            Destroy(this);
-            return;
+            if (Instance)
+            {
+                Debug.LogWarning("ConstructorDict already in scene. Deleting myself!");
+                Destroy(this);
+                return;
+            }
+            Instance = this;
         }
-        Instance = this;
-    }
 
-    public Animator LoadingCharacterAnimator;
+        public Animator LoadingCharacterAnimator;
 
-    public RigBuilder rigBuilder;
+        public RigBuilder rigBuilder;
 
-    public Rig rig;
+        public Rig rig;
 
-    public Transform rightArm, leftArm, head, rightLeg, leftLeg, hip;
+        public Transform rightArm, leftArm, head, rightLeg, leftLeg, hip;
 
-    public RigMaker rigMaker;
+        public RigMaker rigMaker;
 
-    public VRMController vrmController;
+        public VRMController vrmController;
 
-    public RuntimeAnimatorController TPoseController => tPoseController;
-    [SerializeField] private RuntimeAnimatorController tPoseController;
+        public RuntimeAnimatorController TPoseController => tPoseController;
+        [SerializeField] private RuntimeAnimatorController tPoseController;
 
-    public RuntimeAnimatorController FullBody => fullBody;
-    [SerializeField] private RuntimeAnimatorController fullBody;
+        public RuntimeAnimatorController FullBody => fullBody;
+        [SerializeField] private RuntimeAnimatorController fullBody;
 
-    public RuntimeAnimatorController UpperBody => upperBody;
-    [SerializeField] private RuntimeAnimatorController upperBody;
+        public RuntimeAnimatorController UpperBody => upperBody;
+        [SerializeField] private RuntimeAnimatorController upperBody;
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-            Instance = null;
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
     }
 }

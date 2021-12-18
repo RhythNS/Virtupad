@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StudioCamera : MonoBehaviour
+namespace Virtupad
 {
-    public Transform CurrentlyTracking { get; set; }
+    public class StudioCamera : MonoBehaviour
+    {
+        public Transform CurrentlyTracking { get; set; }
 
 
+    }
 }

@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class PrintString : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private string toPrint;
+    public class PrintString : MonoBehaviour
+    {
+        [SerializeField] private string toPrint;
 
-    public void Print() => Debug.Log(toPrint);
+        public void Print() => Debug.Log(toPrint);
+    }
 }

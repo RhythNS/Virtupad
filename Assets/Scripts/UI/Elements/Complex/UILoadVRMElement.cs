@@ -3,88 +3,91 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VRM;
-using static LastLoadedVRMs;
+using static Virtupad.LastLoadedVRMs;
 
-public class UILoadVRMElement : UIPrimitiveElement
+namespace Virtupad
 {
-    [SerializeField] private Image previewImage;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private VRMHumanoidDescription vrmPrefabOverride;
-
-    private ExtendedCoroutine waitForImageCoroutine;
-
-    public LoadVRM LoadVRM
+    public class UILoadVRMElement : UIPrimitiveElement
     {
-        get => loadVRM;
-        set
+        [SerializeField] private Image previewImage;
+        [SerializeField] private TMP_Text nameText;
+        [SerializeField] private VRMHumanoidDescription vrmPrefabOverride;
+
+        private ExtendedCoroutine waitForImageCoroutine;
+
+        public LoadVRM LoadVRM
         {
-            loadVRM = value;
-            if (loadVRM == null)
+            get => loadVRM;
+            set
+            {
+                loadVRM = value;
+                if (loadVRM == null)
+                    return;
+
+                nameText.text = loadVRM.Name;
+                if (loadVRM.previewTexture != null)
+                    SetPreviewImage();
+                else
+                    StartWaitUntilImagePreview();
+            }
+        }
+        private LoadVRM loadVRM;
+
+        public void OnClicked()
+        {
+            if (vrmPrefabOverride != null)
+            {
+                UIVRMSelector.Instance.LoadVRMFromPrefab(vrmPrefabOverride);
+                return;
+            }
+
+            UIVRMSelector.Instance.LoadVRMFromFilePath(loadVRM);
+        }
+
+        private void StartWaitUntilImagePreview()
+        {
+            if (waitForImageCoroutine != null && waitForImageCoroutine.IsFinshed == false)
                 return;
 
-            nameText.text = loadVRM.Name;
-            if (loadVRM.previewTexture != null)
+            waitForImageCoroutine = new ExtendedCoroutine(this, WaitUntilImagePreview(), startNow: true);
+        }
+
+        private IEnumerator WaitUntilImagePreview()
+        {
+            Coroutine loadingAnimation = StartCoroutine(DoLoadingAnimation());
+            while (true)
+            {
+                yield return null;
+
+                if (loadVRM.previewTexture == null)
+                    continue;
+
+                StopCoroutine(loadingAnimation);
                 SetPreviewImage();
-            else
-                StartWaitUntilImagePreview();
+                yield break;
+            }
         }
-    }
-    private LoadVRM loadVRM;
 
-    public void OnClicked()
-    {
-        if (vrmPrefabOverride != null)
+        private IEnumerator DoLoadingAnimation()
         {
-            UIVRMSelector.Instance.LoadVRMFromPrefab(vrmPrefabOverride);
-            return;
+            Sprite[] loadingSpriteAnimation = UIVRMSelector.Instance.LoadingSpriteAnimation;
+            int at = 0;
+            float waitTime = UIVRMSelector.Instance.LoadingAnimationSecondsPerFrame;
+
+            while (true)
+            {
+                if (++at >= loadingSpriteAnimation.Length)
+                    at = 0;
+
+                previewImage.sprite = loadingSpriteAnimation[at];
+                yield return new WaitForSeconds(waitTime);
+            }
         }
 
-        UIVRMSelector.Instance.LoadVRMFromFilePath(loadVRM);
-    }
-
-    private void StartWaitUntilImagePreview()
-    {
-        if (waitForImageCoroutine != null && waitForImageCoroutine.IsFinshed == false)
-            return;
-
-        waitForImageCoroutine = new ExtendedCoroutine(this, WaitUntilImagePreview(), startNow: true);
-    }
-
-    private IEnumerator WaitUntilImagePreview()
-    {
-        Coroutine loadingAnimation = StartCoroutine(DoLoadingAnimation());
-        while (true)
+        private void SetPreviewImage()
         {
-            yield return null;
-
-            if (loadVRM.previewTexture == null)
-                continue;
-
-            StopCoroutine(loadingAnimation);
-            SetPreviewImage();
-            yield break;
+            previewImage.sprite = Sprite.Create(loadVRM.previewTexture,
+                new Rect(0.0f, 0.0f, loadVRM.previewWidth, loadVRM.previewHeight), Vector2.zero);
         }
-    }
-
-    private IEnumerator DoLoadingAnimation()
-    {
-        Sprite[] loadingSpriteAnimation = UIVRMSelector.Instance.LoadingSpriteAnimation;
-        int at = 0;
-        float waitTime = UIVRMSelector.Instance.LoadingAnimationSecondsPerFrame;
-
-        while (true)
-        {
-            if (++at >= loadingSpriteAnimation.Length)
-                at = 0;
-
-            previewImage.sprite = loadingSpriteAnimation[at];
-            yield return new WaitForSeconds(waitTime);
-        }
-    }
-
-    private void SetPreviewImage()
-    {
-        previewImage.sprite = Sprite.Create(loadVRM.previewTexture,
-            new Rect(0.0f, 0.0f, loadVRM.previewWidth, loadVRM.previewHeight), Vector2.zero);
     }
 }

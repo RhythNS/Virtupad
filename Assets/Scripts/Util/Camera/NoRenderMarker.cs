@@ -1,16 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoRenderMarker : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private List<Renderer> renderes = new List<Renderer>();
-
-    private void Awake()
+    public class NoRenderMarker : MonoBehaviour
     {
-        GetComponents(renderes);
-        GetComponentsInChildren(renderes);
-    }
+        [SerializeField] private List<Renderer> renderes = new List<Renderer>();
 
-    public void ToggleRenderers(bool enable)
-        => renderes.ForEach(x => x.enabled = enable);
+        private void Awake()
+        {
+            GetComponents(renderes);
+            GetComponentsInChildren(renderes);
+        }
+
+        public void ToggleRenderers(bool enable)
+            => renderes.ForEach(x => x.enabled = enable);
+    }
 }

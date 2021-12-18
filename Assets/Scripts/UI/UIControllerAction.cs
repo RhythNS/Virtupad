@@ -1,4 +1,7 @@
-public enum UIControllerAction
+namespace Virtupad
 {
-    Accept, Cancel
+    public enum UIControllerAction
+    {
+        Accept, Cancel
+    }
 }

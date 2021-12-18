@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class PrintLayer : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private GameObject target;
-
-    void Update()
+    public class PrintLayer : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.H))
-            Debug.Log(target.layer);
+        [SerializeField] private GameObject target;
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.H))
+                Debug.Log(target.layer);
+        }
     }
 }

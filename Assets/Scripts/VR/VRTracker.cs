@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-public class VRTracker : MonoBehaviour
+namespace Virtupad
 {
-    public VRTrackerType TrackerType = VRTrackerType.Unknown;
-
-    public SteamVR_TrackedObject TrackedObject { get; private set; }
-
-    private void Awake()
+    public class VRTracker : MonoBehaviour
     {
-        TrackedObject = gameObject.AddComponent<SteamVR_TrackedObject>();
+        public VRTrackerType TrackerType = VRTrackerType.Unknown;
+
+        public SteamVR_TrackedObject TrackedObject { get; private set; }
+
+        private void Awake()
+        {
+            TrackedObject = gameObject.AddComponent<SteamVR_TrackedObject>();
+        }
     }
 }

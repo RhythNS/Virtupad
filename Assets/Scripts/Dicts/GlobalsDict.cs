@@ -1,35 +1,41 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-public class GlobalsDict : MonoBehaviour
+namespace Virtupad
 {
-    public static GlobalsDict Instance { get; private set; }
-
-    public Player Player => player;
-    [SerializeField] private Player player;
-
-    private void Awake()
+    public class GlobalsDict : MonoBehaviour
     {
-        if (Instance)
+        public static GlobalsDict Instance { get; private set; }
+
+        public Player Player => player;
+        [SerializeField] private Player player;
+
+        public List<Interacter> Interacters => interacters;
+        [SerializeField] private List<Interacter> interacters = new List<Interacter>();
+
+        private void Awake()
         {
-            Debug.LogWarning("GlobalsDict already in scene. Deleting myself!");
-            Destroy(this);
-            return;
+            if (Instance)
+            {
+                Debug.LogWarning("GlobalsDict already in scene. Deleting myself!");
+                Destroy(this);
+                return;
+            }
+
+            if (!Player)
+            {
+                Debug.LogWarning("Player was not assigned! Searching for him instead!");
+                player = FindObjectOfType<Player>();
+            }
+
+            Instance = this;
         }
 
-        if (!Player)
+        private void OnDestroy()
         {
-            Debug.LogWarning("Player was not assigned! Searching for him instead!");
-            player = FindObjectOfType<Player>();
+            if (Instance == this)
+                Instance = null;
         }
-
-        Instance = this;
     }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-            Instance = null;
-    }
-
 }

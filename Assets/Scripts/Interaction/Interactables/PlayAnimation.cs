@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayAnimation : Interactable
+namespace Virtupad
 {
-    [SerializeField] private Animation toControl;
-    [SerializeField] private string animationName;
-    [SerializeField] private PlayMode mode;
-
-    public override void Select()
+    public class PlayAnimation : Interactable
     {
-        toControl.Play(animationName);
+        [SerializeField] private Animation toControl;
+        [SerializeField] private string animationName;
+        [SerializeField] private PlayMode mode;
+
+        public override void Select()
+        {
+            toControl.Play(animationName);
+        }
     }
 }

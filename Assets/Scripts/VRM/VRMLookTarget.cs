@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class VRMLookTarget : MonoBehaviour
+namespace Virtupad
 {
-    private void OnDrawGizmos()
+    public class VRMLookTarget : MonoBehaviour
     {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, 0.1f);
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, 0.1f);
+        }
     }
 }

@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class ControllingHip : MonoBehaviour
+namespace Virtupad
 {
-    public Animator animator;
-    public Vector3 offset;
-
-    private void FixedUpdate()
+    public class ControllingHip : MonoBehaviour
     {
-        Vector3 currentPos = transform.position;
-        animator.transform.position = currentPos - offset;
+        public Animator animator;
+        public Vector3 offset;
+
+        private void FixedUpdate()
+        {
+            Vector3 currentPos = transform.position;
+            animator.transform.position = currentPos - offset;
+        }
     }
 }

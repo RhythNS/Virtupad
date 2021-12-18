@@ -1,37 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllingTest : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private Transform source;
-    [SerializeField] private Vector3 offset;
-
-    private void SetOffset()
+    public class ControllingTest : MonoBehaviour
     {
-        offset = (source.position) - transform.position;
-    }
+        [SerializeField] private Transform source;
+        [SerializeField] private Vector3 offset;
 
-    private void Start()
-    {
-        SetOffset();
-    }
+        private void SetOffset()
+        {
+            offset = (source.position) - transform.position;
+        }
 
-    private void Update()
-    {
-        Vector3 currentPos = source.position;
+        private void Start()
+        {
+            SetOffset();
+        }
 
-        transform.rotation = Quaternion.AngleAxis(source.rotation.eulerAngles.y, Vector3.up);
+        private void Update()
+        {
+            Vector3 currentPos = source.position;
 
-        float angle = Vector3.SignedAngle(transform.forward, Vector3.forward, Vector3.up);
-        
-        Debug.Log(angle);
-        transform.position = currentPos - (Quaternion.Euler(0.0f, -angle, 0.0f) * offset);
-    }
+            transform.rotation = Quaternion.AngleAxis(source.rotation.eulerAngles.y, Vector3.up);
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position + offset, new Vector3(0.1f,0.1f,0.1f));
+            float angle = Vector3.SignedAngle(transform.forward, Vector3.forward, Vector3.up);
+
+            Debug.Log(angle);
+            transform.position = currentPos - (Quaternion.Euler(0.0f, -angle, 0.0f) * offset);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(transform.position + offset, new Vector3(0.1f, 0.1f, 0.1f));
+        }
     }
 }

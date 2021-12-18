@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace Virtupad
 {
@@ -13,7 +12,7 @@ namespace Virtupad
         [SerializeField] private Canvas canvas;
         [SerializeField] private GraphicRaycaster caster;
 
-        protected override void OnBeginHover()
+        protected override void OnBeginHover(Vector3 impactPosition)
         {
             PointerEventData ped = GetPED(prevPos);
 

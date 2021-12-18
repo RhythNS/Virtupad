@@ -1,5 +1,8 @@
-public enum MidPanelSwitcherIndexes
+namespace Virtupad
 {
-    UIVRMSelector = 0,
-    FileBrowser = 1,
+    public enum MidPanelSwitcherIndexes
+    {
+        UIVRMSelector = 0,
+        FileBrowser = 1,
+    }
 }

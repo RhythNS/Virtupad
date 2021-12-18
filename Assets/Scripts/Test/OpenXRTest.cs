@@ -1,28 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class OpenXRTest : MonoBehaviour
+namespace Virtupad
 {
-    private List<XRInputSubsystem> subsystems = new List<XRInputSubsystem>();
-    private XRInputSubsystem inputSubsystem;
-
-    private void Start()
+    public class OpenXRTest : MonoBehaviour
     {
-        SetTrackingOriginMode();
-    }
+        private List<XRInputSubsystem> subsystems = new List<XRInputSubsystem>();
+        private XRInputSubsystem inputSubsystem;
 
-    public void SetTrackingOriginMode()
-    {
-        if (inputSubsystem == null)
+        private void Start()
         {
-            SubsystemManager.GetInstances(subsystems);
-            if (subsystems.Count != 0)
-                inputSubsystem = subsystems[0];
+            SetTrackingOriginMode();
         }
 
-        Debug.Log($"Tracking Origin Mode is [{inputSubsystem.GetTrackingOriginMode()}]");
-     //   inputSubsystem.
+        public void SetTrackingOriginMode()
+        {
+            if (inputSubsystem == null)
+            {
+                SubsystemManager.GetInstances(subsystems);
+                if (subsystems.Count != 0)
+                    inputSubsystem = subsystems[0];
+            }
+
+            Debug.Log($"Tracking Origin Mode is [{inputSubsystem.GetTrackingOriginMode()}]");
+            //   inputSubsystem.
+        }
     }
 }

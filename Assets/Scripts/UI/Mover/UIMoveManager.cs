@@ -3,111 +3,114 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Valve.VR;
 
-public class UIMoveManager : MonoBehaviour
+namespace Virtupad
 {
-    public static UIMoveManager Instance { get; private set; }
-
-    public UIPrimitiveElement LowestPrevSelected { get; private set; }
-    public UIPrimitiveElement SelectedElement { get; private set; }
-
-    public UIMover UIMover { get => uIMover; private set => uIMover = value; }
-    [SerializeField] private UIMover uIMover;
-
-    [SerializeField] private SteamVR_Action_Vector2 uiMoveInput;
-    [SerializeField] private SteamVR_Action_Boolean uiSelectInput;
-    [SerializeField] private SteamVR_Action_Boolean uiMainMenuInput;
-
-    private void Awake()
+    public class UIMoveManager : MonoBehaviour
     {
-        if (Instance)
+        public static UIMoveManager Instance { get; private set; }
+
+        public UIPrimitiveElement LowestPrevSelected { get; private set; }
+        public UIPrimitiveElement SelectedElement { get; private set; }
+
+        public UIMover UIMover { get => uIMover; private set => uIMover = value; }
+        [SerializeField] private UIMover uIMover;
+
+        [SerializeField] private SteamVR_Action_Vector2 uiMoveInput;
+        [SerializeField] private SteamVR_Action_Boolean uiSelectInput;
+        [SerializeField] private SteamVR_Action_Boolean uiMainMenuInput;
+
+        private void Awake()
         {
-            Debug.LogWarning("UIMoveManager already in scene. Deleting myself!");
-            Destroy(this);
-            return;
-        }
-        Instance = this;
-    }
-
-    private void Start()
-    {
-        if (UIMover == null && TryGetComponent(out uIMover) == false)
-            return;
-
-        UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
-        uiMainMenuInput.AddOnStateDownListener(OnMainMenuDown, SteamVR_Input_Sources.Any);
-    }
-
-    public void AddMover(Type type)
-    {
-        if (type.IsSubclassOf(typeof(UIMover)) == false)
-        {
-            Debug.LogWarning("Type " + type.FullName + " is not a subclass of UIMover!");
-            return;
+            if (Instance)
+            {
+                Debug.LogWarning("UIMoveManager already in scene. Deleting myself!");
+                Destroy(this);
+                return;
+            }
+            Instance = this;
         }
 
-        if (UIMover)
+        private void Start()
         {
-            UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
-            Destroy(UIMover);
+            if (UIMover == null && TryGetComponent(out uIMover) == false)
+                return;
+
+            UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
+            uiMainMenuInput.AddOnStateDownListener(OnMainMenuDown, SteamVR_Input_Sources.Any);
         }
 
-        UIMover = (UIMover)gameObject.AddComponent(type);
-        UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            OnMainMenuDown(null, SteamVR_Input_Sources.Waist);
-    }
-
-    private void OnMainMenuDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        UIPanelManager.Instance.OnMainMenuToggle();
-    }
-
-    public void OnElementSelected(UIPrimitiveElement element, UIPrimitiveElement mostLowestSelected)
-    {
-        LowestPrevSelected = mostLowestSelected;
-
-        if (element == SelectedElement)
-            return;
-
-        if (SelectedElement)
-            SelectedElement.FireDeselectEvent();
-
-        SelectedElement = element;
-    }
-
-    public bool Move(Direction direction)
-    {
-        Debug.Log("UI wants to move " + direction);
-
-        if (SelectedElement == null)
+        public void AddMover(Type type)
         {
-            if (LowestPrevSelected == null)
-                return false;
+            if (type.IsSubclassOf(typeof(UIMover)) == false)
+            {
+                Debug.LogWarning("Type " + type.FullName + " is not a subclass of UIMover!");
+                return;
+            }
 
-            LowestPrevSelected.Select();
-            return true;
+            if (UIMover)
+            {
+                UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
+                Destroy(UIMover);
+            }
+
+            UIMover = (UIMover)gameObject.AddComponent(type);
+            UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
         }
 
-        return SelectedElement.Move(direction);
-    }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+                OnMainMenuDown(null, SteamVR_Input_Sources.Waist);
+        }
 
-    public void Click()
-    {
-        if (SelectedElement != null)
-            SelectedElement.OnEvent(ExecuteEvents.pointerClickHandler);
-    }
+        private void OnMainMenuDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+        {
+            UIPanelManager.Instance.OnMainMenuToggle();
+        }
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-            Instance = null;
-        if (UIMover)
-            UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
+        public void OnElementSelected(UIPrimitiveElement element, UIPrimitiveElement mostLowestSelected)
+        {
+            LowestPrevSelected = mostLowestSelected;
 
-        uiMainMenuInput.RemoveAllListeners(SteamVR_Input_Sources.Any);
+            if (element == SelectedElement)
+                return;
+
+            if (SelectedElement)
+                SelectedElement.FireDeselectEvent();
+
+            SelectedElement = element;
+        }
+
+        public bool Move(Direction direction)
+        {
+            Debug.Log("UI wants to move " + direction);
+
+            if (SelectedElement == null)
+            {
+                if (LowestPrevSelected == null)
+                    return false;
+
+                LowestPrevSelected.Select();
+                return true;
+            }
+
+            return SelectedElement.Move(direction);
+        }
+
+        public void Click()
+        {
+            if (SelectedElement != null)
+                SelectedElement.OnEvent(ExecuteEvents.pointerClickHandler);
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+            if (UIMover)
+                UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
+
+            uiMainMenuInput.RemoveAllListeners(SteamVR_Input_Sources.Any);
+        }
     }
 }

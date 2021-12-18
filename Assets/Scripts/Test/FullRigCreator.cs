@@ -1,49 +1,52 @@
 using System.Collections;
 using UnityEngine;
 
-public class FullRigCreator : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private float waitTime = 3.0f;
-
-    private void Update()
+    public class FullRigCreator : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        [SerializeField] private float waitTime = 3.0f;
+
+        private void Update()
         {
-            StartAutoSetup();
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                StartAutoSetup();
+            }
         }
-    }
 
-    public void StartAutoSetup()
-    {
-        StartCoroutine(AutoSetup());
-    }
+        public void StartAutoSetup()
+        {
+            StartCoroutine(AutoSetup());
+        }
 
-    private IEnumerator AutoSetup()
-    {
-        Debug.Log("Starting rig constructor...");
-        
-        if (VRAnimatorController.Instance)
-            VRAnimatorController.Instance.enabled = false;
-        VRSetTracker.RegisterTrackers();
-        RigMaker.Config? config = VRSetTracker.AutoAssignTrackers();
-        if (config.HasValue == false)
-            yield break;
+        private IEnumerator AutoSetup()
+        {
+            Debug.Log("Starting rig constructor...");
 
-        ConstructorDict.Instance.LoadingCharacterAnimator = GetComponent<Animator>();
-        ConstructorDict.Instance.vrmController = GetComponent<VRMController>();
+            if (VRAnimatorController.Instance)
+                VRAnimatorController.Instance.enabled = false;
+            VRSetTracker.RegisterTrackers();
+            RigMaker.Config? config = VRSetTracker.AutoAssignTrackers();
+            if (config.HasValue == false)
+                yield break;
 
-        VRToRig.CharacterToTPose();
-        VRToRig.CharacterToVRPlayer();
-        VRController.Instance.SizeToModelHeight(VRMController.Instance.Height);
+            ConstructorDict.Instance.LoadingCharacterAnimator = GetComponent<Animator>();
+            ConstructorDict.Instance.vrmController = GetComponent<VRMController>();
 
-        yield return new WaitForSeconds(waitTime);
+            VRToRig.CharacterToTPose();
+            VRToRig.CharacterToVRPlayer();
+            VRController.Instance.SizeToModelHeight(VRMController.Instance.Height);
 
-        VRToRig.PrepareRig();
-        VRToRig.MakeCharacter(config.Value);
-        VRToRig.AssignTrackers();
+            yield return new WaitForSeconds(waitTime);
 
-        VRMController.Instance.OnTakenControl();
+            VRToRig.PrepareRig();
+            VRToRig.MakeCharacter(config.Value);
+            VRToRig.AssignTrackers();
 
-        Debug.Log("Finished rig constructor");
+            VRMController.Instance.OnTakenControl();
+
+            Debug.Log("Finished rig constructor");
+        }
     }
 }

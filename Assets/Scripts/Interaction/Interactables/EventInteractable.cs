@@ -1,11 +1,14 @@
 using UnityEngine.Events;
 
-public class EventInteractable : Interactable
+namespace Virtupad
 {
-    public UnityEvent onSelect;
-
-    public override void Select()
+    public class EventInteractable : Interactable
     {
-        onSelect?.Invoke();
+        public UnityEvent onSelect;
+
+        public override void Select()
+        {
+            onSelect?.Invoke();
+        }
     }
 }

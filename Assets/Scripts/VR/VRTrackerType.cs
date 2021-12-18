@@ -1,4 +1,7 @@
-public enum VRTrackerType
+namespace Virtupad
 {
-    Unknown, LeftFoot, RightFoot, Hip
+    public enum VRTrackerType
+    {
+        Unknown, LeftFoot, RightFoot, Hip
+    }
 }

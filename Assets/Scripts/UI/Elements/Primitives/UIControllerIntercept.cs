@@ -1,4 +1,7 @@
-public interface UIControllerIntercept
+namespace Virtupad
 {
-    public bool Intercept(UIControllerAction controllerAction);
+    public interface UIControllerIntercept
+    {
+        public bool Intercept(UIControllerAction controllerAction);
+    }
 }

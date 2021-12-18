@@ -1,7 +1,10 @@
-public class CreateAutoRigInteractable : Interactable
+namespace Virtupad
 {
-    public override void Select()
+    public class CreateAutoRigInteractable : Interactable
     {
-        FindObjectOfType<FullRigCreator>()?.StartAutoSetup();
+        public override void Select()
+        {
+            FindObjectOfType<FullRigCreator>()?.StartAutoSetup();
+        }
     }
 }

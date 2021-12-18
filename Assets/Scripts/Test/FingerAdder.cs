@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public class FingerAdder : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private HumanBodyBones bone;
-    [SerializeField] private bool useOffset;
-
-    private void Start()
+    public class FingerAdder : MonoBehaviour
     {
-        if (VRAnimatorController.Instance)
-            VRAnimatorController.Instance.Register(bone, transform, useOffset);
-    }
+        [SerializeField] private HumanBodyBones bone;
+        [SerializeField] private bool useOffset;
 
-    private void OnDestroy()
-    {
-        if (VRAnimatorController.Instance)
-            VRAnimatorController.Instance.DeRegister(transform);
+        private void Start()
+        {
+            if (VRAnimatorController.Instance)
+                VRAnimatorController.Instance.Register(bone, transform, useOffset);
+        }
+
+        private void OnDestroy()
+        {
+            if (VRAnimatorController.Instance)
+                VRAnimatorController.Instance.DeRegister(transform);
+        }
     }
 }

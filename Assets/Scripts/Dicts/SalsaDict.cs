@@ -1,32 +1,35 @@
 using UnityEngine;
 
-public class SalsaDict : MonoBehaviour
+namespace Virtupad
 {
-    public static SalsaDict Instance { get; private set; }
-
-    public float AnimationStartDuration => animationStartDuration;
-    [SerializeField] private float animationStartDuration;
-
-    public float AnimationEndDuration => animationEndDuration;
-    [SerializeField] private float animationEndDuration;
-
-    public AudioClip EmptyClip => emptyClip;
-    [SerializeField] private AudioClip emptyClip;
-
-    private void Awake()
+    public class SalsaDict : MonoBehaviour
     {
-        if (Instance)
+        public static SalsaDict Instance { get; private set; }
+
+        public float AnimationStartDuration => animationStartDuration;
+        [SerializeField] private float animationStartDuration;
+
+        public float AnimationEndDuration => animationEndDuration;
+        [SerializeField] private float animationEndDuration;
+
+        public AudioClip EmptyClip => emptyClip;
+        [SerializeField] private AudioClip emptyClip;
+
+        private void Awake()
         {
-            Debug.LogWarning("SalsaDict already in scene. Deleting myself!");
-            Destroy(this);
-            return;
+            if (Instance)
+            {
+                Debug.LogWarning("SalsaDict already in scene. Deleting myself!");
+                Destroy(this);
+                return;
+            }
+            Instance = this;
         }
-        Instance = this;
-    }
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-            Instance = null;
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
     }
 }

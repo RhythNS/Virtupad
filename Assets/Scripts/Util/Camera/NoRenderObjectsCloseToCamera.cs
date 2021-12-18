@@ -1,57 +1,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoRenderObjectsCloseToCamera : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private Camera onCamera;
-    private readonly List<NoRenderMarker> noRender = new List<NoRenderMarker>();
-
-    private void Awake()
+    public class NoRenderObjectsCloseToCamera : MonoBehaviour
     {
-        if (onCamera != null || TryGetComponent(out onCamera) == true)
-            return;
+        [SerializeField] private Camera onCamera;
+        private readonly List<NoRenderMarker> noRender = new List<NoRenderMarker>();
 
-        Debug.LogWarning("Expected a camera! Deleting myself!");
-        Destroy(this);
-    }
+        private void Awake()
+        {
+            if (onCamera != null || TryGetComponent(out onCamera) == true)
+                return;
 
-    void Start()
-    {
-        Camera.onPreCull += OnPreCullCallback;
-        Camera.onPreRender += OnPreRenderCallback;
-    }
+            Debug.LogWarning("Expected a camera! Deleting myself!");
+            Destroy(this);
+        }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out NoRenderMarker noRenderMarker) == false)
-            return;
+        void Start()
+        {
+            Camera.onPreCull += OnPreCullCallback;
+            Camera.onPreRender += OnPreRenderCallback;
+        }
 
-        noRender.Add(noRenderMarker);
-    }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out NoRenderMarker noRenderMarker) == false)
+                return;
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out NoRenderMarker noRenderMarker) == false)
-            return;
+            noRender.Add(noRenderMarker);
+        }
 
-        noRender.Remove(noRenderMarker);
-    }
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out NoRenderMarker noRenderMarker) == false)
+                return;
 
-    private void OnPreCullCallback(Camera camera)
-    {
-        if (camera == onCamera)
-            noRender.ForEach(x => x.ToggleRenderers(false));
-    }
+            noRender.Remove(noRenderMarker);
+        }
 
-    private void OnPreRenderCallback(Camera camera)
-    {
-        if (camera == onCamera)
-            noRender.ForEach(x => x.ToggleRenderers(true));
-    }
+        private void OnPreCullCallback(Camera camera)
+        {
+            if (camera == onCamera)
+                noRender.ForEach(x => x.ToggleRenderers(false));
+        }
 
-    private void OnDestroy()
-    {
-        Camera.onPreCull -= OnPreCullCallback;
-        Camera.onPreRender -= OnPreRenderCallback;
+        private void OnPreRenderCallback(Camera camera)
+        {
+            if (camera == onCamera)
+                noRender.ForEach(x => x.ToggleRenderers(true));
+        }
+
+        private void OnDestroy()
+        {
+            Camera.onPreCull -= OnPreCullCallback;
+            Camera.onPreRender -= OnPreRenderCallback;
+        }
     }
 }

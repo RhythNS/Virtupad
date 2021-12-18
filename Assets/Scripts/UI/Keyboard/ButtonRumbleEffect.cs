@@ -1,12 +1,15 @@
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-public class ButtonRumbleEffect : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private ushort microseconds = 1000;
-
-    public void OnButtonDown(Hand fromHand)
+    public class ButtonRumbleEffect : MonoBehaviour
     {
-        fromHand.TriggerHapticPulse(microseconds);
+        [SerializeField] private ushort microseconds = 1000;
+
+        public void OnButtonDown(Hand fromHand)
+        {
+            fromHand.TriggerHapticPulse(microseconds);
+        }
     }
 }

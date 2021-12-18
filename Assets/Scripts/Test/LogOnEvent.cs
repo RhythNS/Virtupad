@@ -1,20 +1,23 @@
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-public class LogOnEvent : MonoBehaviour
+namespace Virtupad
 {
-    private void Start()
+    public class LogOnEvent : MonoBehaviour
     {
-        GetComponent<HoverButton>().onButtonDown.AddListener(OnHover);
-    }
+        private void Start()
+        {
+            GetComponent<HoverButton>().onButtonDown.AddListener(OnHover);
+        }
 
-    public void Print()
-    {
-        Debug.Log("Event fired!");
-    }
+        public void Print()
+        {
+            Debug.Log("Event fired!");
+        }
 
-    public void OnHover(Hand hand)
-    {
-        hand.TriggerHapticPulse(10000);
+        public void OnHover(Hand hand)
+        {
+            hand.TriggerHapticPulse(10000);
+        }
     }
 }

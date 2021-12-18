@@ -1,37 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveTest : MonoBehaviour
+namespace Virtupad
 {
-    [SerializeField] private Transform toMove;
-
-    private Collider ownCollider;
-
-    [SerializeField] private List<Collider> intersecting = new List<Collider>();
-
-    private void Awake()
+    public class MoveTest : MonoBehaviour
     {
-        ownCollider = GetComponent<Collider>();
-    
-        Physics.IgnoreCollision(ownCollider, toMove.GetComponent<Collider>());
-    }
+        [SerializeField] private Transform toMove;
 
-    private void FixedUpdate()
-    {
-        if (intersecting.Count > 0)
-            return;
+        private Collider ownCollider;
 
-        toMove.position = transform.position;
-        toMove.rotation = transform.rotation;
-    }
+        [SerializeField] private List<Collider> intersecting = new List<Collider>();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        intersecting.Add(other);
-    }
+        private void Awake()
+        {
+            ownCollider = GetComponent<Collider>();
 
-    private void OnTriggerExit(Collider other)
-    {
-        intersecting.Remove(other);
+            Physics.IgnoreCollision(ownCollider, toMove.GetComponent<Collider>());
+        }
+
+        private void FixedUpdate()
+        {
+            if (intersecting.Count > 0)
+                return;
+
+            toMove.position = transform.position;
+            toMove.rotation = transform.rotation;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            intersecting.Add(other);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            intersecting.Remove(other);
+        }
     }
 }

@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrayDict : MonoBehaviour
+namespace Virtupad
 {
+    public class ArrayDict : MonoBehaviour
+    {
 
+    }
 }
