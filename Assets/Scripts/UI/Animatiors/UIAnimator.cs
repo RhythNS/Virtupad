@@ -102,6 +102,17 @@ namespace Virtupad
             }
         }
 
+        private void OnDisable()
+        {
+            toAnimate.transform.localPosition = startPoint;
+
+            if (moveCoroutine != null && moveCoroutine.IsFinshed == false)
+                moveCoroutine.Stop(false);
+
+            moveCoroutine = null;
+            atPercentage = 0.0f;
+        }
+
         private void OnDestroy()
         {
             if (toAnimate)

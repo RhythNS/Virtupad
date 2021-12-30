@@ -32,7 +32,7 @@ namespace Virtupad
         {
             for (int i = 0; i < collections.Length; i++)
             {
-                VRMLoader.Instance.SpawnModel(collections[i].index, collections[i].position, collections[i].rotation);
+                VRMLoader.Instance.DebugSpawnModel(collections[i].index, collections[i].position, collections[i].rotation);
                 yield return new WaitForSeconds(timeBetween);
             }
         }

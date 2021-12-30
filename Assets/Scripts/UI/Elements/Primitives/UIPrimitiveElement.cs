@@ -16,6 +16,7 @@ namespace Virtupad
         public Vector2Int uiPos;
         public UIPrimitiveElement parent;
         public event VoidEvent OnInitEvent;
+        public event VoidEvent OnResetEvent;
 
         protected Fast2DArray<UIPrimitiveElement> children;
         protected UIControllerIntercept controllerIntercept;
@@ -46,6 +47,23 @@ namespace Virtupad
                 {
                     if (children[x, y] != null)
                         children[x, y].OnInit();
+                }
+            }
+        }
+
+        public virtual void OnReset()
+        {
+            OnResetEvent?.Invoke();
+
+            if (children == null)
+                return;
+
+            for (int x = 0; x < children.XSize; x++)
+            {
+                for (int y = 0; y < children.YSize; y++)
+                {
+                    if (children[x, y] != null)
+                        children[x, y].OnReset();
                 }
             }
         }
@@ -81,6 +99,10 @@ namespace Virtupad
                 return;
             }
 
+            if (element.parent != null && element.parent != this)
+                element.parent.RemoveChild(element);
+
+            element.parent = this;
             children[pos.x, pos.y] = element;
         }
 
@@ -94,14 +116,21 @@ namespace Virtupad
 
             if (selected == element)
                 selected = null;
+
+            element.parent = null;
         }
 
         public virtual void RemoveAllChildren()
         {
+            if (children == null)
+                return;
+
             for (int x = 0; x < children.XSize; x++)
             {
                 for (int y = 0; y < children.YSize; y++)
                 {
+                    if (children[x, y] != null)
+                        children[x, y].parent = null;
                     children[x, y] = null;
                 }
             }

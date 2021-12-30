@@ -7,7 +7,6 @@ public class SaveFileManager : MonoBehaviour
 {
     public static SaveFileManager Instance { get; private set; }
 
-
     [SerializeField] public SaveGame saveGame;
 
     private void Awake()

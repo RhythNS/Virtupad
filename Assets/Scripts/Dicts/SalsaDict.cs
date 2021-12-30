@@ -6,12 +6,6 @@ namespace Virtupad
     {
         public static SalsaDict Instance { get; private set; }
 
-        public float AnimationStartDuration => animationStartDuration;
-        [SerializeField] private float animationStartDuration;
-
-        public float AnimationEndDuration => animationEndDuration;
-        [SerializeField] private float animationEndDuration;
-
         public AudioClip EmptyClip => emptyClip;
         [SerializeField] private AudioClip emptyClip;
 

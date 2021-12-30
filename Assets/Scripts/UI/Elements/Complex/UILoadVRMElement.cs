@@ -54,7 +54,8 @@ namespace Virtupad
 
         private IEnumerator WaitUntilImagePreview()
         {
-            Coroutine loadingAnimation = StartCoroutine(DoLoadingAnimation());
+            Coroutine loadingAnimation = StartCoroutine(UIVRMSelector.Instance.DoLoadingAnimation(previewImage));
+
             while (true)
             {
                 yield return null;
@@ -68,20 +69,12 @@ namespace Virtupad
             }
         }
 
-        private IEnumerator DoLoadingAnimation()
+        private void OnDisable()
         {
-            Sprite[] loadingSpriteAnimation = UIVRMSelector.Instance.LoadingSpriteAnimation;
-            int at = 0;
-            float waitTime = UIVRMSelector.Instance.LoadingAnimationSecondsPerFrame;
+            if (waitForImageCoroutine != null && waitForImageCoroutine.IsFinshed == false)
+                waitForImageCoroutine.Stop(false);
 
-            while (true)
-            {
-                if (++at >= loadingSpriteAnimation.Length)
-                    at = 0;
-
-                previewImage.sprite = loadingSpriteAnimation[at];
-                yield return new WaitForSeconds(waitTime);
-            }
+            waitForImageCoroutine = null;
         }
 
         private void SetPreviewImage()

@@ -1,5 +1,8 @@
 using SimpleFileBrowser;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using VRM;
 using static Virtupad.LastLoadedVRMs;
 
@@ -9,9 +12,17 @@ namespace Virtupad
     {
         public static UIVRMSelector Instance { get; private set; }
 
+        public UIElementSwitcher Switcher => switcher;
+        [SerializeField] private UIElementSwitcher switcher;
+
         [SerializeField] private int maxVRMElementsInPanel = 16;
         [SerializeField] private RectTransform vrmPanel;
+
+        public LastLoadedVRMs LastLoadedVRMs => lastLoadedVRMs;
         [SerializeField] private LastLoadedVRMs lastLoadedVRMs;
+
+        [SerializeField] private UIPrimitiveElement lastLoadedVRMsPanel;
+        [SerializeField] private GridLayoutGroup lastLoadedGroup;
 
         public Sprite NoTextureFound => noTextureFound;
         [SerializeField] private Sprite noTextureFound;
@@ -44,19 +55,36 @@ namespace Virtupad
 
         private void OnEnable()
         {
-            lastLoadedVRMs.Init(SaveFileManager.Instance.saveGame.vrms);
+            List<SaveGame.LoadVRM> vrms = SaveFileManager.Instance.saveGame.vrms;
+            if (vrms == null)
+                vrms = new List<SaveGame.LoadVRM>();
+            lastLoadedVRMs.Init(vrms);
+
             SetCurrentLastLoadedVRMs();
         }
 
-
         public void LoadVRMFromFilePath(LoadVRM vrm)
         {
-            Debug.Log("Now loading model: " + vrm.filepath);
+            Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LoadingInProgress);
+            UILoadVRMInProgressPanel.Instance.TryToLoad(vrm.filepath);
         }
 
         public void LoadVRMFromPrefab(VRMHumanoidDescription prefab)
         {
-            Debug.Log("Now loading overide model: " + prefab.name);
+            Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LoadingInProgress);
+            UILoadVRMInProgressPanel.Instance.TryToLoad(prefab);
+        }
+
+        public override void OnInit()
+        {
+            base.OnInit();
+            InitPositionOfLastLoaded();
+        }
+
+        public void Refresh()
+        {
+            atPage = 0;
+            SetCurrentLastLoadedVRMs();
         }
 
         public void SetNextPage()
@@ -98,7 +126,45 @@ namespace Virtupad
             int elementIndex = -1;
             for (int i = from; i < to; i++)
             {
-                vrmPanel.GetChild(++elementIndex).GetComponent<UILoadVRMElement>().LoadVRM = lastLoadedVRMs.LastLoaded[i];
+                UILoadVRMElement loadElement = vrmPanel.GetChild(++elementIndex).GetComponent<UILoadVRMElement>();
+                loadElement.LoadVRM = lastLoadedVRMs.LastLoaded[i];
+            }
+
+            InitPositionOfLastLoaded();
+        }
+
+        private void InitPositionOfLastLoaded()
+        {
+            lastLoadedVRMsPanel.RemoveAllChildren();
+
+            // ---- Gotten from ----
+            // https://stackoverflow.com/questions/52353898/get-column-and-row-of-count-from-gridlayoutgroup-programmatically
+            int colNum = 0;
+            Vector3 firstElementPosition = lastLoadedGroup.transform.GetChild(0).localPosition;
+            foreach (Transform t in lastLoadedGroup.transform)
+            {
+                if (Mathf.Approximately(firstElementPosition.y, t.localPosition.y) == false)
+                    break;
+                colNum++;
+            }
+
+            int rowNum = 1;
+            foreach (Transform t in lastLoadedGroup.transform)
+            {
+                if (Mathf.Approximately(firstElementPosition.y, t.localPosition.y) == false)
+                {
+                    rowNum++;
+                    firstElementPosition = t.localPosition;
+                }
+            }
+            // ---- Gotten from ----
+
+            for (int i = 0; i < lastLoadedGroup.transform.childCount; i++)
+            {
+                UILoadVRMElement loadElement = lastLoadedGroup.transform.GetChild(i).GetComponent<UILoadVRMElement>();
+
+                loadElement.uiPos = new Vector2Int(i % colNum, rowNum - (i / colNum) - 1);
+                lastLoadedVRMsPanel.AddChild(loadElement);
             }
         }
 
@@ -107,38 +173,62 @@ namespace Virtupad
             if (count == vrmPanel.childCount)
                 return;
 
-            if (count < vrmPanel.childCount)
+            if (count > vrmPanel.childCount)
             {
-                while (count < vrmPanel.childCount)
+                while (count > vrmPanel.childCount)
                 {
                     Instantiate(prefabElement, vrmPanel);
                 }
                 return;
             }
 
-            while (count > vrmPanel.childCount)
+            while (count < vrmPanel.childCount)
             {
-                Destroy(vrmPanel.GetChild(count - 1));
+                Transform trans = vrmPanel.GetChild(vrmPanel.childCount - 1);
+                UILoadVRMElement loadElement = trans.GetComponent<UILoadVRMElement>();
+                loadElement.parent.RemoveChild(loadElement);
+                trans.SetParent(null, false);
+                Destroy(trans.gameObject);
             }
         }
 
         public void ShowFileDialog()
         {
-            (parent as UIElementSwitcher).SwitchChild((int)MidPanelSwitcherIndexes.FileBrowser);
+            Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.FileBrowser);
             FileBrowser.SetFilters(true, new FileBrowser.Filter("VRM model files", ".vrm"));
             FileBrowser.ShowLoadDialog(OnFileSuccess, OnFileCancel, FileBrowser.PickMode.Files);
         }
 
         private void OnFileSuccess(string[] paths)
         {
-            gameObject.SetActive(true);
-            (parent as UIElementSwitcher).SwitchChild((int)MidPanelSwitcherIndexes.UIVRMSelector);
+            if (paths == null || paths.Length == 0 || string.IsNullOrEmpty(paths[0]))
+            {
+                OnFileCancel();
+                return;
+            }
+
+            Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LoadingInProgress);
+            UILoadVRMInProgressPanel.Instance.TryToLoad(paths[0]);
+        }
+
+        public IEnumerator DoLoadingAnimation(Image image)
+        {
+            int at = 0;
+
+            while (true)
+            {
+                if (++at >= loadingSpriteAnimation.Length)
+                    at = 0;
+
+                image.sprite = loadingSpriteAnimation[at];
+                yield return new WaitForSeconds(loadingAnimationSecondsPerFrame);
+            }
         }
 
         private void OnFileCancel()
         {
             gameObject.SetActive(true);
-            (parent as UIElementSwitcher).SwitchChild((int)MidPanelSwitcherIndexes.UIVRMSelector);
+            Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LastLoaded);
         }
 
         private void OnDisable()

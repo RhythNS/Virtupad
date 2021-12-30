@@ -62,6 +62,10 @@ GameObject:
   - component: {fileID: 3689714305140074729}
   - component: {fileID: 4331071301417253539}
   - component: {fileID: 1374518952343709538}
+  - component: {fileID: 6115851557703159721}
+  - component: {fileID: 967851030718722207}
+  - component: {fileID: 4098422726681812854}
+  - component: {fileID: 4769726672203580297}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -154,6 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  interacters: []
 --- !u!114 &3689714305140074729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,8 +177,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -195,39 +200,21 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.01
-      inSlope: 0.07662235
-      outSlope: 0.07662235
+      value: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.10344351
-    - serializedVersion: 3
-      time: 0.5926301
-      value: 0.39236566
-      inSlope: 1.8391161
-      outSlope: 1.8391161
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 1
-    - serializedVersion: 3
-      time: 0.9309414
-      value: 1.0159649
-      inSlope: 2.133487
-      outSlope: 2.6743798
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.074314356
-      outWeight: 0.3076546
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 4.357964
-      outSlope: 4.357964
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.1684387
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -238,18 +225,18 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -292,3 +279,86 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuStack: []
   root: {fileID: 0}
+--- !u!114 &6115851557703159721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a724c2f92924384e89d4686578e96cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emptyClip: {fileID: 8300000, guid: be7ce50a3d5c057459eba3f954cdbff3, type: 3}
+--- !u!114 &967851030718722207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda0c9f439e80eb49bc8a2e16c96c799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveGame:
+    vrms: []
+--- !u!114 &4098422726681812854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bf9ef2d8e8b734ba32f7ed82b61424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4769726672203580297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4927bad913df60f4ebf61e520817929a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layouts:
+  - layout:
+      spaceButtonLabel: SPACE
+      enterButtonLabel: ENTER
+      cancelButtonLabel: CANCEL
+      shiftButtonLabel: SHIFT
+      backspaceButtonLabel: BACKSPACE
+      clearButtonLabel: CLEAR
+      row1Keys:
+      - key: ~
+        shifted: ~
+        keyValue: 186
+        keyShiftedValue: 186
+        hasShiftedValue: 1
+      - key: 1
+        shifted: 1
+        keyValue: 49
+        keyShiftedValue: 49
+        hasShiftedValue: 1
+      - key: 1
+        shifted: 1
+        keyValue: 49
+        keyShiftedValue: 49
+        hasShiftedValue: 1
+      row2Keys: []
+      row3Keys: []
+      row4Keys: []
+      row1Offset: 0
+      row2Offset: 0
+      row3Offset: 0
+      row4Offset: 0
+    locale: en

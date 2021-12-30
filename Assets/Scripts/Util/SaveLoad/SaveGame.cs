@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Serilizable save game.
@@ -16,5 +17,5 @@ public class SaveGame
         public int previewWidth, previewHeight;
     }
 
-    public List<LoadVRM> vrms = new List<LoadVRM>();
+    [SerializeField] public List<LoadVRM> vrms;
 }

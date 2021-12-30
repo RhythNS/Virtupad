@@ -14,6 +14,18 @@ namespace Virtupad
         public List<Interacter> Interacters => interacters;
         [SerializeField] private List<Interacter> interacters = new List<Interacter>();
 
+        public SetDefinition CurrentDefinition
+        {
+            get => currentDefinition;
+            set
+            {
+                currentDefinition = value;
+                onSetDefinitionChanged?.Invoke(value);
+            }
+        }
+        private SetDefinition currentDefinition;
+        public SetDefinitionChanged onSetDefinitionChanged;
+
         private void Awake()
         {
             if (Instance)

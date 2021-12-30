@@ -80,13 +80,14 @@ namespace Virtupad
                 return;
             }
 
+            if (lastSelectedInteractable != null)
+                lastSelectedInteractable.Select();
+
             if (ShouldGoOff())
             {
                 Stop();
                 return;
             }
-
-            lastSelectedInteractable.Select();
         }
 
         private bool ShouldGoOff() => lastSelectedInteractable == null || lastSelectedInteractable.TryGetComponent<IStayOnInteractable>(out _) == false;

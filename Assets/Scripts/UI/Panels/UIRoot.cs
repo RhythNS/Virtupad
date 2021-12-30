@@ -5,6 +5,8 @@ namespace Virtupad
 {
     public class UIRoot : UIPanel
     {
+        public static UIRoot Instance { get; private set; }
+
         [SerializeField] private Vector3 normalScale;
         [SerializeField] private Vector3 closingScale = new Vector3(0.01f, 0.01f, 0.01f);
         [SerializeField] private float animationTime = 0.3f;
@@ -12,11 +14,26 @@ namespace Virtupad
         [SerializeField] private Vector3 forwardTrackingPosition = new Vector3(0.0f, 1.0f, 1.5f);
         [SerializeField] private Quaternion trackingRotation;
 
+        public UIElementSwitcher MainSwitcher => mainSwitcher;
+        [SerializeField] private UIElementSwitcher mainSwitcher;
+
+        public UIMenuSelectionPanel SelectionPanel => selectionPanel;
+        [SerializeField] private UIMenuSelectionPanel selectionPanel;
+
         private ExtendedCoroutine hideOrShowingCoroutine;
         private Transform toTrack;
 
         private void Awake()
         {
+            if (Instance)
+            {
+                Debug.LogWarning("UIVRMSelector already in scene. Deleting myself!");
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+
             trackingRotation = transform.rotation;
             normalScale = transform.localScale;
             transform.localScale = closingScale;
@@ -27,8 +44,7 @@ namespace Virtupad
         {
             toTrack = VRController.Instance?.transform;
 
-            if (toTrack == null)
-                return;
+            OnReset();
         }
 
         private void Update()
@@ -70,6 +86,7 @@ namespace Virtupad
         private void OnAnimationFinished()
         {
             OnInit();
+            selectionPanel.OnInit();
         }
 
         private void OnHidden()
@@ -79,6 +96,12 @@ namespace Virtupad
             List<Interacter> interacters = GlobalsDict.Instance.Interacters;
             for (int i = 0; i < interacters.Count; i++)
                 interacters[i].StopRequest();
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
     }
 }

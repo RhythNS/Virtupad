@@ -38,6 +38,18 @@ namespace Virtupad
             }
         }
 
+        public static RigMaker.Config? GetConfig()
+        {
+            return VRController.Instance.trackers.Count switch
+            {
+                0 => RigMaker.Config.ThreePoints,
+                1 => RigMaker.Config.FourPoints,
+                2 => RigMaker.Config.FivePoints,
+                3 => RigMaker.Config.SixPoints,
+                _ => null
+            };
+        }
+
         public static RigMaker.Config? AutoAssignTrackers()
         {
             List<VRTracker> trackers = VRController.Instance.trackers;

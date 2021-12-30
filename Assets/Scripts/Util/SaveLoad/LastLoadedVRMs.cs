@@ -11,7 +11,7 @@ namespace Virtupad
     public class LastLoadedVRMs : MonoBehaviour
     {
         [System.Serializable]
-        public class LoadVRM : IComparer<LoadVRM>
+        public class LoadVRM : IComparer<LoadVRM>, IComparable<LoadVRM>
         {
             public string filepath;
             public int id;
@@ -24,6 +24,8 @@ namespace Virtupad
                 "" : Path.GetFileNameWithoutExtension(filepath);
 
             public int Compare(LoadVRM x, LoadVRM y) => x.lastLoaded > y.lastLoaded ? 1 : -1;
+
+            public int CompareTo(LoadVRM other) => this.lastLoaded > other.lastLoaded ? 1 : -1;
 
             public void Free()
             {
@@ -46,7 +48,7 @@ namespace Virtupad
             FreeAll();
             lastLoaded.Clear();
 
-            if (File.Exists(vrmFolder) == false)
+            if (Directory.Exists(vrmFolder) == false)
                 Directory.CreateDirectory(vrmFolder);
 
             List<string> pngs = Directory.GetFiles(vrmFolder, "*.png", SearchOption.TopDirectoryOnly).ToList();
@@ -140,6 +142,7 @@ namespace Virtupad
             };
 
             lastLoaded.Add(loadVRM);
+            OnUpdateSaveGame();
         }
 
         private int GetNextFreeID()
@@ -147,7 +150,17 @@ namespace Virtupad
             List<string> pngs = Directory.GetFiles(vrmFolder, "*.png", SearchOption.TopDirectoryOnly).ToList();
             for (int i = 0; i < int.MaxValue; i++)
             {
-                if (Path.GetFileNameWithoutExtension(pngs[i]).Equals(i.ToString()) == false)
+                bool isFree = true;
+                for (int j = 0; j < pngs.Count; j++)
+                {
+                    if (Path.GetFileNameWithoutExtension(pngs[j]).Equals(i.ToString()) == true)
+                    {
+                        isFree = false;
+                        break;
+                    }
+                }
+
+                if (isFree == true)
                     return i;
             }
 
@@ -156,7 +169,7 @@ namespace Virtupad
 
         public bool IsValid(string filepath)
         {
-            return File.Exists(filepath) && File.Exists(vrmFolder);
+            return File.Exists(filepath) && Directory.Exists(vrmFolder);
         }
 
         public void DeleteFromHistory(LoadVRM loadVRM)
@@ -184,7 +197,7 @@ namespace Virtupad
             try
             {
                 byte[] write = texture.EncodeToPNG();
-                File.WriteAllBytes(path, write);
+                File.WriteAllBytes(path + ".png", write);
                 return true;
             }
             catch (Exception)
@@ -195,12 +208,21 @@ namespace Virtupad
 
         public IEnumerator RequestPreviewImages(int fromInclusive, int toExclusive)
         {
+            List<string> pngs = Directory.GetFiles(vrmFolder, "*.png", SearchOption.TopDirectoryOnly).ToList();
+
             for (int i = fromInclusive; i < toExclusive; i++)
             {
                 if (IsValid(lastLoaded[i].filepath) == false)
                     continue;
 
-                Task<byte[]> byteTask = ReadBytes(lastLoaded[i].filepath);
+                int index = pngs.FindIndex(x => Path.GetFileName(x) == lastLoaded[i].id + ".png");
+
+                if (index == -1)
+                    continue;
+
+                Task<byte[]> byteTask = ReadBytes(pngs[index]);
+                pngs.RemoveAt(index);
+
                 yield return new WaitUntil(() => byteTask.IsCompleted);
 
                 byte[] read = byteTask.Result;

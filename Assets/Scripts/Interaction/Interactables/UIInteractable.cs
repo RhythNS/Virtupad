@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -23,6 +25,9 @@ namespace Virtupad
         [SerializeField] private UIInteractableSizer sizer = 0;
 
         [SerializeField] protected UIPrimitiveElement element;
+
+        [SerializeField] private Vector3 fromOffset;
+        [SerializeField] private Vector3 toOffset;
 
         public virtual void Awake()
         {
@@ -56,20 +61,43 @@ namespace Virtupad
 
         protected override void OnStayHover(Vector3 impactPoint)
         {
+
         }
 
         public override void OnBeginSelecting(Vector3 impactPoint)
         {
+
         }
 
         public override void OnStaySelecting(Vector3 impactPoint)
         {
+            /*
+            Debug.Log(gameObject.name  + "Staying selecting");
+            Vector3 fromAdj = transform.position + fromOffset;
+            Vector3 toAdj = transform.position + toOffset;
+
+            Vector3 from = new Vector3(Mathf.Min(fromAdj.x, toAdj.x), Mathf.Min(fromAdj.y, toAdj.y), Mathf.Min(fromAdj.z, toAdj.z));
+            Vector3 to = new Vector3(Mathf.Max(fromAdj.x, toAdj.x), Mathf.Max(fromAdj.y, toAdj.y), Mathf.Max(fromAdj.y, toAdj.y));
+
+            impactPoint = MathUtil.VectorClamp(impactPoint, from, to);
+             */
+
             PointerEventData eventData = UIEventThrower.GetDefaultPed(impactPoint);
             element.OnEvent(ExecuteEvents.dragHandler, false, eventData);
         }
 
         public override void OnEndSelecting()
         {
+
+        }
+
+        public IEnumerator AutoSizeEverySeconds(float seconds)
+        {
+            while (true)
+            {
+                yield return seconds;
+                AutoSize();
+            }
         }
 
         public void AutoSize()
@@ -87,11 +115,19 @@ namespace Virtupad
             Rect rect = trans.rect;
             collider.size = rect.size;
 
-            if (sizer == 0)
-                return;
+            if (sizer != 0)
+                ComplexAutoSize(rect, collider);
 
+            Vector3 size = collider.size * 0.5f;
+            fromOffset = -size;
+            toOffset = size;
+        }
+
+        private void ComplexAutoSize(Rect rect, BoxCollider collider)
+        {
             Vector3 halfSize = rect.size * 0.5f;
             Vector3 center = Vector3.zero;
+
             if (sizer.HasFlag(UIInteractableSizer.XPlus))
                 center.x = halfSize.x;
             else if (sizer.HasFlag(UIInteractableSizer.XMinus))
@@ -113,7 +149,11 @@ namespace Virtupad
         private void OnValidate()
         {
             if (element == null)
-                Debug.LogWarning(gameObject.name + " does not have an element assigend!");
+            {
+                List<string> list = ComponentObjectUtil.GetRecursiveListOfParents(transform);
+                Debug.LogWarning(gameObject.name + " does not have an element assigend!" +
+                    "\nParents are" + string.Join("\n", list));
+            }
         }
     }
 
