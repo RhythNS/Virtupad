@@ -14,7 +14,8 @@
         "Unity.XR.OpenVR",
         "SteamVR_Actions",
         "SalsaAddons",
-        "SimpleFileBrowser.Runtime"
+        "SimpleFileBrowser.Runtime",
+        "OutlineEffect"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

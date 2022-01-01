@@ -7,6 +7,7 @@ namespace Virtupad
     {
         public bool SnapToObject { get; protected set; } = true;
 
+        public List<Interacter> CurrentlyInteracting => currentlyInteracting;
         private List<Interacter> currentlyInteracting = new List<Interacter>();
 
         public abstract void Select();

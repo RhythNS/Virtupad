@@ -3,13 +3,9 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public class UIRoot : UIPanel
+    public class UIRoot : UIAnimationPanel
     {
         public static UIRoot Instance { get; private set; }
-
-        [SerializeField] private Vector3 normalScale;
-        [SerializeField] private Vector3 closingScale = new Vector3(0.01f, 0.01f, 0.01f);
-        [SerializeField] private float animationTime = 0.3f;
 
         [SerializeField] private Vector3 forwardTrackingPosition = new Vector3(0.0f, 1.0f, 1.5f);
         [SerializeField] private Quaternion trackingRotation;
@@ -20,10 +16,9 @@ namespace Virtupad
         public UIMenuSelectionPanel SelectionPanel => selectionPanel;
         [SerializeField] private UIMenuSelectionPanel selectionPanel;
 
-        private ExtendedCoroutine hideOrShowingCoroutine;
         private Transform toTrack;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance)
             {
@@ -31,20 +26,18 @@ namespace Virtupad
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
 
+            base.Awake();
             trackingRotation = transform.rotation;
-            normalScale = transform.localScale;
-            transform.localScale = closingScale;
             gameObject.SetActive(false);
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
             toTrack = VRController.Instance?.transform;
 
-            OnReset();
+            base.OnEnable();
         }
 
         private void Update()
@@ -56,46 +49,10 @@ namespace Virtupad
             transform.rotation = toTrack.rotation * trackingRotation;
         }
 
-        public override void LooseFocus(bool closing)
+        protected override void OnAnimationFinished()
         {
-            if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
-                hideOrShowingCoroutine.Stop(false);
-
-            hideOrShowingCoroutine = new ExtendedCoroutine(this,
-                EnumeratorUtil.ScaleInSecondsCurve
-                    (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationTime),
-                OnHidden,
-                true
-                );
-        }
-
-        public override void RegainFocus(UIRegainFocusMessage msg)
-        {
-            gameObject.SetActive(true);
-
-            if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
-                hideOrShowingCoroutine.Stop(false);
-
-            hideOrShowingCoroutine = new ExtendedCoroutine(this,
-                EnumeratorUtil.ScaleInSecondsCurve
-                    (transform, normalScale, CurveDict.Instance.UIInAnimation, animationTime),
-                OnAnimationFinished, true
-                );
-        }
-
-        private void OnAnimationFinished()
-        {
-            OnInit();
+            base.OnAnimationFinished();
             selectionPanel.OnInit();
-        }
-
-        private void OnHidden()
-        {
-            gameObject.SetActive(false);
-
-            List<Interacter> interacters = GlobalsDict.Instance.Interacters;
-            for (int i = 0; i < interacters.Count; i++)
-                interacters[i].StopRequest();
         }
 
         private void OnDestroy()
