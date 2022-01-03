@@ -11,7 +11,8 @@ namespace Virtupad
         public List<StudioCamera> Cameras { get => cameras; set => cameras = value; }
         private List<StudioCamera> cameras = new List<StudioCamera>();
 
-        public StudioCameraChanged OnStudioCameraChanged;
+        public event StudioCamerasChanged OnCamerasChanged;
+        public event StudioCameraChanged OnActiveStudioCameraChanged;
 
         private StudioCamera activeCamera;
         public StudioCamera ActiveCamera
@@ -42,7 +43,7 @@ namespace Virtupad
 
                 activeCamera = value;
 
-                OnStudioCameraChanged?.Invoke(value);
+                OnActiveStudioCameraChanged?.Invoke(value);
             }
         }
         private List<StudioCamera> prevCameras = new List<StudioCamera>();
@@ -51,6 +52,8 @@ namespace Virtupad
         [SerializeField] private StudioCamera prefabCamera;
 
         [SerializeField] private float previewResolutionMultiplier = 0.5f;
+
+        public bool ForcePreviewRender { get; set; } = false;
 
         public Vector2 DesiredResolution => new Vector2((float)Screen.width * previewResolutionMultiplier,
             (float)Screen.height * previewResolutionMultiplier);
@@ -71,6 +74,24 @@ namespace Virtupad
         private void Start()
         {
             ResolutionChange.Instance.OnResolutionChanged += OnResolutionChanged;
+            StartCoroutine(RenderCameras());
+        }
+
+        private IEnumerator RenderCameras()
+        {
+            while (true)
+            {
+                for (int i = 0; i < cameras.Count; i++)
+                {
+                    if (cameras[i].IsPreviewOutputting == true || ForcePreviewRender == true)
+                    {
+                        cameras[i].PreviewCamera.Render();
+                        yield return null;
+                    }
+                }
+
+                yield return null;
+            }
         }
 
         private void OnResolutionChanged(Vector2Int newResolution)
@@ -92,18 +113,32 @@ namespace Virtupad
             }
         }
 
-        public Vector2 RegisterAndGetPreviewResolution(StudioCamera studioCamera)
+        public void Register(StudioCamera studioCamera, out Vector2 resolution)
         {
+            studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;
             cameras.Add(studioCamera);
-            return DesiredResolution;
+            resolution = DesiredResolution;
+            OnCamerasChanged?.Invoke(cameras);
         }
 
         public void DeRegister(StudioCamera studioCamera)
         {
             cameras.Remove(studioCamera);
+            for (int i = studioCamera.Id; i < cameras.Count; i++)
+                cameras[i].Id = i;
 
             if (prevCameras.Contains(studioCamera))
                 prevCameras.Remove(studioCamera);
+
+            if (activeCamera == studioCamera)
+                activeCamera = null;
+
+            OnCamerasChanged?.Invoke(cameras);
+        }
+
+        private void SortCameras()
+        {
+            cameras.Sort((StudioCamera a, StudioCamera b) => { return a == b ? 0 : a.Id < b.Id ? -1 : 1; });
         }
 
         private void OnDestroy()

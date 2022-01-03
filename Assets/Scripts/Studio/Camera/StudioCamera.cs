@@ -5,18 +5,36 @@ namespace Virtupad
 {
     public class StudioCamera : OutlineInteractable
     {
+        [System.Serializable]
+        public enum ToTrack
+        {
+            Head, UpperBody, Waist, RightHand, LeftHand, RightFoot, LeftFoot
+        }
+
+        public bool IsTracking => Tracking != null;
         public Transform Tracking { get; set; }
-        public HumanBodyBones TrackingBone { get; set; }
+        public ToTrack TrackingBodyPart
+        {
+            get => trackingBodyPart;
+            set
+            {
+                trackingBodyPart = value;
+                UpdateTrackingBone();
+            }
+        }
+        private ToTrack trackingBodyPart;
+        public HumanBodyBones TrackingBone { get; private set; }
         public Transform Anchor { get; set; }
         public bool Grabbable { get; set; }
-        public bool NonXRotatable { get; set; }
+        public bool SmoothPickUp { get; set; }
         public bool Playing { get; private set; } = false;
         public CameraMover Mover { get; private set; }
+        public int Id { get; set; }
 
         public Camera OutputCamera { get => outputCamera; private set => outputCamera = value; }
         [SerializeField] private Camera outputCamera;
 
-        public bool IsPreviewOutputting => previewCamera.isActiveAndEnabled;
+        public bool IsPreviewOutputting { get; private set; }
         public Camera PreviewCamera { get => previewCamera; set => previewCamera = value; }
         [SerializeField] private Camera previewCamera;
 
@@ -30,9 +48,11 @@ namespace Virtupad
         {
             base.Start();
 
+            previewCamera.enabled = false;
             OnDeActive();
 
-            ChangePreviewResolution(StudioCameraManager.Instance.RegisterAndGetPreviewResolution(this));
+            StudioCameraManager.Instance.Register(this, out Vector2 resolution);
+            ChangePreviewResolution(resolution);
             StudioCameraManager.Instance.ActiveCamera = this;
         }
 
@@ -48,8 +68,25 @@ namespace Virtupad
 
         protected virtual void OnDestroy()
         {
+            ReleasePreviewTexture();
+
             if (StudioCameraManager.Instance != null)
                 StudioCameraManager.Instance.DeRegister(this);
+        }
+
+        private void UpdateTrackingBone()
+        {
+            TrackingBone = TrackingBodyPart switch
+            {
+                ToTrack.Head => HumanBodyBones.Head,
+                ToTrack.UpperBody => HumanBodyBones.Chest,
+                ToTrack.Waist => HumanBodyBones.Hips,
+                ToTrack.RightHand => HumanBodyBones.RightHand,
+                ToTrack.LeftHand => HumanBodyBones.LeftHand,
+                ToTrack.RightFoot => HumanBodyBones.RightFoot,
+                ToTrack.LeftFoot => HumanBodyBones.LeftFoot,
+                _ => HumanBodyBones.Head,
+            };
         }
 
         public void ChangePreviewResolution(Vector2 baseRes)
@@ -70,13 +107,13 @@ namespace Virtupad
 
         public void ActivatePreview()
         {
-            previewCamera.enabled = true;
+            IsPreviewOutputting = true;
             previewOutput.gameObject.SetActive(true);
         }
 
         public void DeactivatePreview()
         {
-            previewCamera.enabled = false;
+            IsPreviewOutputting = false;
             previewOutput.gameObject.SetActive(false);
         }
 

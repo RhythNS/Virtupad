@@ -19,7 +19,7 @@ namespace VRKeys {
 	public class EnterKey : Key {
 
 		public override void HandleTriggerEnter (Collider other) {
-			//keyboard.Submit ();
+			keyboard.AddCharacter(uDesktopDuplication.KeyBoard.Keys.SPACE, false);
 		}
 
 		public override void UpdateLayout (Layout translation) {

@@ -53,6 +53,8 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_mainMenu;
         
+        private static SteamVR_Action_Boolean p_default_quickSelect;
+        
         private static SteamVR_Action_Vibration p_default_Haptic;
         
         public static SteamVR_Action_Boolean default_InteractUI
@@ -199,6 +201,14 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Boolean default_quickSelect
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_quickSelect.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         public static SteamVR_Action_Vibration default_Haptic
         {
             get
@@ -228,6 +238,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_MoveUIElement,
                     SteamVR_Actions.default_SelectUIElement,
                     SteamVR_Actions.default_mainMenu,
+                    SteamVR_Actions.default_quickSelect,
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
@@ -247,7 +258,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Looking,
                     SteamVR_Actions.default_MoveUIElement,
                     SteamVR_Actions.default_SelectUIElement,
-                    SteamVR_Actions.default_mainMenu};
+                    SteamVR_Actions.default_mainMenu,
+                    SteamVR_Actions.default_quickSelect};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[] {
@@ -265,7 +277,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_ChangeInteractable,
                     SteamVR_Actions.default_Interact,
                     SteamVR_Actions.default_SelectUIElement,
-                    SteamVR_Actions.default_mainMenu};
+                    SteamVR_Actions.default_mainMenu,
+                    SteamVR_Actions.default_quickSelect};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
                     SteamVR_Actions.default_Squeeze};
             Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
@@ -291,7 +304,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Looking,
                     SteamVR_Actions.default_MoveUIElement,
                     SteamVR_Actions.default_SelectUIElement,
-                    SteamVR_Actions.default_mainMenu};
+                    SteamVR_Actions.default_mainMenu,
+                    SteamVR_Actions.default_quickSelect};
         }
         
         private static void PreInitActions()
@@ -314,6 +328,7 @@ namespace Valve.VR
             SteamVR_Actions.p_default_MoveUIElement = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/default/in/MoveUIElement")));
             SteamVR_Actions.p_default_SelectUIElement = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SelectUIElement")));
             SteamVR_Actions.p_default_mainMenu = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/mainMenu")));
+            SteamVR_Actions.p_default_quickSelect = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/quickSelect")));
             SteamVR_Actions.p_default_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/default/out/Haptic")));
         }
     }

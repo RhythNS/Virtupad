@@ -134,7 +134,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/selectuielement"
+                     "output" : "/actions/default/in/quickselect"
                   }
                },
                "mode" : "button",
@@ -143,7 +143,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/selectuielement"
+                     "output" : "/actions/default/in/quickselect"
                   }
                },
                "mode" : "button",

@@ -8,14 +8,12 @@
  * Website: https://www.campfireunion.com
  */
 
-using UnityEngine;
-using UnityEngine.XR;
-using UnityEngine.Events;
 using System;
 using System.Collections;
-using TMPro;
-using uDesktopDuplication;
 using System.Collections.Generic;
+using uDesktopDuplication;
+using UnityEngine;
+using UnityEngine.Events;
 using Virtupad;
 
 namespace VRKeys
@@ -45,8 +43,6 @@ namespace VRKeys
         public float keyHeight = 0.16f;
 
         [Space(15)]
-        public GameObject canvas;
-
         public GameObject keyboardWrapper;
 
         public ShiftKey shiftKey;
@@ -120,11 +116,6 @@ namespace VRKeys
 
             disabled = false;
 
-            if (canvas != null)
-            {
-                canvas.SetActive(true);
-            }
-
             if (keysParent != null)
             {
                 keysParent.gameObject.SetActive(true);
@@ -147,11 +138,6 @@ namespace VRKeys
         {
             disabled = true;
 
-            if (canvas != null)
-            {
-                canvas.SetActive(false);
-            }
-
             if (keysParent != null)
             {
                 keysParent.gameObject.SetActive(false);
@@ -164,7 +150,6 @@ namespace VRKeys
         /// <param name="character">Character.</param>
         public void AddCharacter(string character)
         {
-
             OnUpdate.Invoke(character);
 
             if (shifted && character != "" && character != " ")
@@ -263,13 +248,6 @@ namespace VRKeys
             }
         }
 
-        /// <summary>
-        /// Backspace one character.
-        /// </summary>
-        public void Backspace()
-        {
-
-        }
 
         /// <summary>
         /// Cancel input and close the keyboard.
@@ -308,10 +286,9 @@ namespace VRKeys
         /// </summary>
         private IEnumerator SetupKeys()
         {
-            bool activeState = canvas.activeSelf;
+            bool activeState = keysParent.gameObject.activeSelf;
 
             // Hide everything before setting up the keys
-            canvas.SetActive(false);
             keysParent.gameObject.SetActive(false);
 
             // Remove previous keys
@@ -426,7 +403,6 @@ namespace VRKeys
             #endregion
 
             // Reset visibility of canvas and keyboard
-            canvas.SetActive(activeState);
             keysParent.gameObject.SetActive(activeState);
         }
 
@@ -439,7 +415,7 @@ namespace VRKeys
                 obj.transform.localPosition += (Vector3.back * keyHeight * rowIndex);
 
                 LetterKey key = obj.GetComponent<LetterKey>();
-                Layout.LayoutKey layoutKey = currentLayout.row1Keys[i];
+                Layout.LayoutKey layoutKey = row[i];
                 key.Set(layoutKey);
 
                 key.Init(obj.transform.localPosition);

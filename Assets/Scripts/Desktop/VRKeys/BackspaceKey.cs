@@ -19,7 +19,7 @@ namespace VRKeys {
 	public class BackspaceKey : Key {
 
 		public override void HandleTriggerEnter (Collider other) {
-			keyboard.Backspace ();
+			keyboard.AddCharacter(uDesktopDuplication.KeyBoard.Keys.BACKSPACE, false);
 
 			ActivateFor (0.3f);
 		}

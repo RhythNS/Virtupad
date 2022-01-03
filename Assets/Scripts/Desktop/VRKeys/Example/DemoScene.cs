@@ -44,8 +44,8 @@ namespace VRKeys {
 			camera.AddComponent<AudioListener> ();
 
 			// Improves event system performance
-			Canvas canvas = keyboard.canvas.GetComponent<Canvas> ();
-			canvas.worldCamera = cam;
+			//Canvas canvas = keyboard.canvas.GetComponent<Canvas> ();
+		//	canvas.worldCamera = cam;
 
 			keyboard.Enable ();
 			//keyboard.SetPlaceholderMessage ("Please enter your email address");

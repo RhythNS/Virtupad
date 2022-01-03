@@ -6,7 +6,7 @@ namespace Virtupad
     {
         private void Start()
         {
-            StudioCameraManager.Instance.OnStudioCameraChanged += OnCameraChanged;
+            StudioCameraManager.Instance.OnActiveStudioCameraChanged += OnCameraChanged;
             OnCameraChanged(StudioCameraManager.Instance.ActiveCamera);
         }
 
@@ -18,7 +18,7 @@ namespace Virtupad
         private void OnDestroy()
         {
             if (StudioCameraManager.Instance)
-                StudioCameraManager.Instance.OnStudioCameraChanged -= OnCameraChanged;
+                StudioCameraManager.Instance.OnActiveStudioCameraChanged -= OnCameraChanged;
         }
     }
 }

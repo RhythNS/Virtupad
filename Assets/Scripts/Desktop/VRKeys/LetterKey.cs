@@ -34,8 +34,8 @@ namespace VRKeys
 
         public void Set(Layout.LayoutKey layoutKey)
         {
-            character = layoutKey.key;
-            shiftedChar = layoutKey.shifted;
+            label.text = character = layoutKey.key;
+            shiftedLabel.text = shiftedChar = layoutKey.shifted;
             key = layoutKey.keyValue;
             shiftedKey = layoutKey.keyShiftedValue;
             hasShiftedKey = layoutKey.hasShiftedValue;

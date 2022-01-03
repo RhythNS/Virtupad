@@ -344,24 +344,199 @@ MonoBehaviour:
         shifted: ~
         keyValue: 186
         keyShiftedValue: 186
-        hasShiftedValue: 1
+        hasShiftedValue: 0
       - key: 1
         shifted: 1
         keyValue: 49
         keyShiftedValue: 49
+        hasShiftedValue: 0
+      - key: 2
+        shifted: 2
+        keyValue: 50
+        keyShiftedValue: 50
+        hasShiftedValue: 0
+      - key: 3
+        shifted: 3
+        keyValue: 51
+        keyShiftedValue: 51
         hasShiftedValue: 1
-      - key: 1
-        shifted: 1
-        keyValue: 49
-        keyShiftedValue: 49
+      - key: 4
+        shifted: 4
+        keyValue: 52
+        keyShiftedValue: 52
         hasShiftedValue: 1
-      row2Keys: []
-      row3Keys: []
-      row4Keys: []
-      row1Offset: 0
-      row2Offset: 0
+      - key: 5
+        shifted: 5
+        keyValue: 53
+        keyShiftedValue: 53
+        hasShiftedValue: 1
+      - key: 6
+        shifted: 6
+        keyValue: 54
+        keyShiftedValue: 54
+        hasShiftedValue: 1
+      - key: 7
+        shifted: 7
+        keyValue: 55
+        keyShiftedValue: 55
+        hasShiftedValue: 1
+      - key: 8
+        shifted: 8
+        keyValue: 56
+        keyShiftedValue: 56
+        hasShiftedValue: 1
+      - key: 9
+        shifted: 9
+        keyValue: 57
+        keyShiftedValue: 57
+        hasShiftedValue: 1
+      - key: 0
+        shifted: 0
+        keyValue: 48
+        keyShiftedValue: 48
+        hasShiftedValue: 1
+      - key: '-'
+        shifted: \
+        keyValue: 109
+        keyShiftedValue: 108
+        hasShiftedValue: 1
+      row2Keys:
+      - key: q
+        shifted: Q
+        keyValue: 81
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: w
+        shifted: W
+        keyValue: 87
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: e
+        shifted: E
+        keyValue: 69
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: r
+        shifted: R
+        keyValue: 82
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: t
+        shifted: T
+        keyValue: 84
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: y
+        shifted: Y
+        keyValue: 89
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: u
+        shifted: U
+        keyValue: 85
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: i
+        shifted: I
+        keyValue: 73
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: o
+        shifted: O
+        keyValue: 79
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: p
+        shifted: P
+        keyValue: 80
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      row3Keys:
+      - key: a
+        shifted: A
+        keyValue: 65
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: s
+        shifted: S
+        keyValue: 83
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: d
+        shifted: D
+        keyValue: 68
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: f
+        shifted: F
+        keyValue: 70
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: g
+        shifted: G
+        keyValue: 71
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: h
+        shifted: H
+        keyValue: 72
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: j
+        shifted: J
+        keyValue: 74
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: k
+        shifted: K
+        keyValue: 75
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: l
+        shifted: L
+        keyValue: 76
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      row4Keys:
+      - key: z
+        shifted: Z
+        keyValue: 90
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: x
+        shifted: X
+        keyValue: 88
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: c
+        shifted: C
+        keyValue: 67
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: v
+        shifted: V
+        keyValue: 86
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: b
+        shifted: B
+        keyValue: 66
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: n
+        shifted: N
+        keyValue: 78
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      - key: m
+        shifted: M
+        keyValue: 77
+        keyShiftedValue: 0
+        hasShiftedValue: 0
+      row1Offset: 0.16
+      row2Offset: 0.08
       row3Offset: 0
-      row4Offset: 0
+      row4Offset: -0.08
     locale: en
 --- !u!114 &6588527047819924475
 MonoBehaviour:
@@ -375,3 +550,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f13a376cadcb0a4d8996a40a3d14c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabCamera: {fileID: 0}
+  previewResolutionMultiplier: 0.5
