@@ -22,7 +22,7 @@ namespace Virtupad
                 Deselect();
 
             image.fillAmount = percentile;
-            transform.localRotation = Quaternion.Euler(0, 0, -index * percentile * 360.0f);
+            transform.localRotation = Quaternion.Euler(0, 0, (-index - 1) * percentile * 360.0f);
         }
 
         public void FixedInit(UIQuickSelect onSelect, bool isDefaultSelected)

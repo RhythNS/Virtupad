@@ -39,21 +39,31 @@ namespace Virtupad
         [SerializeField] private Camera previewCamera;
 
         [SerializeField] private Transform previewOutput;
+        [SerializeField] private Material previewMaterialPrefab;
+        private Material previewMaterial;
 
         [SerializeField] private Vector2 maxDesiredDimensions = new Vector2(1.0f, 0.8f);
 
+        public UISingleCameraSettingsPanel CameraSettingsPanel => cameraSettingsPanel;
+        [SerializeField] private UISingleCameraSettingsPanel cameraSettingsPanel;
+
         public RenderTexture PreviewTexture { get; private set; }
+
+        public event OnRenderTextureChanged OnRenderTextureChanged;
 
         protected override void Start()
         {
             base.Start();
 
             previewCamera.enabled = false;
+            outputCamera.enabled = false;
             OnDeActive();
+
+            previewMaterial = new Material(previewMaterialPrefab);
+            previewOutput.GetComponent<MeshRenderer>().material = previewMaterial;
 
             StudioCameraManager.Instance.Register(this, out Vector2 resolution);
             ChangePreviewResolution(resolution);
-            StudioCameraManager.Instance.ActiveCamera = this;
         }
 
         private void ReleasePreviewTexture()
@@ -68,6 +78,8 @@ namespace Virtupad
 
         protected virtual void OnDestroy()
         {
+            Destroy(previewMaterial);
+
             ReleasePreviewTexture();
 
             if (StudioCameraManager.Instance != null)
@@ -103,6 +115,10 @@ namespace Virtupad
 
             PreviewTexture = new RenderTexture(baseResInt.x, baseResInt.y, 16, RenderTextureFormat.ARGB32);
             previewCamera.targetTexture = PreviewTexture;
+
+            previewMaterial.mainTexture = PreviewTexture;
+
+            OnRenderTextureChanged?.Invoke(PreviewTexture);
         }
 
         public void ActivatePreview()
@@ -213,7 +229,7 @@ namespace Virtupad
 
         public override void Select()
         {
-
+            CameraSettingsPanel.Open();
         }
     }
 }

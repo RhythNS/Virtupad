@@ -113,6 +113,18 @@ namespace Virtupad
             }
         }
 
+        public void ChangeActiveCamera(int id)
+        {
+            for (int i = 0; i < cameras.Count; i++)
+            {
+                if (cameras[i].Id == id)
+                {
+                    activeCamera = cameras[i];
+                    return;
+                }
+            }
+        }
+
         public void Register(StudioCamera studioCamera, out Vector2 resolution)
         {
             studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;

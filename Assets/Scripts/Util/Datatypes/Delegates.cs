@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Virtupad
 {
@@ -10,4 +11,6 @@ namespace Virtupad
     public delegate void SetDefinitionChanged(SetDefinition newDefinition);
     public delegate void StudioCameraChanged(StudioCamera newCamera);
     public delegate void StudioCamerasChanged(List<StudioCamera> newCamera);
+
+    public delegate void OnRenderTextureChanged(RenderTexture newTexture);
 }

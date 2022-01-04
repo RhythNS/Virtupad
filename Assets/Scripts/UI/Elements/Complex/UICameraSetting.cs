@@ -22,8 +22,15 @@ namespace Virtupad
 
         [SerializeField] private Transform trackingBodyPartPanel;
 
+        [SerializeField] private bool onMainMenu = false;
+        [SerializeField] private Transform forSmallPanel;
+        [SerializeField] private Transform forMainMenuPanel;
+
         private void OnEnable()
         {
+            forSmallPanel.gameObject.SetActive(onMainMenu == false);
+            forMainMenuPanel.gameObject.SetActive(onMainMenu == true);
+
             Init();
         }
 
@@ -68,6 +75,11 @@ namespace Virtupad
         {
             StudioCamera.ToTrack toTrack = (StudioCamera.ToTrack)newValue;
             OnCamera.TrackingBodyPart = toTrack;
+        }
+
+        public void OnDeletePressed()
+        {
+            Destroy(OnCamera.gameObject);
         }
     }
 }

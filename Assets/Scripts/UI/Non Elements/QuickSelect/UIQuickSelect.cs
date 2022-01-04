@@ -12,9 +12,8 @@ namespace Virtupad
     {
         public List<string> selections = new List<string>();
 
-        public UnityEvent<int> previewChanged;
-        public UnityEvent<int> selectionChanged;
-        public event GetInt getCurrentSelection;
+        [SerializeField] private GameObject listenerObject;
+        private IUIQuickSelectListener listener;
 
         [SerializeField] SteamVR_Action_Boolean quickSelectButton;
         [SerializeField] SteamVR_Input_Sources listenForSource;
@@ -22,6 +21,7 @@ namespace Virtupad
 
         [SerializeField] private TMP_Text textDisplay;
         [SerializeField] private int index;
+        private int defaultIndex;
 
         [SerializeField] private Transform quickSelectPanel;
         [SerializeField] private bool fixedElements;
@@ -31,7 +31,8 @@ namespace Virtupad
         private Vector3 normalScale;
         [SerializeField] private float animationDuration;
 
-        [SerializeField] private float minimalDistanceForSelectionSquared = 0.0625f;
+        [SerializeField] private float minimalDistanceForSelectionSizePercentage = 0.25f;
+        private float minimalDistanceForSelectionSquared = 0.0625f;
 
         public Color SelectColor => selectColor;
         [SerializeField] private Color selectColor;
@@ -46,6 +47,7 @@ namespace Virtupad
         private List<UIQuickSelectElement> elements = new List<UIQuickSelectElement>();
 
         private Vector3 planeNormal;
+        private Vector3 planeUp;
         private Vector3 planePosition;
 
         private ExtendedCoroutine hideOrShowingCoroutine;
@@ -53,6 +55,9 @@ namespace Virtupad
 
         private void Start()
         {
+            if (listenerObject.TryGetComponent(out listener) == false && TryGetComponent(out listener) == false)
+                Debug.LogError(gameObject.name + " does not have a listener!");
+
             normalScale = transform.localScale;
             gameObject.SetActive(false);
 
@@ -69,27 +74,53 @@ namespace Virtupad
 
         private void OnUpdateValue()
         {
-            previewChanged?.Invoke(index);
+            if (selections.Count == 0)
+            {
+                textDisplay.text = "";
+                return;
+            }
+
+            listener.OnPreviewChanged(index);
             textDisplay.text = selections[index];
         }
 
         public void Init()
         {
-            if (getCurrentSelection != null)
-                this.index = getCurrentSelection.Invoke();
+            listener.OnStart();
+            index = listener.GetCurrentSelection();
+            defaultIndex = index;
+
             planePosition = hand.position;
+
+            Transform headTrans = Player.instance.hmdTransform;
+            planeNormal = (headTrans.position - hand.position).normalized;
+            planeUp = Quaternion.LookRotation(planeNormal) * Quaternion.Euler(-90.0f, 0.0f, 0.0f) * new Vector3(0.0f, 0.0f, 1.0f);
 
             if (fixedElements == true)
                 InitFixedElements();
             else
+            {
+                selections = listener.GetSelections();
                 InitElements();
+            }
+            OnUpdateValue();
 
             selectionCoroutine = new ExtendedCoroutine(this, DoSelection());
 
+            if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
+                hideOrShowingCoroutine.Stop(false);
+
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve
-                    (transform, normalScale, CurveDict.Instance.UIInAnimation, animationDuration)
+                    (transform, normalScale, CurveDict.Instance.UIInAnimation, animationDuration),
+                    OnActive
                 );
+        }
+
+        private void OnActive()
+        {
+            minimalDistanceForSelectionSquared = Mathf.Pow(
+                (transform as RectTransform).sizeDelta.x * 0.5f * minimalDistanceForSelectionSizePercentage * transform.lossyScale.x, 2.0f);
         }
 
         private void InitElements()
@@ -143,18 +174,26 @@ namespace Virtupad
             {
                 yield return null;
 
-                Transform headTrans = Player.instance.hmdTransform;
-                planeNormal = (headTrans.position - hand.position).normalized;
-                transform.rotation = Quaternion.LookRotation(planeNormal);
+                transform.position = planePosition;
+                transform.rotation = Quaternion.LookRotation(-planeNormal);
 
-                Vector3 currentPos = Vector3.ProjectOnPlane(hand.position, planeNormal);
-                Debug.DrawLine(currentPos + planeNormal * 0.5f, currentPos - planeNormal * 0.5f);
+                Plane plane = new Plane(planeNormal, planePosition);
 
+                Vector3 currentPos = plane.ClosestPointOnPlane(hand.position);
+
+                int newIndex;
                 if ((currentPos - planePosition).sqrMagnitude < minimalDistanceForSelectionSquared)
-                    continue;
+                    newIndex = defaultIndex;
+                else
+                {
+                    Vector3 toCurrentPosDir = (currentPos - planePosition).normalized;
 
-                float rot = Vector3.Angle(planePosition, currentPos);
-                int newIndex = Mathf.FloorToInt((rot / 360.0f) * selections.Count);
+                    float rot = Vector3.SignedAngle(planeUp, toCurrentPosDir, planeNormal);
+                    if (rot < 0f)
+                        rot = 360.0f + rot;
+
+                    newIndex = Mathf.FloorToInt((rot / 360.0f) * selections.Count);
+                }
 
                 if (index == newIndex)
                     continue;
@@ -170,16 +209,18 @@ namespace Virtupad
         public void Stop(bool invokeChange = true)
         {
             if (hideOrShowingCoroutine.IsFinshed == false)
-                hideOrShowingCoroutine.Stop();
-            if (selectionCoroutine.IsFinshed == false)
-                selectionCoroutine.Stop();
+                hideOrShowingCoroutine.Stop(false);
+            if (selectionCoroutine != null && selectionCoroutine.IsFinshed == false)
+                selectionCoroutine.Stop(false);
 
             if (invokeChange == true)
-                selectionChanged?.Invoke(index);
+                listener.OnSelectionChanged(index);
+
+            listener.OnStop();
 
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve
-                    (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationDuration),
+                    (transform, closingScale, CurveDict.Instance.UIInAnimation, animationDuration),
                 OnHidden,
                 true
                 );

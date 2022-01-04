@@ -14,6 +14,7 @@ namespace Virtupad
         public VRMLookTarget VRMLookTarget { get; private set; }
         //public VRMMouthMover VRMMouthMover { get; private set; }
         public VRMSalsa VRMSalsa { get; private set; }
+        public VRMEmotionManager VRMEmotionManager { get; private set; }
         public float Height { get; private set; }
 
         private void Awake()
@@ -60,6 +61,7 @@ namespace Virtupad
             FullRigCreator = gameObject.AddComponent<FullRigCreator>();
             //VRMMouthMover = gameObject.AddComponent<VRMMouthMover>();
             VRMSalsa = gameObject.AddComponent<VRMSalsa>();
+            VRMEmotionManager = gameObject.AddComponent<VRMEmotionManager>();
             VRAnimatorController.enabled = false;
         }
 
