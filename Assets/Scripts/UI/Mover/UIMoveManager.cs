@@ -34,7 +34,6 @@ namespace Virtupad
         {
             if (UIMover == null && TryGetComponent(out uIMover) == false)
                 return;
-
             UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
             uiMainMenuInput.AddOnStateDownListener(OnMainMenuDown, SteamVR_Input_Sources.Any);
         }

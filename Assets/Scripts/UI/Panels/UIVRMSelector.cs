@@ -79,6 +79,12 @@ namespace Virtupad
         {
             base.OnInit();
             InitPositionOfLastLoaded();
+
+            for (int i = 0; i < lastLoadedGroup.transform.childCount; i++)
+            {
+                UILoadVRMElement loadElement = lastLoadedGroup.transform.GetChild(i).GetComponent<UILoadVRMElement>();
+                loadElement.OnInit();
+            }
         }
 
         public void Refresh()

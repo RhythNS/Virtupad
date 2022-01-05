@@ -47,7 +47,7 @@ namespace Virtupad
 
         private void DeOutlineCurrentCamera()
         {
-            if (highlightingCamera == null)
+            if (highlightingCamera != null)
                 highlightingCamera.DeActivateOutline();
             highlightingCamera = null;
         }
