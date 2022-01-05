@@ -52,6 +52,7 @@ namespace Virtupad
         protected override void OnAnimationFinished()
         {
             base.OnAnimationFinished();
+            mainSwitcher.OnInit();
             selectionPanel.OnInit();
         }
 
