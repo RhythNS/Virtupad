@@ -50,7 +50,7 @@ namespace Virtupad
             }
             Instance = this;
 
-            FileBrowser.OverideInstance(fileBrowser);
+            // FileBrowser.OverideInstance(fileBrowser);
         }
 
         private void OnEnable()

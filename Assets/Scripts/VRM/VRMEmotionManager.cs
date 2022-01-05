@@ -27,6 +27,7 @@ namespace Virtupad
 
         private IEnumerator Start()
         {
+            yield break;
             yield return new WaitForSeconds(0.5f);
 
             foreach (KeyValuePair<BlendShapeKey, float> keys in VRMBlendShapeProxy.GetValues())

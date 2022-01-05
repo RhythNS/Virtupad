@@ -18,14 +18,18 @@ namespace Virtupad
         public Transform SteamVRObjects => steamVRObjects;
         [SerializeField] private Transform steamVRObjects;
 
-        [SerializeField] private SteamVR_Action_Vector2 positionInput;
+        [SerializeField] private SteamVR_Action_Vector2 primaryWalkingDirectionInput;
+        
+        // 1 = Left Controller; 2 = HMD
+        [Range(1, 2)]public int secondaryWalkingDirectionInputOption; 
         [SerializeField] private SteamVR_Action_Vector2 lookingInput;
+        [SerializeField][Range(2, 4)] private float walkingSpeed;
 
         public float playerHeight = 1.9f;
 
         public static readonly float movementSpeed = 1.0f;
         public static readonly float invMovementSpeed = 1.0f / movementSpeed;
-        public static readonly float rotatingSpeed = 1.0f;
+        public static readonly float rotatingSpeed = 0.01f;
 
         private void Awake()
         {
@@ -41,6 +45,7 @@ namespace Virtupad
         private void Start()
         {
             player = GlobalsDict.Instance.Player.transform;
+            walkingSpeed *= 100;
         }
 
         public void SizeToModelHeight(float modelHeight)
@@ -51,15 +56,22 @@ namespace Virtupad
 
         private void Update()
         {
-            Vector2 axis = positionInput.axis;
-            Vector3 movement = new Vector3(axis.x, 0.0f, axis.y);
-            movement = head.rotation * movement;
-            movement.y = 0.0f;
-            movement.Normalize();
-            transform.position += movementSpeed * Time.deltaTime * movement;
+            //GetComponentInChildren<CharacterController>().Move(new Vector3(hmdTransform.position.x, hmdTransform.position.y, hmdTransform.position.z));
+        }
 
-            axis = lookingInput.axis;
-            player.rotation *= Quaternion.Euler(0.0f, axis.x * rotatingSpeed, 0.0f);
+        private void FixedUpdate()
+        {
+            
+            Vector2 walkingDirection2D = primaryWalkingDirectionInput.axis;
+            Vector3 walkingDirection = new Vector3(walkingDirection2D.x, 0, walkingDirection2D.y);
+            if (secondaryWalkingDirectionInputOption == 1)
+                walkingDirection = Vector3.Scale(leftHand.transform.rotation * walkingDirection, new Vector3(1, 0, 1));
+            else if (secondaryWalkingDirectionInputOption == 2)
+                walkingDirection = Vector3.Scale(head.rotation * walkingDirection, new Vector3(1, 0, 1));
+            Vector3 additionalVelocity = walkingDirection * walkingSpeed * Time.deltaTime;
+            player.GetComponentInChildren<Rigidbody>().velocity = Vector3.Scale(player.GetComponentInChildren<Rigidbody>().velocity, new Vector3(0, 1, 0)) + additionalVelocity;
+
+     
         }
 
         private void OnDestroy()
