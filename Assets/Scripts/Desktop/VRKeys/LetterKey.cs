@@ -55,7 +55,9 @@ namespace VRKeys
 
         public override void HandleTriggerEnter(Collider other)
         {
-            if (Shifted && hasShiftedKey == false)
+            if (Shifted == false)
+                keyboard.AddCharacter(key, false);
+            if (hasShiftedKey == false)
                 keyboard.AddCharacter(key, Shifted);
             else
                 keyboard.AddCharacter(shiftedKey, false);

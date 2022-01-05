@@ -50,10 +50,6 @@ namespace VRKeys
         public Key[] extraKeys;
 
         [Space(15)]
-        public bool leftPressing = false;
-
-        public bool rightPressing = false;
-
         public bool initialized = false;
 
         public bool disabled = true;
@@ -203,9 +199,6 @@ namespace VRKeys
         /// </summary>
         public void DisableInput()
         {
-            leftPressing = false;
-            rightPressing = false;
-
             if (keys != null)
             {
                 foreach (LetterKey key in keys)
@@ -228,9 +221,6 @@ namespace VRKeys
         /// </summary>
         public void EnableInput()
         {
-            leftPressing = false;
-            rightPressing = false;
-
             if (keys != null)
             {
                 foreach (LetterKey key in keys)

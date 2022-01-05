@@ -1967,7 +1967,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693652188635605506}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.558, y: 1.57, z: -2.3116}
+  m_LocalPosition: {x: 0.558, y: 1.179, z: -2.3116}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3869384481680657506}
@@ -2291,8 +2291,16 @@ PrefabInstance:
       value: -419.91452
       objectReference: {fileID: 0}
     - target: {fileID: 3418477931389334507, guid: 63ae588f354b6764b8f46f2299ae99b8, type: 3}
+      propertyPath: m_Name
+      value: For main menu panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418477931389334507, guid: 63ae588f354b6764b8f46f2299ae99b8, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8540579534106345604, guid: 63ae588f354b6764b8f46f2299ae99b8, type: 3}
+      propertyPath: m_Name
+      value: For small panel
       objectReference: {fileID: 0}
     - target: {fileID: 8771521491745428177, guid: 63ae588f354b6764b8f46f2299ae99b8, type: 3}
       propertyPath: m_Name
@@ -2712,7 +2720,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3869384481680657506
 Transform:
   m_ObjectHideFlags: 0
@@ -2786,7 +2794,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3869384481976765422
 Transform:
   m_ObjectHideFlags: 0

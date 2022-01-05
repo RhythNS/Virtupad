@@ -49,6 +49,7 @@ namespace VRKeys
 
         private ExtendedCoroutine activateFor;
         private ExtendedCoroutine press;
+        private Collider lastPressed;
 
         private void Awake()
         {
@@ -94,13 +95,24 @@ namespace VRKeys
             int layer = LayerDict.Instance.PlayerCollider | LayerDict.Instance.PlayerHands;
 
             if ((other.gameObject.layer & layer) != 0)
-                Press();
+                Press(other);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (lastPressed == other)
+            {
+                lastPressed = null;
+                Debug.Log("last pressed rip");
+            }
         }
 
         public void Press(Collider other = null)
         {
             if (isPressing || disabled || keyboard.disabled || !keyboard.initialized)
                 return;
+
+            lastPressed = other;
 
             if (press != null && press.IsFinshed == false)
             {
@@ -111,6 +123,8 @@ namespace VRKeys
 
         private IEnumerator OnPress(Collider other)
         {
+            Debug.Log("Entering press with " + lastPressed);
+
             isPressing = true;
 
             HandleTriggerEnter(other);
@@ -118,6 +132,10 @@ namespace VRKeys
             transform.localPosition = pressedPosition;
 
             yield return new WaitForSeconds(0.125f);
+            while (lastPressed != null)
+            {
+                yield return null;
+            }
 
             transform.localPosition = defaultPosition;
             isPressing = false;

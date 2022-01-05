@@ -144,8 +144,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onlyVisibleInVRLayer: 9
   onlyVisibleInDesktopLayer: 10
-  playerCollider: 0
-  playerHands: 0
+  playerCollider: 8
+  playerHands: 23
 --- !u!114 &5994798561738827276
 MonoBehaviour:
   m_ObjectHideFlags: 0

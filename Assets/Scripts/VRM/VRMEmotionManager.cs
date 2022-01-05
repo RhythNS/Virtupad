@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,8 @@ namespace Virtupad
 {
     public class VRMEmotionManager : MonoBehaviour
     {
-        public BlendShapePreset[] presets;
+        public List<BlendShapePreset> Presets => presets;
+        [SerializeField] private List<BlendShapePreset> presets;
         private Dictionary<BlendShapePreset, BlendShapeKey> keyForBlendShape = new Dictionary<BlendShapePreset, BlendShapeKey>();
 
         public VRMBlendShapeProxy VRMBlendShapeProxy { get; private set; }
@@ -31,12 +31,32 @@ namespace Virtupad
 
             foreach (KeyValuePair<BlendShapeKey, float> keys in VRMBlendShapeProxy.GetValues())
             {
-                int index = Array.FindIndex(presets, x => x == keys.Key.Preset);
+                int index = presets.FindIndex(x => x == keys.Key.Preset);
                 if (index == -1)
                     continue;
 
                 keyForBlendShape.Add(presets[index], keys.Key);
             }
+        }
+
+        public BlendShapeKey GetLastKey()
+        {
+            return lastKey;
+        }
+
+        public BlendShapeKey? AddBlendShapePreset(BlendShapePreset preset)
+        {
+            foreach (KeyValuePair<BlendShapeKey, float> keys in VRMBlendShapeProxy.GetValues())
+            {
+                if (keys.Key.Preset != preset)
+                    continue;
+
+                presets.Add(preset);
+                keyForBlendShape.Add(preset, keys.Key);
+                return keys.Key;
+            }
+
+            return null;
         }
 
         public void SetEmote(BlendShapePreset preset)
@@ -48,7 +68,13 @@ namespace Virtupad
             }
 
             if (keyForBlendShape.TryGetValue(preset, out BlendShapeKey toFind) == false)
-                return;
+            {
+                BlendShapeKey? found = AddBlendShapePreset(preset);
+                if (found == null)
+                    return;
+
+                toFind = found.Value;
+            }
 
             settingCoroutine = new ExtendedCoroutine(this, SetValue(true, toFind, 0.0f, 1.0f, emoteInSeconds));
         }

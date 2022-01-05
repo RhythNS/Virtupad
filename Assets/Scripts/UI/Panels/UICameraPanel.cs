@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Virtupad
 {
@@ -11,10 +12,13 @@ namespace Virtupad
         public UIElementSwitcher Switcher => switcher;
         [SerializeField] private UIElementSwitcher switcher;
 
-
         [SerializeField] private Transform buttonPanel;
         [SerializeField] private UICameraSelection selectionPrefab;
-        [SerializeField] private Transform cameraAddButton;
+        [SerializeField] private UIPrimitiveElement cameraAddButton;
+        [SerializeField] private UIPrimitiveElement cameraParent;
+
+        [SerializeField] private UIElementSwitcher cameraSettingSwitcher;
+        [SerializeField] private UICameraSetting cameraSetting;
 
         private void Awake()
         {
@@ -46,6 +50,8 @@ namespace Virtupad
 
         private void OnStudioCamerasChanged(List<StudioCamera> cameras)
         {
+            OnChangeCamera(null);
+
             int childCount = buttonPanel.childCount - 1; // Do not count the camera add button
             if (childCount < cameras.Count)
             {
@@ -59,21 +65,40 @@ namespace Virtupad
                 for (int i = childCount - 1; i >= cameras.Count; i--)
                 {
                     Transform trans = buttonPanel.GetChild(i);
-                    trans.parent = null;
+                    UICameraSelection selection = trans.GetComponent<UICameraSelection>();
+                    selection.parent.RemoveChild(selection);
+                    trans.SetParent(null, false);
                     Destroy(trans.gameObject);
                 }
             }
 
+            bool showCameraAddButton = cameras.Count < 9;
+            cameraAddButton.gameObject.SetActive(showCameraAddButton);
             cameraAddButton.transform.SetAsLastSibling();
+
+            UIUtil.GetColAndRowsOfGridLayoutGroup(buttonPanel.GetComponent<GridLayoutGroup>(), out int colNum, out int rowNum);
+            cameraParent.RemoveAllChildren();
+
             for (int i = 0; i < cameras.Count; i++)
             {
-                buttonPanel.GetChild(i).GetComponent<UICameraSelection>().Init(cameras[i]);
+                UICameraSelection selection = buttonPanel.GetChild(i).GetComponent<UICameraSelection>();
+
+                selection.uiPos = new Vector2Int(i % colNum, rowNum - (i / colNum) - 1);
+                cameraParent.AddChild(selection);
+                selection.Init(cameras[i]);
+            }
+
+            if (showCameraAddButton == true)
+            {
+                cameraAddButton.uiPos = new Vector2Int((cameras.Count + 1) % colNum, rowNum - ((cameras.Count + 1) / colNum) - 1);
+                cameraParent.AddChild(cameraAddButton);
             }
         }
 
         public void OnChangeCamera(StudioCamera studioCamera)
         {
-
+            cameraSetting.OnCamera = studioCamera;
+            cameraSettingSwitcher.SwitchChild(studioCamera == null ? 1 : 0);
         }
 
         public void OnCameraAdd()

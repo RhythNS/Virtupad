@@ -137,27 +137,7 @@ namespace Virtupad
         {
             lastLoadedVRMsPanel.RemoveAllChildren();
 
-            // ---- Gotten from ----
-            // https://stackoverflow.com/questions/52353898/get-column-and-row-of-count-from-gridlayoutgroup-programmatically
-            int colNum = 0;
-            Vector3 firstElementPosition = lastLoadedGroup.transform.GetChild(0).localPosition;
-            foreach (Transform t in lastLoadedGroup.transform)
-            {
-                if (Mathf.Approximately(firstElementPosition.y, t.localPosition.y) == false)
-                    break;
-                colNum++;
-            }
-
-            int rowNum = 1;
-            foreach (Transform t in lastLoadedGroup.transform)
-            {
-                if (Mathf.Approximately(firstElementPosition.y, t.localPosition.y) == false)
-                {
-                    rowNum++;
-                    firstElementPosition = t.localPosition;
-                }
-            }
-            // ---- Gotten from ----
+            UIUtil.GetColAndRowsOfGridLayoutGroup(lastLoadedGroup, out int colNum, out int rowNum);
 
             for (int i = 0; i < lastLoadedGroup.transform.childCount; i++)
             {
