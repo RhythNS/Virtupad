@@ -36,7 +36,7 @@ namespace Virtupad
             if (element == null)
                 element = GetComponent<UIPrimitiveElement>();
 
-            // element.OnInitEvent += OnInit;
+            element.OnInitEvent += OnInit;
         }
 
         private void OnInit()

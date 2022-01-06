@@ -26,7 +26,7 @@ namespace Virtupad
 
         protected bool autoRemoveFromParentOnDestroy = false;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             controllerIntercept = GetComponent<UIControllerIntercept>();
 
@@ -72,7 +72,8 @@ namespace Virtupad
         {
             if (element.uiPos.x < 0 || element.uiPos.y < 0)
             {
-                Debug.LogWarning("Element " + element.name + " had an invalid pos! Ignoring it!");
+                Debug.LogWarning("Element " + element.name + " had an invalid pos(" +
+                    element.uiPos + "! Ignoring it!");
                 return;
             }
 

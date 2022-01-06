@@ -3,12 +3,17 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public class StudioCamera : OutlineInteractable
+    public class StudioCamera : Interactable
     {
         [System.Serializable]
         public enum ToTrack
         {
             Head, UpperBody, Waist, RightHand, LeftHand, RightFoot, LeftFoot
+        }
+
+        public enum CameraType
+        {
+            StudioCamera, Phone
         }
 
         public bool IsTracking => Tracking != null;
@@ -31,56 +36,102 @@ namespace Virtupad
         public CameraMover Mover { get; private set; }
         public int Id { get; set; }
 
-        public Camera OutputCamera { get => outputCamera; private set => outputCamera = value; }
-        [SerializeField] private Camera outputCamera;
+        public int CurrentCameraIndex
+        {
+            get => currentCameraIndex;
+            set
+            {
+                value = Mathf.Clamp(value, 0, outputCameras.Length - 1);
+
+                if (currentCameraIndex == value)
+                    return;
+
+                if (outputCameras[currentCameraIndex].enabled == true)
+                {
+                    outputCameras[currentCameraIndex].enabled = false;
+                    outputCameras[value].enabled = true;
+                }
+                if (IsPreviewOutputting == true)
+                {
+                    previewCameras[currentCameraIndex].enabled = false;
+                    previewCameras[value].enabled = true;
+                }
+
+                currentCameraIndex = value;
+            }
+        }
+        [SerializeField] private int currentCameraIndex;
+        public Camera OutputCamera => outputCameras[currentCameraIndex];
+        [SerializeField] private Camera[] outputCameras;
 
         public bool IsPreviewOutputting { get; private set; }
-        public Camera PreviewCamera { get => previewCamera; set => previewCamera = value; }
-        [SerializeField] private Camera previewCamera;
+        public Camera PreviewCamera => previewCameras[currentCameraIndex];
+        [SerializeField] private Camera[] previewCameras;
 
         [SerializeField] private Transform previewOutput;
         [SerializeField] private Material previewMaterialPrefab;
-        private Material previewMaterial;
+        private Material[] previewMaterials;
 
+        [SerializeField] private bool previewCanResize = true;
         [SerializeField] private Vector2 maxDesiredDimensions = new Vector2(1.0f, 0.8f);
 
-        public UISingleCameraSettingsPanel CameraSettingsPanel => cameraSettingsPanel;
-        [SerializeField] private UISingleCameraSettingsPanel cameraSettingsPanel;
-
-        public RenderTexture PreviewTexture { get; private set; }
+        public RenderTexture PreviewTexture => PreviewTextures[currentCameraIndex];
+        public RenderTexture[] PreviewTextures { get; private set; }
 
         public event OnRenderTextureChanged OnRenderTextureChanged;
 
-        protected override void Start()
+        protected virtual void Awake()
         {
-            base.Start();
-
-            previewCamera.enabled = false;
-            outputCamera.enabled = false;
+            SnapToObject = true;
+            Array.ForEach(previewCameras, x => x.enabled = false);
+            Array.ForEach(outputCameras, x => x.enabled = false);
             OnDeActive();
 
-            previewMaterial = new Material(previewMaterialPrefab);
-            previewOutput.GetComponent<MeshRenderer>().material = previewMaterial;
+            PreviewTextures = new RenderTexture[previewCameras.Length];
+            previewMaterials = new Material[outputCameras.Length];
+            for (int i = 0; i < previewMaterials.Length; i++)
+                previewMaterials[i] = new Material(previewMaterialPrefab);
 
-            StudioCameraManager.Instance.Register(this, out Vector2 resolution);
-            ChangePreviewResolution(resolution);
+            previewOutput.GetComponent<MeshRenderer>().material = previewMaterials[currentCameraIndex];
+            previewOutput.gameObject.SetActive(false);
+
+            ChangePreviewResolution(StudioCameraManager.Instance.DesiredResolution);
+
+            StudioCameraManager.Instance.Register(this);
         }
 
-        private void ReleasePreviewTexture()
+        private void ReleasePreviewTextures()
         {
-            if (PreviewTexture == null)
-                return;
+            for (int i = 0; i < previewMaterials.Length; i++)
+            {
+                if (PreviewTextures[i] == null)
+                    continue;
 
-            previewCamera.targetTexture = null;
-            PreviewTexture.Release();
-            PreviewTexture = null;
+                previewMaterials[i].mainTexture = null;
+                previewCameras[i].targetTexture = null;
+                PreviewTextures[i].Release();
+                PreviewTextures[i] = null;
+            }
+        }
+
+        public void ChangeType(CameraType cameraType)
+        {
+            // TODO:
+        }
+
+        public void SetAutoFollow(bool newValue)
+        {
+            // TODO:
         }
 
         protected virtual void OnDestroy()
         {
-            Destroy(previewMaterial);
+            for (int i = 0; i < previewMaterials.Length; i++)
+            {
+                Destroy(previewMaterials[i]);
+            }
 
-            ReleasePreviewTexture();
+            ReleasePreviewTextures();
 
             if (StudioCameraManager.Instance != null)
                 StudioCameraManager.Instance.DeRegister(this);
@@ -103,7 +154,7 @@ namespace Virtupad
 
         public void ChangePreviewResolution(Vector2 baseRes)
         {
-            ReleasePreviewTexture();
+            ReleasePreviewTextures();
 
             baseRes *= 0.01f;
 
@@ -111,25 +162,31 @@ namespace Virtupad
 
             Vector2Int baseResInt = Vector2Int.RoundToInt(baseRes);
 
-            previewOutput.localScale = new Vector3(baseResInt.x, 0.00001f, baseResInt.y);
+            if (previewCanResize == true)
+                previewOutput.localScale = new Vector3(baseResInt.x, 0.00001f, baseResInt.y);
 
-            PreviewTexture = new RenderTexture(baseResInt.x, baseResInt.y, 16, RenderTextureFormat.ARGB32);
-            previewCamera.targetTexture = PreviewTexture;
+            for (int i = 0; i < outputCameras.Length; i++)
+            {
+                PreviewTextures[i] = new RenderTexture(baseResInt.x, baseResInt.y, 16, RenderTextureFormat.ARGB32);
+                previewCameras[i].targetTexture = PreviewTextures[i];
 
-            previewMaterial.mainTexture = PreviewTexture;
+                previewMaterials[i].mainTexture = PreviewTextures[i];
 
-            OnRenderTextureChanged?.Invoke(PreviewTexture);
+            }
+            OnRenderTextureChanged?.Invoke(PreviewTextures[currentCameraIndex]);
         }
 
         public void ActivatePreview()
         {
             IsPreviewOutputting = true;
+            PreviewCamera.enabled = true;
             previewOutput.gameObject.SetActive(true);
         }
 
         public void DeactivatePreview()
         {
             IsPreviewOutputting = false;
+            PreviewCamera.enabled = false;
             previewOutput.gameObject.SetActive(false);
         }
 
@@ -229,7 +286,7 @@ namespace Virtupad
 
         public override void Select()
         {
-            CameraSettingsPanel.Open();
+            UISingleCameraSettingsPanel.Instance.Open(this);
         }
     }
 }

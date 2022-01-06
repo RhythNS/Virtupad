@@ -11,8 +11,10 @@ namespace Virtupad
 
         private ExtendedCoroutine hideOrShowingCoroutine;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             normalScale = transform.localScale;
             transform.localScale = closingScale;
         }

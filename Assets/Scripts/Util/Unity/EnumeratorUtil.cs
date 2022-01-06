@@ -14,6 +14,11 @@ public static class EnumeratorUtil
         yield return new WaitForSeconds(seconds);
     }
 
+    public static IEnumerator AtEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+    }
+
     /// <summary>
     /// Executes enumerators in sequence.
     /// </summary>

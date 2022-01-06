@@ -67,18 +67,44 @@ namespace Virtupad
 
         public void OnAutoTrackChanged(bool newValue)
         {
+            if (onCamera == null)
+                return;
+
             OnCamera.Tracking = newValue ? VRMController.Instance.transform : null;
             trackingBodyPartPanel.gameObject.SetActive(newValue);
         }
 
         public void OnTrackingBodyPartChanged(int newValue)
         {
+            if (onCamera == null)
+                return;
+
             StudioCamera.ToTrack toTrack = (StudioCamera.ToTrack)newValue;
             OnCamera.TrackingBodyPart = toTrack;
         }
 
+        public void OnCameraTypeChanged(int newValue)
+        {
+            if (onCamera == null)
+                return;
+
+            StudioCamera.CameraType cameraType = (StudioCamera.CameraType)newValue;
+            OnCamera.ChangeType(cameraType);
+        }
+
+        public void OnAutoFollowChanged(bool newValue)
+        {
+            if (onCamera == null)
+                return;
+
+            OnCamera.SetAutoFollow(newValue);
+        }
+
         public void OnDeletePressed()
         {
+            if (onCamera == null)
+                return;
+
             Destroy(OnCamera.gameObject);
         }
     }

@@ -40,7 +40,7 @@ namespace Virtupad
 
         private int atPage = 0;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance)
             {
@@ -49,6 +49,8 @@ namespace Virtupad
                 return;
             }
             Instance = this;
+
+            base.Awake();
 
             FileBrowser.OverideInstance(fileBrowser);
         }
@@ -209,6 +211,12 @@ namespace Virtupad
                 image.sprite = loadingSpriteAnimation[at];
                 yield return new WaitForSeconds(loadingAnimationSecondsPerFrame);
             }
+        }
+
+        public void OnClearHistory()
+        {
+            lastLoadedVRMs.DeleteAllFromHistory();
+            Refresh();
         }
 
         private void OnFileCancel()

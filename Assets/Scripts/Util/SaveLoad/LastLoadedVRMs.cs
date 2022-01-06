@@ -192,6 +192,25 @@ namespace Virtupad
             OnUpdateSaveGame();
         }
 
+
+        public void DeleteAllFromHistory()
+        {
+            for (int i = 0; i < lastLoaded.Count; i++)
+            {
+                try
+                {
+                    File.Delete(Path.Combine(vrmFolder, lastLoaded[i].id.ToString()));
+                }
+                catch (Exception)
+                {
+                }
+                lastLoaded[i].Free();
+            }
+
+            lastLoaded.Clear();
+            OnUpdateSaveGame();
+        }
+
         private bool TrySavePreview(string path, Texture2D texture)
         {
             try

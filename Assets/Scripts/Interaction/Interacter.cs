@@ -7,7 +7,10 @@ namespace Virtupad
     public class Interacter : MonoBehaviour
     {
         [SerializeField] SteamVR_Action_Boolean interactButton;
+
+        public SteamVR_Input_Sources ForSource => listenForSource;
         [SerializeField] SteamVR_Input_Sources listenForSource;
+
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private float maxRange;
 
@@ -19,11 +22,13 @@ namespace Virtupad
 
         public event BoolChanged DownChanged;
 
-        private Interactable lastSelectedInteractable;
+        private IInteractable lastSelectedInteractable;
 
         private bool beginStopSelectRequest = false;
-        private Interactable beginStopSelecting;
+        private IInteractable beginStopSelecting;
         private Vector3 lastHitStopSelectingPoint = Vector3.zero;
+
+        private IGrabbable grabbed;
 
         private void Start()
         {
@@ -90,7 +95,7 @@ namespace Virtupad
             }
         }
 
-        private bool ShouldGoOff() => lastSelectedInteractable == null || lastSelectedInteractable.TryGetComponent<IStayOnInteractable>(out _) == false;
+        private bool ShouldGoOff() => lastSelectedInteractable == null || !(lastSelectedInteractable is IStayOnInteractable);
 
         private void Stop(bool issueStopEvents = true)
         {
@@ -105,6 +110,11 @@ namespace Virtupad
             lastSelectedInteractable = null;
         }
 
+        public void ChangeGrabbed(IGrabbable grabbed)
+        {
+            this.grabbed = grabbed;
+        }
+
         public void StopRequest()
         {
             if (buttonPressed == true)
@@ -115,7 +125,10 @@ namespace Virtupad
 
         private void Update()
         {
-            Interactable closestInteractable = GetClosest<Interactable>(out Vector3 impactPoint);
+            IInteractable closestInteractable;
+            Vector3 impactPoint = Vector3.zero;
+
+            closestInteractable = grabbed != null ? null : GetClosest<IInteractable>(out impactPoint);
 
             if (beginStopSelectRequest == true)
                 HandleBeginStopRequest(closestInteractable, impactPoint);
@@ -126,9 +139,12 @@ namespace Virtupad
             IssueEvents(closestInteractable, impactPoint);
 
             lastSelectedInteractable = closestInteractable;
+
+            if (grabbed != null)
+                Stop();
         }
 
-        private void HandleBeginStopRequest(Interactable interactable, Vector3 impactPoint)
+        private void HandleBeginStopRequest(IInteractable interactable, Vector3 impactPoint)
         {
             beginStopSelectRequest = false;
 
@@ -139,7 +155,7 @@ namespace Virtupad
             beginStopSelecting.OnBeginSelecting(impactPoint);
         }
 
-        private void HandleBeginStopStay(Interactable closestInteractable, Vector3 impactPoint)
+        private void HandleBeginStopStay(IInteractable closestInteractable, Vector3 impactPoint)
         {
             if (closestInteractable == beginStopSelecting)
             {
@@ -177,7 +193,7 @@ namespace Virtupad
             return closest;
         }
 
-        private void UpdateLineRenderer(Interactable closestInteractable, Vector3 impactPoint)
+        private void UpdateLineRenderer(IInteractable closestInteractable, Vector3 impactPoint)
         {
             Vector3 ownPos = transform.position;
 
@@ -185,30 +201,30 @@ namespace Virtupad
             if (closestInteractable == null)
                 toPos = ownPos + transform.forward * maxRange;
             else if (closestInteractable.SnapToObject)
-                toPos = closestInteractable.transform.position;
+                toPos = (closestInteractable as Component).transform.position;
             else
                 toPos = impactPoint;
 
             lineRenderer.SetPositions(new Vector3[2] { ownPos, toPos });
         }
 
-        private void IssueEvents(Interactable closestInteractable, Vector3 impactPoint)
+        private void IssueEvents(IInteractable closestInteractable, Vector3 impactPoint)
         {
             // is it the same since last frame?
             if (lastSelectedInteractable == closestInteractable)
             {
                 // have we selected anything?
-                if (closestInteractable)
+                if (closestInteractable != null)
                     closestInteractable.StayHover(this, impactPoint);
                 return;
             }
 
             // not the same
             // have we selected something in the last frame?
-            if (lastSelectedInteractable)
+            if (lastSelectedInteractable != null)
                 lastSelectedInteractable.LeaveHover(this);
             // have we selected something this frame?
-            if (closestInteractable)
+            if (closestInteractable != null)
                 closestInteractable.BeginHover(this, impactPoint);
         }
 

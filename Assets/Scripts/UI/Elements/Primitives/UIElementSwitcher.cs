@@ -40,7 +40,7 @@ namespace Virtupad
 
         public UnityEvent<int> onChildSwitched;
 
-        private void Awake()
+        protected override void Awake()
         {
             for (int i = 0; i < switchingChildren.Count; i++)
                 switchingChildren[i].primitive.gameObject.SetActive(false);
@@ -96,6 +96,16 @@ namespace Virtupad
             base.AddChild(element);
 
             switchingChildren.Add(new Element(element, false));
+        }
+
+        public override void RemoveAllChildren()
+        {
+            switchingChildren[AtChild].primitive.RemoveAllChildren();
+        }
+
+        public override void RemoveChild(UIPrimitiveElement element)
+        {
+            switchingChildren[AtChild].primitive.RemoveChild(element);
         }
 
         public override bool InterceptAction(UIControllerAction action)

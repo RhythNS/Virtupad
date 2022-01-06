@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Globals.unity
+    path: Assets/Scenes/Globals pre VR Controller Update.unity
     guid: 5866790f6ced0a64ea5ccc21df861414
   - enabled: 1
     path: Assets/Scenes/Sets/Appartement.unity

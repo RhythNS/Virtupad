@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
@@ -48,8 +49,16 @@ namespace Virtupad
         }
         private List<StudioCamera> prevCameras = new List<StudioCamera>();
 
-        public StudioCamera PrefabCamera => prefabCamera;
-        [SerializeField] private StudioCamera prefabCamera;
+        [System.Serializable]
+        public struct StudioCameraPrefabType
+        {
+            public StudioCamera prefab;
+            public StudioCamera.CameraType cameraType;
+        }
+
+        public StudioCameraPrefabType[] PrefabCameras => prefabCameras;
+        [SerializeField] private StudioCameraPrefabType[] prefabCameras;
+        [SerializeField] private int defaultSpawningCamera = 0;
 
         [SerializeField] private float previewResolutionMultiplier = 0.5f;
 
@@ -125,11 +134,25 @@ namespace Virtupad
             }
         }
 
-        public void Register(StudioCamera studioCamera, out Vector2 resolution)
+        public void CreateNewCamera()
+        {
+            Transform hmdTransform = Player.instance.hmdTransform;
+            Vector3 position = hmdTransform.position + hmdTransform.forward * 2.0f;
+            Quaternion rotation = Quaternion.LookRotation((hmdTransform.position - position).normalized, Vector3.up);
+            StudioCamera studioCamera = Instantiate(prefabCameras[defaultSpawningCamera].prefab, position, rotation);
+            UIRoot.Instance.CloseRequest();
+        }
+
+        public Vector2 GetPreviewResolution => DesiredResolution;
+
+        public void Register(StudioCamera studioCamera)
         {
             studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;
             cameras.Add(studioCamera);
-            resolution = DesiredResolution;
+
+            if (activeCamera == null)
+                ActiveCamera = studioCamera;
+
             OnCamerasChanged?.Invoke(cameras);
         }
 

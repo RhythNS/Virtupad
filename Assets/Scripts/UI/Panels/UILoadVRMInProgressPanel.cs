@@ -17,7 +17,7 @@ namespace Virtupad
 
         private string currentPath;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance)
             {
@@ -26,6 +26,8 @@ namespace Virtupad
                 return;
             }
             Instance = this;
+
+            base.Awake();
         }
 
         private void OnEnable()

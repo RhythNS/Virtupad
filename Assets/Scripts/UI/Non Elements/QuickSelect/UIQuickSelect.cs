@@ -44,6 +44,8 @@ namespace Virtupad
         public Color DefaultDeselectColor => defaultDeselectColor;
         [SerializeField] private Color defaultDeselectColor;
 
+        [SerializeField] private RectTransform cursor;
+
         private List<UIQuickSelectElement> elements = new List<UIQuickSelectElement>();
 
         private Vector3 planeNormal;
@@ -180,6 +182,9 @@ namespace Virtupad
                 Plane plane = new Plane(planeNormal, planePosition);
 
                 Vector3 currentPos = plane.ClosestPointOnPlane(hand.position);
+
+                if (cursor)
+                    cursor.localPosition = cursor.parent.InverseTransformPoint(currentPos);
 
                 int newIndex;
                 if ((currentPos - planePosition).sqrMagnitude < minimalDistanceForSelectionSquared)

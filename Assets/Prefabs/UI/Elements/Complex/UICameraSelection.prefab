@@ -152,7 +152,7 @@ MonoBehaviour:
   eventInterception: 3
   studioCamera: {fileID: 0}
   cameraNameDisplay: {fileID: 2390927848368289653}
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 8639069526471991921}
 --- !u!114 &2390927846940114227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,8 +184,8 @@ MonoBehaviour:
   useAutoSize: 1
   sizer: 0
   element: {fileID: 0}
-  fromOffset: {x: -110, y: -110, z: -0}
-  toOffset: {x: 110, y: 110, z: 0}
+  fromOffset: {x: -0, y: -0, z: -0}
+  toOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &2390927846940114637
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,7 +197,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 220, y: 220, z: 0}
+  m_Size: {x: 0, y: 0, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2390927848368289659
 GameObject:
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 18
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

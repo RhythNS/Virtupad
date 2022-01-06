@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +19,7 @@ namespace Virtupad
         [SerializeField] private UIElementSwitcher cameraSettingSwitcher;
         [SerializeField] private UICameraSetting cameraSetting;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance)
             {
@@ -29,6 +28,8 @@ namespace Virtupad
                 return;
             }
             Instance = this;
+            
+            base.Awake();
         }
 
         private void OnEnable()
@@ -90,7 +91,7 @@ namespace Virtupad
 
             if (showCameraAddButton == true)
             {
-                cameraAddButton.uiPos = new Vector2Int((cameras.Count + 1) % colNum, rowNum - ((cameras.Count + 1) / colNum) - 1);
+                cameraAddButton.uiPos = new Vector2Int((cameras.Count) % colNum, rowNum - ((cameras.Count) / colNum) - 1);
                 cameraParent.AddChild(cameraAddButton);
             }
         }
@@ -99,11 +100,6 @@ namespace Virtupad
         {
             cameraSetting.OnCamera = studioCamera;
             cameraSettingSwitcher.SwitchChild(studioCamera == null ? 1 : 0);
-        }
-
-        public void OnCameraAdd()
-        {
-
         }
 
         private void OnDestroy()

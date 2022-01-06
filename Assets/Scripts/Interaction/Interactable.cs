@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public abstract class Interactable : MonoBehaviour
+    public abstract class Interactable : MonoBehaviour, IInteractable
     {
-        public bool SnapToObject { get; protected set; } = true;
+        public bool SnapToObject { get => snapToObject; set => snapToObject = value; }
+        private bool snapToObject;
 
         public List<Interacter> CurrentlyInteracting => currentlyInteracting;
+
         private List<Interacter> currentlyInteracting = new List<Interacter>();
 
         public abstract void Select();

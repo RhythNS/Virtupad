@@ -11,7 +11,7 @@ namespace Virtupad
         public UIElementSwitcher Switcher => switcher;
         [SerializeField] private UIElementSwitcher switcher;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance)
             {
@@ -20,6 +20,8 @@ namespace Virtupad
                 return;
             }
             Instance = this;
+
+            base.Awake();
         }
 
         private void OnDestroy()

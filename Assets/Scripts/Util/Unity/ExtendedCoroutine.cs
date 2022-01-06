@@ -77,4 +77,7 @@ public class ExtendedCoroutine
     /// <param name="startNow">Wheter the coroutine should start now.</param>
     public static ExtendedCoroutine ActionAfterSeconds(MonoBehaviour onScript, float seconds, Action onFinished, bool startNow = false)
         => new ExtendedCoroutine(onScript, EnumeratorUtil.WaitForSeconds(seconds), onFinished, startNow);
+
+    public static ExtendedCoroutine ActionAtEndOfFrame(MonoBehaviour onScript, Action onFinished, bool startNow = false)
+        => new ExtendedCoroutine(onScript, EnumeratorUtil.AtEndOfFrame(), onFinished, startNow);
 }
