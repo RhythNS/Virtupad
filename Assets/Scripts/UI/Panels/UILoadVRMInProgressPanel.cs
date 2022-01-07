@@ -73,8 +73,10 @@ namespace Virtupad
             RigMaker.Config? config = VRMController.Instance?.FullRigCreator?.GetConfig();
             if (config == null || config.Value != RigMaker.Config.ThreePoints)
             {
-                UIRoot.Instance.MainSwitcher.SwitchChild((int)MidPanelSwitcherIndexes.VRMModelConfigSettings);
-                UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.FullBodySetup);
+                //UIRoot.Instance.MainSwitcher.SwitchChild((int)MidPanelSwitcherIndexes.VRMModelConfigSettings);
+                //UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.FullBodySetup);
+                UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.FullBodySetup);
+                
                 return;
             }
 

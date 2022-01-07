@@ -8,7 +8,6 @@ namespace Virtupad
     {
         public override void OnInit()
         {
-            OnCamera.Grabbable = true;
         }
 
         public override void Play()

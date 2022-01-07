@@ -32,21 +32,17 @@ namespace Virtupad
             base.Awake();
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            if (StudioCameraManager.Instance == null)
-                return;
-
-            List<StudioCamera> cameras = StudioCameraManager.Instance.Cameras;
-            OnStudioCamerasChanged(cameras);
-
             StudioCameraManager.Instance.OnCamerasChanged += OnStudioCamerasChanged;
         }
 
-        private void OnDisable()
+        public override void OnInit()
         {
-            if (StudioCameraManager.Instance)
-                StudioCameraManager.Instance.OnCamerasChanged -= OnStudioCamerasChanged;
+            base.OnInit();
+
+            List<StudioCamera> cameras = StudioCameraManager.Instance.Cameras;
+            OnStudioCamerasChanged(cameras);
         }
 
         private void OnStudioCamerasChanged(List<StudioCamera> cameras)
@@ -106,6 +102,9 @@ namespace Virtupad
         {
             if (Instance == this)
                 Instance = null;
+
+            if (StudioCameraManager.Instance)
+                StudioCameraManager.Instance.OnCamerasChanged -= OnStudioCamerasChanged;
         }
     }
 }

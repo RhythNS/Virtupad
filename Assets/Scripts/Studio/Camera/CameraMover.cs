@@ -7,13 +7,22 @@ namespace Virtupad
         [System.Serializable]
         public enum Type
         {
-            Static, Selfie, Rail, Follow, Tracking
+            Default, Static, Selfie, Rail, Follow, Tracking
+        }
+
+        [System.Serializable]
+        public enum TrackingSpace
+        {
+            Playspace = 0,
+            ModelSpace = 1
         }
 
         public static System.Type GetSystemTypeForType(Type type)
         {
             switch (type)
             {
+                case Type.Default:
+                    return typeof(DefaultCameraMover);
                 case Type.Static:
                     return typeof(StaticCameraMover);
                 case Type.Selfie:
@@ -32,6 +41,8 @@ namespace Virtupad
 
         public static Type GetType(CameraMover cameraMover)
         {
+            if (cameraMover is DefaultCameraMover)
+                return Type.Default;
             if (cameraMover is StaticCameraMover)
                 return Type.Static;
             if (cameraMover is SelfieCameraMover)
@@ -60,5 +71,9 @@ namespace Virtupad
         public virtual void Stop() { }
 
         public virtual void Restart() { }
+
+        public virtual void OnRemove() { }
+
+        public virtual void OnFollowTypeChanged() { }
     }
 }

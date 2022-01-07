@@ -8,6 +8,19 @@ namespace Virtupad
     {
         public static SetSceneLoader Instance { get; private set; }
 
+        [System.Serializable]
+        public struct SetDescription
+        {
+            public string title;
+            public string description;
+            public Sprite previewSprite;
+
+            public string sceneName;
+        }
+
+        public SetDescription[] Sets => sets;
+        [SerializeField] SetDescription[] sets;
+
         private void Awake()
         {
             if (Instance)
@@ -20,6 +33,8 @@ namespace Virtupad
         }
 
         private int numberOfOperationsNotDone = 0;
+
+        public void LoadScene(int index) => StartCoroutine(AsyncLoadUnLoad(sets[index].sceneName));
 
         public void LoadScene(string sceneName) => StartCoroutine(AsyncLoadUnLoad(sceneName));
 

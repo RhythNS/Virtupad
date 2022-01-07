@@ -18,4 +18,11 @@ public class SaveGame
     }
 
     [SerializeField] public List<LoadVRM> vrms;
+    [SerializeField] public bool autoLoadVRM = false;
+    [SerializeField] public bool footIK = true;
+
+    // Auto camera create setting
+
+    [SerializeField] public int autoLoadSet = -1;
+
 }

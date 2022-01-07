@@ -21,7 +21,8 @@ namespace Virtupad
 
         public void OnStartAssign()
         {
-            UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.Coutdown);
+            UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.Coutdown);
+            //UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.Coutdown);
             VRMController.Instance.FullRigCreator.StartAutoSetup(5, OnSecondTickedOnCountdown, OnRigConstructed);
         }
 
@@ -32,7 +33,8 @@ namespace Virtupad
 
         private void OnRigConstructed()
         {
-            UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.MainPanel);
+            UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LastLoaded);
+            //UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.MainPanel);
             UIRoot.Instance.CloseRequest();
         }
     }

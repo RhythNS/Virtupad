@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public class TrackingCameraMover : MonoBehaviour
+    public class TrackingCameraMover : CameraMover
     {
         // Start is called before the first frame update
         void Start()

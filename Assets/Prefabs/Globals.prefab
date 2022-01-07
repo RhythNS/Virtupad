@@ -307,6 +307,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveGame:
     vrms: []
+    autoLoadVRM: 0
+    footIK: 1
+    autoLoadSet: -1
 --- !u!114 &4098422726681812854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,6 +322,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36bf9ef2d8e8b734ba32f7ed82b61424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sets:
+  - title: '[Test] VR Controller'
+    description: A Test map to debug the VR Controller
+    previewSprite: {fileID: 21300000, guid: d55af8413522593469a86e33847f5edd, type: 3}
+    sceneName: VRController
+  - title: Stage
+    description: The test version of the Stage Set present in the final release.
+    previewSprite: {fileID: 21300000, guid: 8bda617b1fe01e94896c6edaca912adb, type: 3}
+    sceneName: Stage
+  - title: Appartement
+    description: The test version of the Appartement Set present in the final release.
+    previewSprite: {fileID: 21300000, guid: fd3b461202ec4ea4daff40a5c89d31cb, type: 3}
+    sceneName: Appartement
 --- !u!114 &4769726672203580297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,5 +566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f13a376cadcb0a4d8996a40a3d14c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabCamera: {fileID: 0}
+  prefabCameras: []
+  defaultSpawningCamera: 0
+  defaultMover: 0
   previewResolutionMultiplier: 0.5

@@ -60,6 +60,9 @@ namespace Virtupad
         [SerializeField] private StudioCameraPrefabType[] prefabCameras;
         [SerializeField] private int defaultSpawningCamera = 0;
 
+        public CameraMover.Type DefaultMover => defaultMover;
+        [SerializeField] public CameraMover.Type defaultMover;
+
         [SerializeField] private float previewResolutionMultiplier = 0.5f;
 
         public bool ForcePreviewRender { get; set; } = false;
@@ -128,7 +131,7 @@ namespace Virtupad
             {
                 if (cameras[i].Id == id)
                 {
-                    activeCamera = cameras[i];
+                    ActiveCamera = cameras[i];
                     return;
                 }
             }
@@ -150,7 +153,7 @@ namespace Virtupad
             studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;
             cameras.Add(studioCamera);
 
-            if (activeCamera == null)
+            if (ActiveCamera == null)
                 ActiveCamera = studioCamera;
 
             OnCamerasChanged?.Invoke(cameras);
@@ -165,8 +168,8 @@ namespace Virtupad
             if (prevCameras.Contains(studioCamera))
                 prevCameras.Remove(studioCamera);
 
-            if (activeCamera == studioCamera)
-                activeCamera = null;
+            if (ActiveCamera == studioCamera)
+                ActiveCamera = null;
 
             OnCamerasChanged?.Invoke(cameras);
         }

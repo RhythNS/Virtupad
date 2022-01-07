@@ -93,9 +93,10 @@ namespace Virtupad
 
         public override void AddChild(UIPrimitiveElement element)
         {
-            base.AddChild(element);
+            // base.AddChild(element);
 
-            switchingChildren.Add(new Element(element, false));
+            if (switchingChildren.FindIndex(x => x.primitive == element) == -1)
+                switchingChildren.Add(new Element(element, false));
         }
 
         public override void RemoveAllChildren()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Virtupad
@@ -21,10 +22,13 @@ namespace Virtupad
         [SerializeField] private UISelector trackingBodyPartSelector;
 
         [SerializeField] private Transform trackingBodyPartPanel;
+        [SerializeField] private Transform autoFollowPanel;
 
         [SerializeField] private bool onMainMenu = false;
         [SerializeField] private Transform forSmallPanel;
         [SerializeField] private Transform forMainMenuPanel;
+
+        public UnityEvent shouldClose;
 
         private void OnEnable()
         {
@@ -41,7 +45,7 @@ namespace Virtupad
 
             fovSlider.value = onCamera.OutputCamera.fieldOfView;
             previewToggle.isOn = onCamera.IsPreviewOutputting;
-            trackingBodyPartPanel.gameObject.SetActive(OnCamera.IsTracking);
+            trackingBodyPartPanel.gameObject.SetActive(OnCamera.Tracking);
             trackingBodyPartSelector.Index = (int)OnCamera.TrackingBodyPart;
         }
 
@@ -70,8 +74,9 @@ namespace Virtupad
             if (onCamera == null)
                 return;
 
-            OnCamera.Tracking = newValue ? VRMController.Instance.transform : null;
+            OnCamera.SetToTrack(newValue);
             trackingBodyPartPanel.gameObject.SetActive(newValue);
+            OnInit();
         }
 
         public void OnTrackingBodyPartChanged(int newValue)
@@ -80,7 +85,7 @@ namespace Virtupad
                 return;
 
             StudioCamera.ToTrack toTrack = (StudioCamera.ToTrack)newValue;
-            OnCamera.TrackingBodyPart = toTrack;
+            OnCamera.SetTrackingBodyPart(toTrack);
         }
 
         public void OnCameraTypeChanged(int newValue)
@@ -98,6 +103,24 @@ namespace Virtupad
                 return;
 
             OnCamera.SetAutoFollow(newValue);
+            autoFollowPanel.gameObject.SetActive(newValue);
+            OnInit();
+        }
+
+        public void OnFollowTypeChanged(int newValue)
+        {
+            if (onCamera == null)
+                return;
+
+            OnCamera.SetFollowType((CameraMover.TrackingSpace)newValue);
+        }
+
+        public void OnEasyMoveChanged(bool newValue)
+        {
+            if (onCamera == null)
+                return;
+
+            onCamera.Grabbable.EasyRotationLock = newValue ? XYZ.X : 0;
         }
 
         public void OnDeletePressed()
@@ -106,6 +129,7 @@ namespace Virtupad
                 return;
 
             Destroy(OnCamera.gameObject);
+            shouldClose?.Invoke();
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public class FollowCameraMover : MonoBehaviour
+    public class FollowCameraMover : CameraMover
     {
         // Start is called before the first frame update
         void Start()

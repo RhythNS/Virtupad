@@ -7,6 +7,24 @@ namespace Virtupad
 {
     public static class VRSetTracker
     {
+        public static bool HasTrackers()
+        {
+            var error = ETrackedPropertyError.TrackedProp_Success;
+            for (uint i = 0; i < 16; i++)
+            {
+                System.Text.StringBuilder result = new System.Text.StringBuilder(64);
+                OpenVR.System.GetStringTrackedDeviceProperty(i, ETrackedDeviceProperty.Prop_RenderModelName_String, result, 64, ref error);
+                if (result.ToString().Contains("tracker"))
+                {
+                    if (OpenVR.System.IsTrackedDeviceConnected(i) == false)
+                        continue;
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static void RegisterTrackers()
         {
             List<VRTracker> trackers = VRController.Instance.trackers;

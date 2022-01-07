@@ -11,6 +11,7 @@ namespace Virtupad
 
         public Transform head;
         public Hand leftHand, rightHand;
+        public Transform bodyCollider;
         private Transform player;
 
         public List<VRTracker> trackers = new List<VRTracker>();
@@ -19,11 +20,11 @@ namespace Virtupad
         [SerializeField] private Transform steamVRObjects;
 
         [SerializeField] private SteamVR_Action_Vector2 primaryWalkingDirectionInput;
-        
+
         // 1 = Left Controller; 2 = HMD
-        [Range(1, 2)]public int secondaryWalkingDirectionInputOption; 
+        [Range(1, 2)] public int secondaryWalkingDirectionInputOption;
         [SerializeField] private SteamVR_Action_Vector2 lookingInput;
-        [SerializeField][Range(2, 4)] private float walkingSpeed;
+        [SerializeField] [Range(2, 4)] private float walkingSpeed;
 
         public float playerHeight = 1.9f;
 
@@ -54,14 +55,15 @@ namespace Virtupad
             transform.localScale = new Vector3(toScale, toScale, toScale);
         }
 
+        /*
         private void Update()
         {
             //GetComponentInChildren<CharacterController>().Move(new Vector3(hmdTransform.position.x, hmdTransform.position.y, hmdTransform.position.z));
         }
+         */
 
         private void FixedUpdate()
         {
-            
             Vector2 walkingDirection2D = primaryWalkingDirectionInput.axis;
             Vector3 walkingDirection = new Vector3(walkingDirection2D.x, 0, walkingDirection2D.y);
             if (secondaryWalkingDirectionInputOption == 1)
@@ -70,8 +72,6 @@ namespace Virtupad
                 walkingDirection = Vector3.Scale(head.rotation * walkingDirection, new Vector3(1, 0, 1));
             Vector3 additionalVelocity = walkingDirection * walkingSpeed * Time.deltaTime;
             player.GetComponentInChildren<Rigidbody>().velocity = Vector3.Scale(player.GetComponentInChildren<Rigidbody>().velocity, new Vector3(0, 1, 0)) + additionalVelocity;
-
-     
         }
 
         private void OnDestroy()

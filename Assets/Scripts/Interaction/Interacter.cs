@@ -53,6 +53,9 @@ namespace Virtupad
 
         private void StartInteract(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
         {
+            if (grabbed != null)
+                return;
+
             buttonPressed = true;
 
             if (enabled)
@@ -64,6 +67,9 @@ namespace Virtupad
 
         private void StopInteract(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
         {
+            if (enabled == false)
+                return;
+
             buttonPressed = false;
 
             if (beginStopSelecting != null)

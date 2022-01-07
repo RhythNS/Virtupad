@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5940629988231515809}
   - component: {fileID: 4665875794837584278}
   - component: {fileID: 4665875794837584279}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Phone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4665875795635878852}
   - component: {fileID: 4665875795635878875}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: BackCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,7 +241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4665875795877860478}
   - component: {fileID: 4665875795877860477}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: SelfieCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 4665875796087125680}
   - component: {fileID: 4665875796087125686}
   - component: {fileID: 4665875796087125687}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8430037693146005828}
   - component: {fileID: 5104507442347246935}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: PreviewSelfieCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 7367268841561535194}
   - component: {fileID: 7367268841562338042}
   - component: {fileID: 7367268841563435066}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -558,7 +558,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2885062189576087778}
   - component: {fileID: 5148517657915522739}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: PreviewBackCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}

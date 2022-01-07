@@ -16,25 +16,20 @@ namespace Virtupad
             StudioCamera, Phone
         }
 
-        public bool IsTracking => Tracking != null;
-        public Transform Tracking { get; set; }
-        public ToTrack TrackingBodyPart
-        {
-            get => trackingBodyPart;
-            set
-            {
-                trackingBodyPart = value;
-                UpdateTrackingBone();
-            }
-        }
-        private ToTrack trackingBodyPart;
+        public bool Tracking { get; private set; }
+        public bool SmoothPostition { get; private set; }
+        public ToTrack TrackingBodyPart { get; private set; }
         public HumanBodyBones TrackingBone { get; private set; }
-        public Transform Anchor { get; set; }
-        public bool Grabbable { get; set; }
-        public bool SmoothPickUp { get; set; }
+
+        public bool SmoothRotation { get; private set; }
+        public float StayInAngle { get; private set; }
+        public bool AutoFollow { get; private set; }
+        public CameraMover.TrackingSpace TrackingSpace { get; private set; }
+
         public bool Playing { get; private set; } = false;
         public CameraMover Mover { get; private set; }
         public int Id { get; set; }
+        public AttachGrabbable Grabbable { get; private set; }
 
         public int CurrentCameraIndex
         {
@@ -83,6 +78,9 @@ namespace Virtupad
         protected virtual void Awake()
         {
             SnapToObject = true;
+
+            Grabbable = GetComponent<AttachGrabbable>();
+
             Array.ForEach(previewCameras, x => x.enabled = false);
             Array.ForEach(outputCameras, x => x.enabled = false);
             OnDeActive();
@@ -96,6 +94,10 @@ namespace Virtupad
             previewOutput.gameObject.SetActive(false);
 
             ChangePreviewResolution(StudioCameraManager.Instance.DesiredResolution);
+
+            Mover = GetComponent<CameraMover>();
+            if (Mover == null)
+                SetCameraMover(StudioCameraManager.Instance.DefaultMover);
 
             StudioCameraManager.Instance.Register(this);
         }
@@ -112,16 +114,6 @@ namespace Virtupad
                 PreviewTextures[i].Release();
                 PreviewTextures[i] = null;
             }
-        }
-
-        public void ChangeType(CameraType cameraType)
-        {
-            // TODO:
-        }
-
-        public void SetAutoFollow(bool newValue)
-        {
-            // TODO:
         }
 
         protected virtual void OnDestroy()
@@ -156,14 +148,15 @@ namespace Virtupad
         {
             ReleasePreviewTextures();
 
-            baseRes *= 0.01f;
+            Vector2 outputSize = baseRes * 0.01f;
 
-            NormalizeScale(ref baseRes);
+            NormalizeScale(ref outputSize);
 
+            Vector2Int outputSizeInt = Vector2Int.RoundToInt(outputSize);
             Vector2Int baseResInt = Vector2Int.RoundToInt(baseRes);
 
             if (previewCanResize == true)
-                previewOutput.localScale = new Vector3(baseResInt.x, 0.00001f, baseResInt.y);
+                previewOutput.localScale = new Vector3(outputSizeInt.x, 0.00001f, outputSizeInt.y);
 
             for (int i = 0; i < outputCameras.Length; i++)
             {
@@ -221,7 +214,11 @@ namespace Virtupad
             if (newMover == Mover)
                 return;
 
-            Mover.enabled = false;
+            if (Mover)
+            {
+                Mover.OnRemove();
+                Mover.enabled = false;
+            }
 
             newMover.Init(this);
             newMover.enabled = true;
@@ -239,6 +236,39 @@ namespace Virtupad
             Mover = newMover;
         }
 
+        public void ChangeType(CameraType cameraType)
+        {
+            // TODO:
+        }
+
+        public void SetToTrack(bool shouldTrack)
+        {
+            Tracking = shouldTrack;
+            // TODO:
+        }
+
+        public void SetTrackingBodyPart(ToTrack toTrack)
+        {
+            TrackingBodyPart = toTrack;
+            UpdateTrackingBone();
+        }
+
+        public void SetAutoFollow(bool newValue)
+        {
+            AutoFollow = newValue;
+
+            if (newValue && Mover == null)
+                Mover.OnFollowTypeChanged();
+        }
+
+        public void SetFollowType(CameraMover.TrackingSpace trackingSpace)
+        {
+            TrackingSpace = trackingSpace;
+
+            if (Mover == null)
+                Mover.OnFollowTypeChanged();
+        }
+
         public void OnActive()
         {
             OutputCamera.enabled = true;
@@ -252,8 +282,6 @@ namespace Virtupad
         public void SetDefaultValues()
         {
             TrackingBone = HumanBodyBones.Head;
-            Anchor = null;
-            Grabbable = false;
         }
 
         public void Play()

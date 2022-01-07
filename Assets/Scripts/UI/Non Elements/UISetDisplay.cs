@@ -9,18 +9,6 @@ namespace Virtupad
 {
     public class UISetDisplay : MonoBehaviour
     {
-        [System.Serializable]
-        public struct SetDescription
-        {
-            public string title;
-            public string description;
-            public Sprite previewSprite;
-
-            public string sceneName;
-        }
-
-        [SerializeField] SetDescription[] sets;
-
         [SerializeField] private TMP_Text setHeader;
         [SerializeField] private TMP_Text setDescription;
         [SerializeField] private Image setPreview;
@@ -31,10 +19,14 @@ namespace Virtupad
         private int loadedIndex = -1;
         private int currentIndex = 0;
 
+        private SetSceneLoader.SetDescription[] sets;
+
         private void Start()
         {
             GlobalsDict.Instance.onSetDefinitionChanged += OnActiveChanged;
             InitIndex();
+
+            sets = SetSceneLoader.Instance.Sets;
         }
 
         private void OnActiveChanged(SetDefinition newDefinition)

@@ -12,9 +12,12 @@ namespace Virtupad
     {
         LastLoaded = 0,
         FileBrowser = 1,
-        LoadingInProgress = 2
+        LoadingInProgress = 2,
+        FullBodySetup = 3,
+        Coutdown = 4,
     }
 
+    /*
     [System.Serializable]
     public enum ModelConfigSwitcherIndexes
     {
@@ -22,6 +25,7 @@ namespace Virtupad
         FullBodySetup = 1,
         Coutdown = 2,
     }
+     */
 
     [System.Serializable]
     public enum WorldSwitcherIndexes
