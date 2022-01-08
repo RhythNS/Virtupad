@@ -6,8 +6,10 @@ namespace Virtupad
     {
         [SerializeField] private bool isHori = false;
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
+
             autoRemoveFromParentOnDestroy = true;
 
             parent = transform.parent.GetComponent<UIPrimitiveElement>();

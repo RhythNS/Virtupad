@@ -11,12 +11,7 @@ namespace Virtupad
     public class VRMLoader : MonoBehaviour
     {
         [SerializeField] private string[] paths;
-        [SerializeField] private int selectedPath;
-
-        [SerializeField] private GameObject lookAtObject = default;
-        [SerializeField] private RuntimeAnimatorController animatorController;
-
-
+        
         public VRMMetaObject Meta => meta;
         [SerializeField] private VRMMetaObject meta = default;
 

@@ -8,7 +8,7 @@ namespace Virtupad
 {
     public class UIElementSwitcher : UIPrimitiveElement
     {
-        [System.Serializable]
+        [Serializable]
         public class Element
         {
             public UIPrimitiveElement primitive;
@@ -42,12 +42,16 @@ namespace Virtupad
 
         protected override void Awake()
         {
+            base.Awake();
+
             for (int i = 0; i < switchingChildren.Count; i++)
                 switchingChildren[i].primitive.gameObject.SetActive(false);
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             AtChild = NormalizeChildValue(AtChild);
 
             switchingChildren[AtChild].primitive.gameObject.SetActive(true);

@@ -28,8 +28,10 @@ namespace Virtupad
             trackingRotation = transform.rotation;
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             gameObject.SetActive(false);
         }
 

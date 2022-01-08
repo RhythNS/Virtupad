@@ -106,7 +106,7 @@ namespace Virtupad
 
         public void SetPrevPage()
         {
-            if (maxVRMElementsInPanel * atPage >= lastLoadedVRMs.LastLoaded.Count)
+            if (maxVRMElementsInPanel * (1 + atPage) >= lastLoadedVRMs.LastLoaded.Count)
                 return;
 
             atPage++;

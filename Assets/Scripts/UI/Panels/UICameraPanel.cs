@@ -32,8 +32,10 @@ namespace Virtupad
             base.Awake();
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             StudioCameraManager.Instance.OnCamerasChanged += OnStudioCamerasChanged;
         }
 

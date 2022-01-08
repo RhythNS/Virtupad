@@ -21,12 +21,16 @@ namespace Virtupad
 
         private SetSceneLoader.SetDescription[] sets;
 
-        private void Start()
+        private void Awake()
         {
             GlobalsDict.Instance.onSetDefinitionChanged += OnActiveChanged;
-            InitIndex();
-
+            
             sets = SetSceneLoader.Instance.Sets;
+        }
+
+        private void Start()
+        {
+            InitIndex();
         }
 
         private void OnActiveChanged(SetDefinition newDefinition)

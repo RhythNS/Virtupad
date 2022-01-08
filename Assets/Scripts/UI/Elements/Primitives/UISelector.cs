@@ -29,8 +29,10 @@ namespace Virtupad
             }
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             OnUpdateValue();
         }
 

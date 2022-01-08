@@ -26,6 +26,9 @@ namespace Virtupad
 
         protected bool autoRemoveFromParentOnDestroy = false;
 
+        protected bool Started { get; private set; } = false;
+        public bool InitedRecievedOnce { get; private set; } = false;
+
         protected virtual void Awake()
         {
             controllerIntercept = GetComponent<UIControllerIntercept>();
@@ -34,8 +37,21 @@ namespace Virtupad
                 parent.AddChild(this);
         }
 
+        protected virtual void Start()
+        {
+            Started = true;
+
+            if (InitedRecievedOnce == true)
+                OnInit();
+        }
+
         public virtual void OnInit()
         {
+            InitedRecievedOnce = true;
+
+            if (Started == false)
+                return;
+
             OnInitEvent?.Invoke();
 
             if (children == null)

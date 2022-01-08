@@ -7,18 +7,17 @@ namespace Virtupad
 {
     public class VRMEmotionManager : MonoBehaviour
     {
-        public List<BlendShapePreset> Presets => presets;
-        [SerializeField] private List<BlendShapePreset> presets;
         private Dictionary<BlendShapePreset, BlendShapeKey> keyForBlendShape = new Dictionary<BlendShapePreset, BlendShapeKey>();
-
+        public List<BlendShapePreset> Presets { get; private set; }
+        
         public VRMBlendShapeProxy VRMBlendShapeProxy { get; private set; }
-
-        [SerializeField] private float emoteInSeconds;
 
         private float lastValue = 0.0f;
         private BlendShapeKey lastKey;
 
         private ExtendedCoroutine settingCoroutine;
+
+        private float changeEmoteInSeconds;
 
         private void Awake()
         {
@@ -27,16 +26,19 @@ namespace Virtupad
 
         private IEnumerator Start()
         {
-            yield break;
             yield return new WaitForSeconds(0.5f);
+
+            changeEmoteInSeconds = VRMDict.Instance.ChangeEmoteInSeconds;
+
+            Presets = new List<BlendShapePreset>(VRMDict.Instance.DefaultsPresets);
 
             foreach (KeyValuePair<BlendShapeKey, float> keys in VRMBlendShapeProxy.GetValues())
             {
-                int index = presets.FindIndex(x => x == keys.Key.Preset);
+                int index = Presets.FindIndex(x => x == keys.Key.Preset);
                 if (index == -1)
                     continue;
 
-                keyForBlendShape.Add(presets[index], keys.Key);
+                keyForBlendShape.Add(Presets[index], keys.Key);
             }
         }
 
@@ -52,7 +54,7 @@ namespace Virtupad
                 if (keys.Key.Preset != preset)
                     continue;
 
-                presets.Add(preset);
+                Presets.Add(preset);
                 keyForBlendShape.Add(preset, keys.Key);
                 return keys.Key;
             }
@@ -62,10 +64,11 @@ namespace Virtupad
 
         public void SetEmote(BlendShapePreset preset)
         {
-            if (settingCoroutine != null && settingCoroutine.IsFinshed == true)
+            if (settingCoroutine != null)
             {
                 settingCoroutine.Stop(false);
-                StartCoroutine(SetValue(false, lastKey, lastValue, 0.0f, emoteInSeconds * (1.0f - lastValue)));
+                float toSeconds = settingCoroutine.IsFinshed != true ? changeEmoteInSeconds * (1.0f - lastValue) : changeEmoteInSeconds;
+                StartCoroutine(SetValue(false, lastKey, lastValue, 0.0f, toSeconds));
             }
 
             if (keyForBlendShape.TryGetValue(preset, out BlendShapeKey toFind) == false)
@@ -77,7 +80,7 @@ namespace Virtupad
                 toFind = found.Value;
             }
 
-            settingCoroutine = new ExtendedCoroutine(this, SetValue(true, toFind, 0.0f, 1.0f, emoteInSeconds));
+            settingCoroutine = new ExtendedCoroutine(this, SetValue(true, toFind, 0.0f, 1.0f, changeEmoteInSeconds));
         }
 
         private IEnumerator SetValue(bool setField, BlendShapeKey key, float from, float to, float seconds)
@@ -94,9 +97,11 @@ namespace Virtupad
 
                 timer += Time.deltaTime;
                 float progress = timer / seconds;
-                shouldContinue = progress > 1.0f;
-                if (shouldContinue)
+                shouldContinue = progress < 1.0f;
+                if (shouldContinue == false)
                     progress = 1.0f;
+
+                Debug.Log(progress + " " + shouldContinue);
 
                 float value = Mathf.Lerp(from, to, progress);
 

@@ -67,6 +67,7 @@ GameObject:
   - component: {fileID: 4098422726681812854}
   - component: {fileID: 4769726672203580297}
   - component: {fileID: 6588527047819924475}
+  - component: {fileID: 8729140469532160428}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -144,6 +145,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onlyVisibleInVRLayer: 9
   onlyVisibleInDesktopLayer: 10
+  footLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   playerCollider: 8
   playerHands: 23
 --- !u!114 &5994798561738827276
@@ -566,7 +570,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f13a376cadcb0a4d8996a40a3d14c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabCameras: []
+  prefabCameras:
+  - prefab: {fileID: 6964966415697653377, guid: 82bcd88b7194bdd4f9d7bd42a4390e8e, type: 3}
+    cameraType: 0
+  - prefab: {fileID: 5940629988231515809, guid: 60c2cf34fe159c84d957e67bb01d4489, type: 3}
+    cameraType: 1
   defaultSpawningCamera: 0
   defaultMover: 0
   previewResolutionMultiplier: 0.5
+--- !u!114 &8729140469532160428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3274526070fbbd64fb737f9c19db596b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultPresets: 0100000008000000090000000a0000000b000000
+  changeEmoteInSeconds: 0.5

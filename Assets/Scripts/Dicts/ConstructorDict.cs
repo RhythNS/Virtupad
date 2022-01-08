@@ -61,7 +61,6 @@ namespace Virtupad
             }
         }
 
-
         private void OnDestroy()
         {
             if (Instance == this)
