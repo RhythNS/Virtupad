@@ -213,6 +213,15 @@ namespace Virtupad
             }
         }
 
+        public void DeleteCurrentModel()
+        {
+            VRMController vrm = VRMController.Instance;
+            if (vrm == null)
+                return;
+
+            Destroy(vrm.gameObject);
+        }
+
         public void OnClearHistory()
         {
             lastLoadedVRMs.DeleteAllFromHistory();

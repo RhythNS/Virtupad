@@ -13,7 +13,6 @@ namespace Virtupad
         [SerializeField] private string[] paths;
         [SerializeField] private int selectedPath;
 
-        [SerializeField] private GameObject currentLoadedModel = default;
         [SerializeField] private GameObject lookAtObject = default;
         [SerializeField] private RuntimeAnimatorController animatorController;
 
@@ -138,16 +137,7 @@ namespace Virtupad
             if (isMain == false)
                 return;
 
-            // cleanup
-            if (currentLoadedModel != null)
-            {
-                Debug.LogFormat("destroy {0}", currentLoadedModel.name);
-                Destroy(currentLoadedModel);
-                currentLoadedModel = null;
-            }
-
-            if (go == null)
-                return;
+            DontDestroyOnLoad(go);
 
             go.AddComponent<VRMController>();
         }

@@ -40,15 +40,25 @@ namespace Virtupad
         {
             currentPath = path;
 
-            GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-            VRMLoader.Instance.SpawnModel(path, position, rotation, OnSuccess, OnFailure);
+            UIVRMSelector.Instance.DeleteCurrentModel();
+
+            ExtendedCoroutine.ActionAfterSeconds(this, 0.05f, () =>
+            {
+                GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
+                VRMLoader.Instance.SpawnModel(path, position, rotation, OnSuccess, OnFailure);
+            });
         }
 
         public void TryToLoad(VRMHumanoidDescription prefab)
         {
-            GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-            VRMLoader.Instance.LoadPrefab(prefab, position, rotation);
-            OnSuccess();
+            UIVRMSelector.Instance.DeleteCurrentModel();
+
+            ExtendedCoroutine.ActionAfterSeconds(this, 0.05f, () =>
+            {
+                GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
+                VRMLoader.Instance.LoadPrefab(prefab, position, rotation);
+                OnSuccess();
+            });
         }
 
         private void GetPositionAndRotation(out Vector3 position, out Quaternion rotation)
@@ -76,10 +86,11 @@ namespace Virtupad
                 //UIRoot.Instance.MainSwitcher.SwitchChild((int)MidPanelSwitcherIndexes.VRMModelConfigSettings);
                 //UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.FullBodySetup);
                 UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.FullBodySetup);
-                
+
                 return;
             }
 
+            UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LastLoaded);
             UIRoot.Instance.CloseRequest();
             VRMController.Instance.FullRigCreator.StartAutoSetup(0);
         }

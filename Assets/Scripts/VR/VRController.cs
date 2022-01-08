@@ -11,6 +11,10 @@ namespace Virtupad
 
         public Transform head;
         public Hand leftHand, rightHand;
+        
+        public Transform leftHandAttachment;
+        public Transform rightHandAttachment;
+
         public Transform bodyCollider;
         private Transform player;
 

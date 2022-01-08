@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 28
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000010839039240
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 37
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000012270039266
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 34
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000012337745512
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 31
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000012560033920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1503,7 +1503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 24
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000014273957140
 GameObject:
   m_ObjectHideFlags: 0

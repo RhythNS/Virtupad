@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -38,6 +40,27 @@ namespace Virtupad
 
         public RuntimeAnimatorController UpperBody => upperBody;
         [SerializeField] private RuntimeAnimatorController upperBody;
+
+        public List<Tuple<Transform, HumanBodyBones, bool>> ToSetDoubleTrans => toSetDoubleTrans;
+        private readonly List<Tuple<Transform, HumanBodyBones, bool>> toSetDoubleTrans = new List<Tuple<Transform, HumanBodyBones, bool>>();
+
+        public void RegisterFinger(HumanBodyBones humanBodyBones, Transform transform, bool useOffset)
+        {
+            toSetDoubleTrans.Add(new Tuple<Transform, HumanBodyBones, bool>(transform, humanBodyBones, useOffset));
+        }
+
+        public void DeRegisterFinger(Transform transform)
+        {
+            for (int i = 0; i < toSetDoubleTrans.Count; i++)
+            {
+                if (toSetDoubleTrans[i].Item1 == transform)
+                {
+                    toSetDoubleTrans.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
 
         private void OnDestroy()
         {

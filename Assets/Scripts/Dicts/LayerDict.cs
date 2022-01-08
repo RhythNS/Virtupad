@@ -12,7 +12,10 @@ namespace Virtupad
         public int OnlyVisibleInDesktopLayer => onlyVisibleInDesktopLayer;
         [SerializeField] private int onlyVisibleInDesktopLayer;
 
-        public int MaskEverythingButPlayer => ~(1 << playerCollider | 1 << playerHands);
+        public LayerMask FootLayerMask => footLayerMask;
+        [SerializeField] private LayerMask footLayerMask;
+
+        //public int MaskEverythingButPlayer => ~(1 << playerCollider | 1 << playerHands);
 
         public int PlayerCollider => playerCollider;
         [SerializeField] private int playerCollider;

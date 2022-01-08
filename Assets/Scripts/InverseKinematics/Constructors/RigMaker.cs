@@ -16,6 +16,24 @@ namespace Virtupad
         private RigBuilder builder;
         private static readonly bool useAlternative = true;
 
+        private Transform rigParent;
+
+        private void Awake()
+        {
+            GameObject go = new GameObject("Rig Objects");
+            DontDestroyOnLoad(go);
+            rigParent = go.transform;
+        }
+
+        public void CleanUp()
+        {
+            int childCount = rigParent.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                Destroy(rigParent.GetChild(i).gameObject);
+            }
+        }
+
         public void MakeCharacter(Config config)
         {
             switch (config)
@@ -191,7 +209,7 @@ namespace Virtupad
 
         private Transform MakeBodyPart(string name, HumanBodyBones bone)
         {
-            GameObject bodyObject = new GameObject(name);
+            GameObject bodyObject = GetGameObject(name);
             bodyObject.transform.parent = transform;
             Transform boneTrans = character.GetBoneTransform(bone);
             bodyObject.transform.position = boneTrans.position;
@@ -201,10 +219,10 @@ namespace Virtupad
 
         private Transform MakeChain(string name, HumanBodyBones root, HumanBodyBones tip)
         {
-            GameObject chainObj = new GameObject(name);
+            GameObject chainObj = GetGameObject(name);
             chainObj.transform.parent = transform;
 
-            GameObject targetObject = new GameObject(name + " source");
+            GameObject targetObject = GetGameObject(name + " source");
 
             ChainIKConstraint chain = chainObj.AddComponent<ChainIKConstraint>();
             chain.Reset();
@@ -221,9 +239,9 @@ namespace Virtupad
 
         private Transform MakeOverrideTransform(string name, HumanBodyBones bone)
         {
-            GameObject overObj = new GameObject(name);
+            GameObject overObj = GetGameObject(name);
             overObj.transform.parent = transform;
-            GameObject targetObject = new GameObject(name + " source");
+            GameObject targetObject = GetGameObject(name + " source");
 
             OverrideTransform overrideTransform = overObj.AddComponent<OverrideTransform>();
             overrideTransform.Reset();
@@ -242,9 +260,9 @@ namespace Virtupad
 
         private Transform MakeMultiRotation(string name, HumanBodyBones bone)
         {
-            GameObject multiRotObj = new GameObject(name);
+            GameObject multiRotObj = GetGameObject(name);
             multiRotObj.transform.parent = transform;
-            GameObject targetObject = new GameObject(name + " source");
+            GameObject targetObject = GetGameObject(name + " source");
 
             MultiRotationConstraint multiRotation = multiRotObj.AddComponent<MultiRotationConstraint>();
             multiRotation.Reset();
@@ -258,6 +276,13 @@ namespace Virtupad
             multiRotation.data = data;
             multiRotObj.transform.position = targetObject.transform.position = data.constrainedObject.position;
             return targetObject.transform;
+        }
+
+        private GameObject GetGameObject(string name)
+        {
+            GameObject gameObject = new GameObject(name);
+            gameObject.transform.parent = rigParent;
+            return gameObject;
         }
     }
 }

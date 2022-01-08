@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +13,10 @@ namespace Virtupad
 
         public static VRAnimatorController Instance { get; private set; }
 
-        private readonly List<DoubleTransform> doubleTransforms = new List<DoubleTransform>();
+        [SerializeField] private Quaternion fingerRotOffset = Quaternion.Euler(0, 180, 0);
 
+        private readonly List<DoubleTransform> doubleTransforms = new List<DoubleTransform>();
+     
         private Animator animator;
         private Vector3 previousPos;
 
@@ -41,6 +44,12 @@ namespace Virtupad
             }
             Instance = this;
             animator = GetComponent<Animator>();
+
+            List<Tuple<Transform, HumanBodyBones, bool>> toSetDoubleTrans = ConstructorDict.Instance.ToSetDoubleTrans;
+            foreach (var item in toSetDoubleTrans)
+            {
+                doubleTransforms.Add(new DoubleTransform(item.Item1, animator.GetBoneTransform(item.Item2), item.Item3));
+            }
         }
 
         void Update()
@@ -65,7 +74,6 @@ namespace Virtupad
             animator.SetFloat("directionY", Mathf.Lerp(prevDirY, Mathf.Clamp(headSetlocalSpeed.z, -1, 1), smoothing));
              */
 
-
             Transform headTrans = VRController.Instance.head;
             Vector3 headsetSpeed = (headTrans.position - previousPos) / Time.deltaTime;
             Vector3 headSetlocalSpeed = transform.InverseTransformDirection(headsetSpeed);
@@ -89,25 +97,8 @@ namespace Virtupad
             for (int i = 0; i < doubleTransforms.Count; i++)
             {
                 doubleTransforms[i].second.rotation = doubleTransforms[i].useOffset ?
-                    doubleTransforms[i].first.rotation * Quaternion.Euler(0, 180, 0) :
+                    doubleTransforms[i].first.rotation * fingerRotOffset :
                     doubleTransforms[i].first.rotation;
-            }
-        }
-
-        public void Register(HumanBodyBones humanBodyBones, Transform transform, bool useOffset)
-        {
-            //   doubleTransforms.Add(new DoubleTransform(transform, animator.GetBoneTransform(humanBodyBones), useOffset));
-        }
-
-        public void DeRegister(Transform transform)
-        {
-            for (int i = 0; i < doubleTransforms.Count; i++)
-            {
-                if (doubleTransforms[i].first == transform)
-                {
-                    doubleTransforms.RemoveAt(i);
-                    return;
-                }
             }
         }
 

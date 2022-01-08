@@ -26,10 +26,7 @@ namespace Virtupad
                 return;
             }
             Instance = this;
-        }
 
-        private void Start()
-        {
             Animator = gameObject.GetComponent<Animator>();
             Animator.runtimeAnimatorController = ConstructorDict.Instance.TPoseController;
             Animator.Update(0.1f);
@@ -40,6 +37,7 @@ namespace Virtupad
                 gameObject.AddComponent<Blinker>();
 
                 GameObject lookTargetObject = new GameObject("VRM Look Target");
+                lookTargetObject.transform.parent = transform;
                 lookAt.Target = lookTargetObject.transform;
                 lookAt.UpdateType = UpdateType.LateUpdate; // after HumanPoseTransfer's setPose
                 VRMLookTarget = lookTargetObject.AddComponent<VRMLookTarget>();
@@ -74,6 +72,8 @@ namespace Virtupad
         {
             if (Instance == this)
                 Instance = null;
+
+            ConstructorDict.Instance?.rigMaker.CleanUp();
         }
     }
 }

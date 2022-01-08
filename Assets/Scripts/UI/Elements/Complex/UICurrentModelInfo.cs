@@ -47,7 +47,7 @@ namespace Virtupad
 
         public void UnloadModel()
         {
-
+            UIVRMSelector.Instance.DeleteCurrentModel();
         }
 
         public void ResetModel()

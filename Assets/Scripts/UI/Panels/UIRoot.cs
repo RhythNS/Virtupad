@@ -35,7 +35,7 @@ namespace Virtupad
 
         protected override void OnEnable()
         {
-            toTrack = VRController.Instance?.transform;
+            toTrack = VRController.Instance?.bodyCollider;
 
             base.OnEnable();
         }

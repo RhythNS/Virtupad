@@ -47,7 +47,7 @@ namespace Virtupad
         {
             Vector3 footPos = animator.GetIKPosition(goal);
 
-            if (Physics.Raycast(footPos + Vector3.up, Vector3.down, out RaycastHit hit, 2.0f, ~LayerDict.Instance.MaskEverythingButPlayer) == false)
+            if (Physics.Raycast(footPos + Vector3.up, Vector3.down, out RaycastHit hit, 2.0f, LayerDict.Instance.FootLayerMask) == false)
             {
                 animator.SetIKPositionWeight(goal, 0);
             }

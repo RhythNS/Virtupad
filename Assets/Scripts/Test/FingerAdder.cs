@@ -9,14 +9,12 @@ namespace Virtupad
 
         private void Start()
         {
-            if (VRAnimatorController.Instance)
-                VRAnimatorController.Instance.Register(bone, transform, useOffset);
+            ConstructorDict.Instance.RegisterFinger(bone, transform, useOffset);
         }
 
         private void OnDestroy()
         {
-            if (VRAnimatorController.Instance)
-                VRAnimatorController.Instance.DeRegister(transform);
+            ConstructorDict.Instance?.DeRegisterFinger(transform);
         }
     }
 }

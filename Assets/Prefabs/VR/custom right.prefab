@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 48
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000010304998954
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 45
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000011120915656
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 42
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000011679908428
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,7 +745,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011679908428}
-  m_LocalRotation: {x: 0.000060980376, y: 0.0013718528, z: -0.24637747, w: 0.96917295}
+  m_LocalRotation: {x: 0.000061024817, y: 0.0013728526, z: -0.24358223, w: 0.96987927}
   m_LocalPosition: {x: 0.040405963, y: -0.000000051561553, z: 0.000000045447194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1258,7 +1258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 39
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000013017660084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 51
-  useOffset: 0
+  useOffset: 1
 --- !u!1 &1000013815259988
 GameObject:
   m_ObjectHideFlags: 0
