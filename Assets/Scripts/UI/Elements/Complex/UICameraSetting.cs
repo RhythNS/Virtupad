@@ -17,12 +17,19 @@ namespace Virtupad
         }
 
         [SerializeField] private StudioCamera onCamera;
-        [SerializeField] private Slider fovSlider;
         [SerializeField] private Toggle previewToggle;
-        [SerializeField] private UISelector trackingBodyPartSelector;
+        [SerializeField] private Toggle easyRotateToggle;
+        [SerializeField] private Slider fovSlider;
+        [SerializeField] private UISelector cameraTypeSelector;
+
+        [SerializeField] private Transform autoFollowPanel;
+        [SerializeField] private Toggle autoFollowToggle;
+        [SerializeField] private UISelector followSelector;
 
         [SerializeField] private Transform trackingBodyPartPanel;
-        [SerializeField] private Transform autoFollowPanel;
+        [SerializeField] private Toggle autoTrackToggle;
+        [SerializeField] private UISelector trackingBodyPartSelector;
+
 
         [SerializeField] private bool onMainMenu = false;
         [SerializeField] private Transform forSmallPanel;
@@ -43,8 +50,16 @@ namespace Virtupad
             if (onCamera == null)
                 return;
 
-            fovSlider.value = onCamera.OutputCamera.fieldOfView;
             previewToggle.isOn = onCamera.IsPreviewOutputting;
+            easyRotateToggle.isOn = onCamera.Grabbable.EasyRotationLock != 0;
+            fovSlider.value = onCamera.OutputCamera.fieldOfView;
+            cameraTypeSelector.Index = (int)onCamera.PrefabType;
+
+            autoFollowToggle.isOn = onCamera.AutoFollow;
+            autoFollowPanel.gameObject.SetActive(onCamera.AutoFollow);
+            followSelector.Index = (int)onCamera.TrackingSpace;
+
+            autoTrackToggle.isOn = onCamera.Tracking;
             trackingBodyPartPanel.gameObject.SetActive(OnCamera.Tracking);
             trackingBodyPartSelector.Index = (int)OnCamera.TrackingBodyPart;
         }

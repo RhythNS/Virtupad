@@ -104,7 +104,8 @@ namespace Virtupad
 
         private void OnDisable()
         {
-            toAnimate.transform.localPosition = startPoint;
+            if (Mathf.Approximately(startPoint.x, 0.0f) == false || Mathf.Approximately(startPoint.y, 0.0f) == false)
+                toAnimate.transform.localPosition = startPoint;
 
             if (moveCoroutine != null && moveCoroutine.IsFinshed == false)
                 moveCoroutine.Stop(false);

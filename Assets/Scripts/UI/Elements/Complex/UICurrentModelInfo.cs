@@ -18,6 +18,7 @@ namespace Virtupad
         public override void OnInit()
         {
             base.OnInit();
+
             VRMController controller = VRMController.Instance;
 
             if (controller == null)
@@ -48,16 +49,13 @@ namespace Virtupad
         public void UnloadModel()
         {
             UIVRMSelector.Instance.DeleteCurrentModel();
-        }
-
-        public void ResetModel()
-        {
-
+            switcher.SwitchChild(0);
         }
 
         public void ResetFullyBodyTracking()
         {
-
+            UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LoadingInProgress);
+            UILoadVRMInProgressPanel.Instance.PossessModel();
         }
     }
 }

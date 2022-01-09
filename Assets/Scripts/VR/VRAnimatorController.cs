@@ -80,8 +80,8 @@ namespace Virtupad
 
             previousPos = headTrans.position;
 
-            float dirX = headSetlocalSpeed.x * VRController.invMovementSpeed;
-            float dirY = headSetlocalSpeed.z * VRController.invMovementSpeed;
+            float dirX = headSetlocalSpeed.x * VRController.InvMovementSpeed;
+            float dirY = headSetlocalSpeed.z * VRController.InvMovementSpeed;
 
             if (float.IsNaN(dirX))
                 dirX = 0.0f;

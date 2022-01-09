@@ -70,6 +70,9 @@ namespace Virtupad
         [SerializeField] private bool previewCanResize = true;
         [SerializeField] private Vector2 maxDesiredDimensions = new Vector2(1.0f, 0.8f);
 
+        public CameraType PrefabType => prefabType;
+        [SerializeField] private CameraType prefabType;
+
         public RenderTexture PreviewTexture => PreviewTextures[currentCameraIndex];
         public RenderTexture[] PreviewTextures { get; private set; }
 
@@ -257,7 +260,7 @@ namespace Virtupad
         {
             AutoFollow = newValue;
 
-            if (newValue && Mover == null)
+            if (newValue && Mover != null)
                 Mover.OnFollowTypeChanged();
         }
 
@@ -265,7 +268,7 @@ namespace Virtupad
         {
             TrackingSpace = trackingSpace;
 
-            if (Mover == null)
+            if (Mover != null)
                 Mover.OnFollowTypeChanged();
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
@@ -7,7 +8,7 @@ namespace Virtupad
         private bool isGrabbed = false;
 
         private Vector3 trackingPositionOffset;
-        public Quaternion trackingRotationOffset;
+        private Vector3 trackingDirectionOffset;
 
         private void OnAttachedToHand()
         {
@@ -17,6 +18,7 @@ namespace Virtupad
         private void OnDetachedFromHand()
         {
             isGrabbed = false;
+            OnFollowTypeChanged();
         }
 
         public override void OnInit()
@@ -41,8 +43,8 @@ namespace Virtupad
             if (toTrack == null)
                 return;
 
-            trackingPositionOffset = transform.position - toTrack.position;
-            trackingRotationOffset = toTrack.rotation * Quaternion.Inverse(transform.rotation);
+            trackingPositionOffset = toTrack.InverseTransformPoint(transform.position);
+            trackingDirectionOffset = toTrack.InverseTransformDirection((toTrack.position - transform.position).normalized);
         }
 
         private void Update()
@@ -76,18 +78,19 @@ namespace Virtupad
             if (toTrack == null)
                 return;
 
-            transform.position = toTrack.position + trackingPositionOffset;
-            transform.rotation = toTrack.rotation * trackingRotationOffset;
+            transform.position = toTrack.TransformPoint(trackingPositionOffset);
+            transform.rotation = Quaternion.LookRotation(toTrack.TransformDirection(trackingDirectionOffset));
         }
 
         private void Track()
         {
-            VRMController controller = VRMController.Instance;
-            if (controller == null)
-                return;
+            Transform toTrack;
 
-            Transform trackingBone = controller.Animator.GetBoneTransform(OnCamera.TrackingBone);
-            transform.LookAt(trackingBone, Vector3.up);
+            VRMController controller = VRMController.Instance;
+            toTrack = controller != null ? controller.Animator.GetBoneTransform(OnCamera.TrackingBone)
+                : Player.instance.hmdTransform;
+
+            transform.LookAt(toTrack, Vector3.up);
         }
     }
 }

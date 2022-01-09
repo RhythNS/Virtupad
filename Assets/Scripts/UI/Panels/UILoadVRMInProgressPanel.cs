@@ -45,7 +45,7 @@ namespace Virtupad
             ExtendedCoroutine.ActionAfterSeconds(this, 0.05f, () =>
             {
                 GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-                VRMLoader.Instance.SpawnModel(path, position, rotation, OnSuccess, OnFailure);
+                VRMLoader.Instance.SpawnModel(path, position, rotation, PossessModel, OnFailure);
             });
         }
 
@@ -57,7 +57,7 @@ namespace Virtupad
             {
                 GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
                 VRMLoader.Instance.LoadPrefab(prefab, position, rotation);
-                OnSuccess();
+                PossessModel();
             });
         }
 
@@ -72,7 +72,7 @@ namespace Virtupad
             UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.LastLoaded);
         }
 
-        private void OnSuccess()
+        public void PossessModel()
         {
             Texture2D preview = null;
             if (VRMLoader.Instance?.Meta != null)
@@ -83,8 +83,8 @@ namespace Virtupad
             RigMaker.Config? config = VRMController.Instance?.FullRigCreator?.GetConfig();
             if (config == null || config.Value != RigMaker.Config.ThreePoints)
             {
-                //UIRoot.Instance.MainSwitcher.SwitchChild((int)MidPanelSwitcherIndexes.VRMModelConfigSettings);
-                //UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.FullBodySetup);
+                // UIRoot.Instance.MainSwitcher.SwitchChild((int)MidPanelSwitcherIndexes.VRMModelConfigSettings);
+                // UICurrentModelPanel.Instance.Switcher.SwitchChild((int)ModelConfigSwitcherIndexes.FullBodySetup);
                 UIVRMSelector.Instance.Switcher.SwitchChild((int)VRMSelectorSwitcherIndexes.FullBodySetup);
 
                 return;

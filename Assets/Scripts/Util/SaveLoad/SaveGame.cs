@@ -5,10 +5,10 @@ using UnityEngine;
 /// <summary>
 /// Serilizable save game.
 /// </summary>
-[System.Serializable]
+[Serializable]
 public class SaveGame
 {
-    [System.Serializable]
+    [Serializable]
     public struct LoadVRM
     {
         public string filepath;
@@ -25,4 +25,8 @@ public class SaveGame
 
     [SerializeField] public int autoLoadSet = -1;
 
+    // vr controller
+    [SerializeField] public float playerMovePerSecond = 1.5f;
+    [SerializeField] public float playerRotatePerSecond = 90.0f;
+    [SerializeField] public int playerMoveType = 1;
 }

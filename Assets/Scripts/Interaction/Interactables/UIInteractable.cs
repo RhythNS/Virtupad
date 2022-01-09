@@ -102,10 +102,10 @@ namespace Virtupad
 
         public void AutoSize()
         {
-            if (useAutoSize == false)
-                return;
-
-            if (TryGetComponent(out RectTransform trans) == false)
+            if (useAutoSize == false
+                || TryGetComponent(out RectTransform trans) == false
+             //   || (Mathf.Approximately(trans.localPosition.x, 0.0f) && (Mathf.Approximately(trans.localPosition.y, 0.0f)) )
+                )
                 return;
 
             BoxCollider collider = GetComponent<BoxCollider>();
@@ -154,6 +154,8 @@ namespace Virtupad
                 Debug.LogWarning(gameObject.name + " does not have an element assigend!" +
                     "\nParents are" + string.Join("\n", list));
             }
+
+            AutoSize();
         }
     }
 
@@ -167,6 +169,7 @@ namespace Virtupad
 
             (target as UIInteractable).AutoSize();
         }
+
     }
 #endif
 }
