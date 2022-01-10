@@ -68,6 +68,8 @@ GameObject:
   - component: {fileID: 4769726672203580297}
   - component: {fileID: 6588527047819924475}
   - component: {fileID: 8729140469532160428}
+  - component: {fileID: 4318336348597186708}
+  - component: {fileID: 3937691439257350528}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -162,7 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c4c8426af6e4444b0558b2b8819a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   interacters: []
 --- !u!114 &3689714305140074729
 MonoBehaviour:
@@ -314,6 +315,9 @@ MonoBehaviour:
     autoLoadVRM: 0
     footIK: 1
     autoLoadSet: -1
+    playerMovePerSecond: 1.5
+    playerRotatePerSecond: 90
+    playerMoveType: 1
 --- !u!114 &4098422726681812854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,6 +582,8 @@ MonoBehaviour:
   defaultSpawningCamera: 0
   defaultMover: 0
   previewResolutionMultiplier: 0.5
+  movingMetersPerSecond: 1
+  rotatingAnglesPerSecond: 45
 --- !u!114 &8729140469532160428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,3 +598,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPresets: 0100000008000000090000000a0000000b000000
   changeEmoteInSeconds: 0.5
+--- !u!114 &4318336348597186708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb17519531a7fe04c84b9b0e9b9b4cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3937691439257350528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683602039922489649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f649f17aa227364aaf1e77855a1cb52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stabs: []

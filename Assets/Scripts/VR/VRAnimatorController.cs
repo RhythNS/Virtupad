@@ -15,8 +15,8 @@ namespace Virtupad
 
         [SerializeField] private Quaternion fingerRotOffset = Quaternion.Euler(0, 180, 0);
 
-        private readonly List<DoubleTransform> doubleTransforms = new List<DoubleTransform>();
-     
+        [SerializeField] private List<DoubleTransform> doubleTransforms = new List<DoubleTransform>();
+
         private Animator animator;
         private Vector3 previousPos;
 
@@ -25,12 +25,16 @@ namespace Virtupad
         {
             public Transform first, second;
             public bool useOffset;
+            public Quaternion customOffset;
+            public bool useCustomOffset;
 
-            public DoubleTransform(Transform first, Transform second, bool useOffset)
+            public DoubleTransform(Transform first, Transform second, bool useOffset, Quaternion customOffset, bool useCustomOffset)
             {
                 this.first = first;
                 this.second = second;
                 this.useOffset = useOffset;
+                this.customOffset = customOffset;
+                this.useCustomOffset = useCustomOffset;
             }
         }
 
@@ -45,10 +49,11 @@ namespace Virtupad
             Instance = this;
             animator = GetComponent<Animator>();
 
-            List<Tuple<Transform, HumanBodyBones, bool>> toSetDoubleTrans = ConstructorDict.Instance.ToSetDoubleTrans;
+            List<ConstructorDict.ToSetDoubleTransform> toSetDoubleTrans = ConstructorDict.Instance.ToSetDoubleTrans;
             foreach (var item in toSetDoubleTrans)
             {
-                doubleTransforms.Add(new DoubleTransform(item.Item1, animator.GetBoneTransform(item.Item2), item.Item3));
+                doubleTransforms.Add(new DoubleTransform(item.transform, animator.GetBoneTransform(item.bodybones),
+                    item.useOffset, item.customOffset, item.useCustomOffset));
             }
         }
 
@@ -96,9 +101,20 @@ namespace Virtupad
         {
             for (int i = 0; i < doubleTransforms.Count; i++)
             {
-                doubleTransforms[i].second.rotation = doubleTransforms[i].useOffset ?
-                    doubleTransforms[i].first.rotation * fingerRotOffset :
-                    doubleTransforms[i].first.rotation;
+                Quaternion toSet = Quaternion.identity;
+
+                if (doubleTransforms[i].useCustomOffset)
+                    toSet *= doubleTransforms[i].customOffset;
+                if (doubleTransforms[i].useOffset)
+                {
+                    toSet *= Quaternion.Inverse(doubleTransforms[i].first.localRotation);
+                }
+                else
+                {
+                    toSet *= doubleTransforms[i].first.localRotation;
+                }
+
+                doubleTransforms[i].second.localRotation = toSet;
             }
         }
 

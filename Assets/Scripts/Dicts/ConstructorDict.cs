@@ -41,19 +41,38 @@ namespace Virtupad
         public RuntimeAnimatorController UpperBody => upperBody;
         [SerializeField] private RuntimeAnimatorController upperBody;
 
-        public List<Tuple<Transform, HumanBodyBones, bool>> ToSetDoubleTrans => toSetDoubleTrans;
-        private readonly List<Tuple<Transform, HumanBodyBones, bool>> toSetDoubleTrans = new List<Tuple<Transform, HumanBodyBones, bool>>();
-
-        public void RegisterFinger(HumanBodyBones humanBodyBones, Transform transform, bool useOffset)
+        [System.Serializable]
+        public struct ToSetDoubleTransform
         {
-            toSetDoubleTrans.Add(new Tuple<Transform, HumanBodyBones, bool>(transform, humanBodyBones, useOffset));
+            public HumanBodyBones bodybones;
+            public Transform transform;
+            public bool useOffset;
+            public Quaternion customOffset;
+            public bool useCustomOffset;
+
+            public ToSetDoubleTransform(HumanBodyBones bodybones, Transform transform, bool useOffset, Quaternion customOffset, bool useCustomOffset)
+            {
+                this.bodybones = bodybones;
+                this.transform = transform;
+                this.useOffset = useOffset;
+                this.customOffset = customOffset;
+                this.useCustomOffset = useCustomOffset;
+            }
+        }
+
+        public List<ToSetDoubleTransform> ToSetDoubleTrans => toSetDoubleTrans;
+        private readonly List<ToSetDoubleTransform> toSetDoubleTrans = new List<ToSetDoubleTransform>();
+
+        public void RegisterFinger(HumanBodyBones humanBodyBones, Transform transform, bool useOffset, Quaternion customOffset, bool useCustomOffset)
+        {
+            toSetDoubleTrans.Add(new ToSetDoubleTransform(humanBodyBones, transform, useOffset, customOffset, useCustomOffset));
         }
 
         public void DeRegisterFinger(Transform transform)
         {
             for (int i = 0; i < toSetDoubleTrans.Count; i++)
             {
-                if (toSetDoubleTrans[i].Item1 == transform)
+                if (toSetDoubleTrans[i].transform == transform)
                 {
                     toSetDoubleTrans.RemoveAt(i);
                     return;

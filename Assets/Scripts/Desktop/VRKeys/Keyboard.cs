@@ -31,6 +31,8 @@ namespace VRKeys
     /// </summary>
     public class Keyboard : MonoBehaviour
     {
+        public static Keyboard Instance { get; private set; }
+
         public Vector3 positionRelativeToUser = new Vector3(0f, 1.35f, 2f);
 
         [Space(15)]
@@ -79,6 +81,17 @@ namespace VRKeys
 
         [SerializeField] private string defaultLayout;
 
+        private void Awake()
+        {
+            if (Instance)
+            {
+                Debug.LogWarning("Keyboard already in scene. Deleting myself!");
+                Destroy(this);
+                return;
+            }
+            Instance = this;
+        }
+
         /// <summary>
         /// Initialization.
         /// </summary>
@@ -87,6 +100,7 @@ namespace VRKeys
             yield return StartCoroutine(DoSetLanguage(LayoutDict.Instance.GetLayout(defaultLayout)));
 
             initialized = true;
+            keysParent.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -96,6 +110,14 @@ namespace VRKeys
         private void OnDisable()
         {
             Disable();
+        }
+
+        public void ToggleEnable()
+        {
+            if (disabled == true)
+                Enable();
+            else
+                Disable();
         }
 
         /// <summary>
@@ -118,6 +140,8 @@ namespace VRKeys
             }
 
             EnableInput();
+
+            KeyStabManager.Instance.Stabs.ForEach(x => x.gameObject.SetActive(true));
         }
 
         private IEnumerator EnableWhenInitialized()
@@ -138,6 +162,8 @@ namespace VRKeys
             {
                 keysParent.gameObject.SetActive(false);
             }
+
+            KeyStabManager.Instance?.Stabs.ForEach(x => { if (x) x.gameObject.SetActive(false); });
         }
 
         /// <summary>
@@ -269,7 +295,6 @@ namespace VRKeys
                 key.UpdateLayout(currentLayout);
             }
         }
-
 
         /// <summary>
         /// Setup the keys.
@@ -418,6 +443,12 @@ namespace VRKeys
 
                 yield return null;
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
     }
 }

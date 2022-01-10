@@ -57,10 +57,13 @@ namespace VRKeys
         {
             if (Shifted == false)
                 keyboard.AddCharacter(key, false);
-            if (hasShiftedKey == false)
-                keyboard.AddCharacter(key, Shifted);
             else
-                keyboard.AddCharacter(shiftedKey, false);
+            {
+                if (hasShiftedKey == false)
+                    keyboard.AddCharacter(key, Shifted);
+                else
+                    keyboard.AddCharacter(shiftedKey, false);
+            }
 
             ActivateFor(0.3f);
         }

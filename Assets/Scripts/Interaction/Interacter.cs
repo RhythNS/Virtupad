@@ -44,11 +44,11 @@ namespace Virtupad
 
         private void ActiveChanged(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource, bool active)
         {
-            DownChanged?.Invoke(active);
             if (active)
                 StartInteract(fromAction, fromSource);
             else
                 StopInteract(fromAction, fromSource);
+            DownChanged?.Invoke(active);
         }
 
         private void StartInteract(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -74,10 +74,10 @@ namespace Virtupad
 
             if (beginStopSelecting != null)
             {
-                beginStopSelecting.OnEndSelecting();
-
                 if (beginStopSelecting == lastSelectedInteractable)
                     beginStopSelecting.Select();
+
+                beginStopSelecting.OnEndSelecting();
 
                 if (lastSelectedInteractable != null)
                     lastSelectedInteractable.LeaveHover(this);

@@ -19,7 +19,7 @@ namespace Virtupad
                 Desubscribe();
 
             studioCamera = onCamera;
-            cameraNameDisplay.text = onCamera.Id.ToString();
+            cameraNameDisplay.text = (onCamera.Id + 1).ToString();
 
             previewImage.texture = onCamera.PreviewTexture;
 

@@ -9,14 +9,13 @@
  */
 
 using UnityEngine;
-using System.Collections;
 
-namespace VRKeys {
-
-	/// <summary>
-	/// Cancel key that calls Cancel() on the keyboard.
-	/// </summary>
-	public class CancelKey : Key {
+namespace VRKeys
+{
+    /// <summary>
+    /// Cancel key that calls Cancel() on the keyboard.
+    /// </summary>
+    public class CancelKey : Key {
 
 		public override void HandleTriggerEnter (Collider other) {
 			keyboard.Cancel ();

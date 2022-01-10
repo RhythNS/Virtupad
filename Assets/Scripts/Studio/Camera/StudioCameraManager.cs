@@ -65,7 +65,24 @@ namespace Virtupad
 
         [SerializeField] private float previewResolutionMultiplier = 0.5f;
 
-        public bool ForcePreviewRender { get; set; } = false;
+        public float MovingMetersPerSecond => movingMetersPerSecond;
+        [SerializeField] private float movingMetersPerSecond;
+
+        public float RotatingAnglesPerSecond => rotatingAnglesPerSecond;
+        [SerializeField] private float rotatingAnglesPerSecond;
+
+        public bool ForcePreviewRender
+        {
+            get => currentForcePreviewRenderRequests > 0;
+            set
+            {
+                if (value)
+                    ++currentForcePreviewRenderRequests;
+                else
+                    --currentForcePreviewRenderRequests;
+            }
+        }
+        private int currentForcePreviewRenderRequests = 0;
 
         public Vector2 DesiredResolution => new Vector2((float)Screen.width * previewResolutionMultiplier,
             (float)Screen.height * previewResolutionMultiplier);

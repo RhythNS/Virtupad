@@ -129,7 +129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114000011813929276, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
       propertyPath: disabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000011813929276, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
       propertyPath: defaultLayout
@@ -147,6 +147,18 @@ PrefabInstance:
       propertyPath: extraKeys.Array.data[4]
       value: 
       objectReference: {fileID: 7126443434158663079}
+    - target: {fileID: 114000014124921810, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
+      propertyPath: m_text
+      value: CLOSE
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014124921810, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014124921810, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 222000013050577040, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}
     - {fileID: 222000012673900028, guid: f28287b1c722ebd4aa4f4d8547ed7fa8, type: 3}

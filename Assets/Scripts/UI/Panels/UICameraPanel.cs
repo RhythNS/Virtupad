@@ -32,6 +32,16 @@ namespace Virtupad
             base.Awake();
         }
 
+        private void OnEnable()
+        {
+            StudioCameraManager.Instance.ForcePreviewRender = true;
+        }
+
+        private void OnDisable()
+        {
+            StudioCameraManager.Instance.ForcePreviewRender = false;
+        }
+
         protected override void Start()
         {
             base.Start();

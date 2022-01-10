@@ -56,12 +56,6 @@ namespace Virtupad
             UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.P))
-                OnMainMenuDown(null, SteamVR_Input_Sources.Waist);
-        }
-
         private void OnMainMenuDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
         {
             UIPanelManager.Instance.OnMainMenuToggle();

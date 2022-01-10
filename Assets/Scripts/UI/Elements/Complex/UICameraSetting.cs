@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
@@ -30,12 +32,14 @@ namespace Virtupad
         [SerializeField] private Toggle autoTrackToggle;
         [SerializeField] private UISelector trackingBodyPartSelector;
 
-
         [SerializeField] private bool onMainMenu = false;
         [SerializeField] private Transform forSmallPanel;
         [SerializeField] private Transform forMainMenuPanel;
 
         public UnityEvent shouldClose;
+
+        private bool overwritingControllerInputs = false;
+        float movingAngleOffset;
 
         private void OnEnable()
         {
@@ -45,10 +49,17 @@ namespace Virtupad
             Init();
         }
 
+        private void OnDisable()
+        {
+            DeRegisterInput();
+        }
+
         private void Init()
         {
             if (onCamera == null)
                 return;
+
+            RegisterInput();
 
             previewToggle.isOn = onCamera.IsPreviewOutputting;
             easyRotateToggle.isOn = onCamera.Grabbable.EasyRotationLock != 0;
@@ -62,6 +73,67 @@ namespace Virtupad
             autoTrackToggle.isOn = onCamera.Tracking;
             trackingBodyPartPanel.gameObject.SetActive(OnCamera.Tracking);
             trackingBodyPartSelector.Index = (int)OnCamera.TrackingBodyPart;
+        }
+
+        private void RegisterInput()
+        {
+            DeRegisterInput();
+
+            overwritingControllerInputs = true;
+
+            VRController.Instance.RegisterRotation(Rotate);
+            VRController.Instance.RegisterWalking(Move);
+
+            Vector3 ownPos = Player.instance.hmdTransform.position;
+            Vector3 cameraPos = OnCamera.transform.position;
+
+            ownPos.y = 0.0f;
+            cameraPos.y = 0.0f;
+
+            movingAngleOffset = Vector3.SignedAngle(ownPos, cameraPos, Vector3.up);
+        }
+
+        private void DeRegisterInput()
+        {
+            if (overwritingControllerInputs == false)
+                return;
+
+            overwritingControllerInputs = false;
+
+            VRController.Instance.DeRegisterRotation(Rotate);
+            VRController.Instance.DeRegisterWalking(Move);
+        }
+
+        private bool Rotate(SteamVR_Action_Vector2 input)
+        {
+            if (onCamera == null)
+            {
+                DeRegisterInput();
+                return false;
+            }
+
+            float rotatingAnglesPerSecond = StudioCameraManager.Instance.RotatingAnglesPerSecond;
+            Vector2 axis = -input.axis * (rotatingAnglesPerSecond * Time.fixedDeltaTime);
+            Vector3 prevAngle = OnCamera.Body.rotation.eulerAngles;
+            OnCamera.Body.MoveRotation(Quaternion.Euler(prevAngle.x + axis.y, prevAngle.y + axis.x, prevAngle.z));
+
+            return true;
+        }
+
+        private bool Move(SteamVR_Action_Vector2 input)
+        {
+            if (onCamera == null)
+            {
+                DeRegisterInput();
+                return false;
+            }
+
+            float toMove = StudioCameraManager.Instance.MovingMetersPerSecond * Time.fixedDeltaTime;
+            Vector3 moveVec = Quaternion.AngleAxis(movingAngleOffset, Vector3.up)
+                * new Vector3(-input.axis.y * toMove, 0.0f, input.axis.x * toMove);
+            OnCamera.Body.MovePosition(OnCamera.Body.position + moveVec);
+
+            return true;
         }
 
         public void OnPreviewToggleChanged(bool newValue)

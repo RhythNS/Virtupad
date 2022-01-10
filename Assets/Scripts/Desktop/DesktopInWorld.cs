@@ -5,9 +5,9 @@ namespace Virtupad
 {
     public class DesktopInWorld : Interactable, IStayOnInteractable
     {
-        private uDesktopDuplication.Texture texture;
+        [SerializeField] private uDesktopDuplication.Texture texture;
 
-        private Vector2 monitorSize;
+        public Vector2 MonitorSize { get; private set; }
 
         private int currentMonitor;
         public int CurrentMonitor
@@ -20,7 +20,8 @@ namespace Virtupad
                 if (monitor == null)
                     return;
 
-                monitorSize = new Vector2(monitor.width, monitor.height);
+                MonitorSize = new Vector2(monitor.width, monitor.height);
+                texture.monitor = monitor;
             }
         }
 
@@ -53,9 +54,14 @@ namespace Virtupad
 
         }
 
-        public override void Select()
+        public override void OnBeginSelecting(Vector3 impactPoint)
         {
             texture.monitor.MouseButtonDown(0);
+        }
+
+        public override void Select()
+        {
+            //texture.monitor.MouseButtonDown(0);
         }
 
         public override void OnEndSelecting()

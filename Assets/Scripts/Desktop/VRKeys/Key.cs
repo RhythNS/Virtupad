@@ -15,7 +15,6 @@ using Virtupad;
 
 namespace VRKeys
 {
-
     /// <summary>
     /// An individual key in the VR keyboard.
     /// </summary>
@@ -40,8 +39,6 @@ namespace VRKeys
         public float pressMagnitude = 0.1f;
 
         public bool autoInit = false;
-
-        private bool isPressing = false;
 
         private bool disabled = false;
 
@@ -74,7 +71,6 @@ namespace VRKeys
 
         private void OnEnable()
         {
-            isPressing = false;
             disabled = false;
             transform.localPosition = defaultPosition;
             meshRenderer.material = inactiveMat;
@@ -92,10 +88,8 @@ namespace VRKeys
 
         public void OnTriggerEnter(Collider other)
         {
-            int layer = LayerDict.Instance.PlayerCollider | LayerDict.Instance.PlayerHands;
-
-            if ((other.gameObject.layer & layer) != 0)
-                Press(other);
+            if (other.TryGetComponent(out KeyStabCollider keyStab) == true)
+                Press(keyStab, other);
         }
 
         private void OnTriggerExit(Collider other)
@@ -103,14 +97,16 @@ namespace VRKeys
             if (lastPressed == other)
             {
                 lastPressed = null;
-                Debug.Log("last pressed rip");
             }
         }
 
-        public void Press(Collider other = null)
+        public void Press(KeyStabCollider keyStab = null, Collider other = null)
         {
-            if (isPressing || disabled || keyboard.disabled || !keyboard.initialized)
+            if ((press != null && press.IsFinshed == false) || disabled || keyboard.disabled || !keyboard.initialized)
                 return;
+
+            if (keyStab != null)
+                keyStab.OnKeyHit();
 
             lastPressed = other;
 
@@ -123,10 +119,6 @@ namespace VRKeys
 
         private IEnumerator OnPress(Collider other)
         {
-            Debug.Log("Entering press with " + lastPressed);
-
-            isPressing = true;
-
             HandleTriggerEnter(other);
 
             transform.localPosition = pressedPosition;
@@ -138,7 +130,6 @@ namespace VRKeys
             }
 
             transform.localPosition = defaultPosition;
-            isPressing = false;
         }
 
         /// <summary>

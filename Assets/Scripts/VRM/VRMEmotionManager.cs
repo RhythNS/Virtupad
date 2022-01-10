@@ -101,8 +101,6 @@ namespace Virtupad
                 if (shouldContinue == false)
                     progress = 1.0f;
 
-                Debug.Log(progress + " " + shouldContinue);
-
                 float value = Mathf.Lerp(from, to, progress);
 
                 if (setField == true)

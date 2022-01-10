@@ -27,6 +27,9 @@ namespace Virtupad
 
         public void CleanUp()
         {
+            if (!rigParent)
+                return;
+
             int childCount = rigParent.childCount;
             for (int i = 0; i < childCount; i++)
             {

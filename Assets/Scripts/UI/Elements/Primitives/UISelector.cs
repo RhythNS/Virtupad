@@ -36,9 +36,16 @@ namespace Virtupad
             OnUpdateValue();
         }
 
-        private void OnUpdateValue()
+        public void ManuallyChangedSelections(bool issueEvents = false)
         {
-            selectionChanged?.Invoke(index);
+            index = Mathf.Clamp(index, 0, selections.Count - 1);
+            OnUpdateValue(issueEvents);
+        }
+
+        private void OnUpdateValue(bool issueEvents = true)
+        {
+            if (issueEvents == true)
+                selectionChanged?.Invoke(index);
             textDisplay.text = selections[index];
         }
 

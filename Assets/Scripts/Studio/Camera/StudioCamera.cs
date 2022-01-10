@@ -73,6 +73,8 @@ namespace Virtupad
         public CameraType PrefabType => prefabType;
         [SerializeField] private CameraType prefabType;
 
+        public Rigidbody Body { get; private set; }
+
         public RenderTexture PreviewTexture => PreviewTextures[currentCameraIndex];
         public RenderTexture[] PreviewTextures { get; private set; }
 
@@ -83,6 +85,7 @@ namespace Virtupad
             SnapToObject = true;
 
             Grabbable = GetComponent<AttachGrabbable>();
+            Body = GetComponent<Rigidbody>();
 
             Array.ForEach(previewCameras, x => x.enabled = false);
             Array.ForEach(outputCameras, x => x.enabled = false);

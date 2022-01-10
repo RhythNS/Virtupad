@@ -241,7 +241,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 48
-  useOffset: 1
+  useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000010304998954
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +431,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 45
-  useOffset: 1
+  useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011120915656
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,8 +478,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462c3ed37c5c65a4cba6b3fbafc2a725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bone: 41
+  bone: 40
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011236499792
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +528,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 44
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011238705446
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,6 +606,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 50
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011434405520
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,6 +685,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 49
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011534126240
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +732,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 42
-  useOffset: 1
+  useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000011679908428
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,8 +779,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462c3ed37c5c65a4cba6b3fbafc2a725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bone: 40
+  bone: 39
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 1
 --- !u!1 &1000011884388644
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +860,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 47
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000012067096306
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +998,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 46
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000012361985124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,7 +1242,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000010195340378}
-  - component: {fileID: 5814428892800773734}
   m_Layer: 0
   m_Name: finger_thumb_0_r
   m_TagString: Untagged
@@ -1245,20 +1264,6 @@ Transform:
   m_Father: {fileID: 4000010328025740}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5814428892800773734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000012866877500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 462c3ed37c5c65a4cba6b3fbafc2a725, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bone: 39
-  useOffset: 1
 --- !u!1 &1000013017660084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,7 +1370,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bone: 51
-  useOffset: 1
+  useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000013815259988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,6 +1419,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 52
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000013891799758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,6 +1497,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 53
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0
 --- !u!1 &1000014142671692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1534,3 +1545,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bone: 43
   useOffset: 0
+  customOffset: {x: 0, y: 0, z: 0, w: 0}
+  useCustomOffset: 0

@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
     public class GlobalsDict : MonoBehaviour
     {
         public static GlobalsDict Instance { get; private set; }
-
-        public Player Player => player;
-        [SerializeField] private Player player;
 
         public List<Interacter> Interacters => interacters;
         [SerializeField] private List<Interacter> interacters = new List<Interacter>();
@@ -24,7 +20,7 @@ namespace Virtupad
             }
         }
         private SetDefinition currentDefinition;
-        public SetDefinitionChanged onSetDefinitionChanged;
+        public event SetDefinitionChanged onSetDefinitionChanged;
 
         private void Awake()
         {
@@ -33,12 +29,6 @@ namespace Virtupad
                 Debug.LogWarning("GlobalsDict already in scene. Deleting myself!");
                 Destroy(this);
                 return;
-            }
-
-            if (!Player)
-            {
-                Debug.LogWarning("Player was not assigned! Searching for him instead!");
-                player = FindObjectOfType<Player>();
             }
 
             Instance = this;
