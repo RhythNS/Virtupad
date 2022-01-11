@@ -598,6 +598,157 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPresets: 0100000008000000090000000a0000000b000000
   changeEmoteInSeconds: 0.5
+  fingerAnimationValues:
+  - bone: 24
+    index: 0
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 25, y: 8, z: 3.6}
+  - bone: 39
+    index: 0
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 25, y: 8, z: 3.6}
+  - bone: 25
+    index: 0
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 26, z: 0}
+  - bone: 40
+    index: 0
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 26, z: 0}
+  - bone: 26
+    index: 0
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 72, z: 0}
+  - bone: 41
+    index: 0
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 72, z: 0}
+  - bone: 27
+    index: 1
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -85}
+  - bone: 42
+    index: 1
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -85}
+  - bone: 28
+    index: 1
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -50.323}
+  - bone: 43
+    index: 1
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -50.323}
+  - bone: 29
+    index: 1
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -71.803}
+  - bone: 44
+    index: 1
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -71.803}
+  - bone: 30
+    index: 2
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -88.182}
+  - bone: 45
+    index: 2
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -88.182}
+  - bone: 31
+    index: 2
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -77.872}
+  - bone: 46
+    index: 2
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -77.872}
+  - bone: 32
+    index: 2
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -43.517}
+  - bone: 47
+    index: 2
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -43.517}
+  - bone: 33
+    index: 3
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -87.367}
+  - bone: 48
+    index: 3
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -87.367}
+  - bone: 34
+    index: 3
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -89.804}
+  - bone: 49
+    index: 3
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -89.804}
+  - bone: 35
+    index: 3
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -55.038}
+  - bone: 50
+    index: 3
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -55.038}
+  - bone: 36
+    index: 4
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -103.729}
+  - bone: 51
+    index: 4
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -103.729}
+  - bone: 37
+    index: 4
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -99.33}
+  - bone: 52
+    index: 4
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -99.33}
+  - bone: 38
+    index: 4
+    rightHand: 0
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -44.378}
+  - bone: 53
+    index: 4
+    rightHand: 1
+    angleFrom: {x: 0, y: 0, z: 0}
+    angleTo: {x: 0, y: 0, z: -44.378}
 --- !u!114 &4318336348597186708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,4 +773,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f649f17aa227364aaf1e77855a1cb52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stabs: []
+  stabs:
+  - {fileID: 0}
+  - {fileID: 0}

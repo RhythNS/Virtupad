@@ -15,6 +15,19 @@ namespace Virtupad
         public float ChangeEmoteInSeconds => changeEmoteInSeconds;
         [SerializeField] private float changeEmoteInSeconds;
 
+        [System.Serializable]
+        public struct FingerAnimationValue
+        {
+            public HumanBodyBones bone;
+            public int index;
+            public bool rightHand;
+            public Vector3 angleFrom;
+            public Vector3 angleTo;
+        }
+
+        public FingerAnimationValue[] FingerAnimationValues => fingerAnimationValues;
+        [SerializeField] private FingerAnimationValue[] fingerAnimationValues;
+
         private void Awake()
         {
             if (Instance)

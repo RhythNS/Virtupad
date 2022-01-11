@@ -14,6 +14,8 @@ namespace Virtupad
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private float maxRange;
 
+        public Vector3 ImpactPoint { get; private set; }
+
         public bool Started { get; private set; } = false;
         public float MaxRange => maxRange;
 
@@ -132,17 +134,18 @@ namespace Virtupad
         private void Update()
         {
             IInteractable closestInteractable;
-            Vector3 impactPoint = Vector3.zero;
 
-            closestInteractable = grabbed != null ? null : GetClosest<IInteractable>(out impactPoint);
+            ImpactPoint = Vector3.zero;
+
+            closestInteractable = grabbed != null ? null : GetClosest<IInteractable>();
 
             if (beginStopSelectRequest == true)
-                HandleBeginStopRequest(closestInteractable, impactPoint);
+                HandleBeginStopRequest(closestInteractable);
             else if (beginStopSelecting != null)
-                HandleBeginStopStay(closestInteractable, impactPoint);
+                HandleBeginStopStay(closestInteractable);
 
-            UpdateLineRenderer(closestInteractable, impactPoint);
-            IssueEvents(closestInteractable, impactPoint);
+            UpdateLineRenderer(closestInteractable);
+            IssueEvents(closestInteractable);
 
             lastSelectedInteractable = closestInteractable;
 
@@ -150,7 +153,7 @@ namespace Virtupad
                 Stop();
         }
 
-        private void HandleBeginStopRequest(IInteractable interactable, Vector3 impactPoint)
+        private void HandleBeginStopRequest(IInteractable interactable)
         {
             beginStopSelectRequest = false;
 
@@ -158,29 +161,28 @@ namespace Virtupad
                 return;
 
             beginStopSelecting = interactable;
-            beginStopSelecting.OnBeginSelecting(impactPoint);
+            beginStopSelecting.OnBeginSelecting(ImpactPoint);
         }
 
-        private void HandleBeginStopStay(IInteractable closestInteractable, Vector3 impactPoint)
+        private void HandleBeginStopStay(IInteractable closestInteractable)
         {
             if (closestInteractable == beginStopSelecting)
             {
-                beginStopSelecting.OnStaySelecting(impactPoint);
-                lastHitStopSelectingPoint = impactPoint;
+                beginStopSelecting.OnStaySelecting(ImpactPoint);
+                lastHitStopSelectingPoint = ImpactPoint;
                 return;
             }
 
             beginStopSelecting.OnStaySelecting(lastHitStopSelectingPoint);
         }
 
-        public T GetClosest<T>(out Vector3 impactPoint)
+        public T GetClosest<T>()
         {
             RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, maxRange, ~0);
 
             T closest = default;
             float closestLength = float.MaxValue;
             Vector3 ownPos = transform.position;
-            impactPoint = Vector3.zero;
             for (int i = 0; i < raycastHits.Length; i++)
             {
                 if (raycastHits[i].collider.TryGetComponent(out T t) == false)
@@ -193,13 +195,13 @@ namespace Virtupad
 
                 closest = t;
                 closestLength = lengthAway;
-                impactPoint = raycastHits[i].point;
+                ImpactPoint = raycastHits[i].point;
             }
 
             return closest;
         }
 
-        private void UpdateLineRenderer(IInteractable closestInteractable, Vector3 impactPoint)
+        private void UpdateLineRenderer(IInteractable closestInteractable)
         {
             Vector3 ownPos = transform.position;
 
@@ -209,19 +211,19 @@ namespace Virtupad
             else if (closestInteractable.SnapToObject)
                 toPos = (closestInteractable as Component).transform.position;
             else
-                toPos = impactPoint;
+                toPos = ImpactPoint;
 
             lineRenderer.SetPositions(new Vector3[2] { ownPos, toPos });
         }
 
-        private void IssueEvents(IInteractable closestInteractable, Vector3 impactPoint)
+        private void IssueEvents(IInteractable closestInteractable)
         {
             // is it the same since last frame?
             if (lastSelectedInteractable == closestInteractable)
             {
                 // have we selected anything?
                 if (closestInteractable != null)
-                    closestInteractable.StayHover(this, impactPoint);
+                    closestInteractable.StayHover(this, ImpactPoint);
                 return;
             }
 
@@ -231,7 +233,7 @@ namespace Virtupad
                 lastSelectedInteractable.LeaveHover(this);
             // have we selected something this frame?
             if (closestInteractable != null)
-                closestInteractable.BeginHover(this, impactPoint);
+                closestInteractable.BeginHover(this, ImpactPoint);
         }
 
         private void OnDestroy()

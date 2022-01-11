@@ -97,6 +97,7 @@ namespace Virtupad
             animator.SetFloat("directionY", dirY, 0.1f, Time.deltaTime);
         }
 
+        /*
         private void LateUpdate()
         {
             for (int i = 0; i < doubleTransforms.Count; i++)
@@ -117,6 +118,7 @@ namespace Virtupad
                 doubleTransforms[i].second.localRotation = toSet;
             }
         }
+         */
 
         private void OnDestroy()
         {

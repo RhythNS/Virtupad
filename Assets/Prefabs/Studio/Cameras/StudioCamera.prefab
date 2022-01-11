@@ -315,6 +315,7 @@ MonoBehaviour:
   previewMaterialPrefab: {fileID: 2100000, guid: ac5814d0bb0cffd468debbdca75835ca, type: 2}
   previewCanResize: 1
   maxDesiredDimensions: {x: 1, y: 0.8}
+  prefabType: 0
 --- !u!114 &6964966415697653383
 MonoBehaviour:
   m_ObjectHideFlags: 0

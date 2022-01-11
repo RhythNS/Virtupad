@@ -16,4 +16,6 @@ namespace Virtupad
     public delegate void InteracterEvent(Interacter interacter);
 
     public delegate void OnRenderTextureChanged(RenderTexture newTexture);
+
+    public delegate void OnVRMChanged(VRMController newController);
 }

@@ -39,7 +39,7 @@ namespace Virtupad
         public UnityEvent shouldClose;
 
         private bool overwritingControllerInputs = false;
-        float movingAngleOffset;
+        private float movingAngleOffset;
 
         private void OnEnable()
         {
@@ -90,7 +90,9 @@ namespace Virtupad
             ownPos.y = 0.0f;
             cameraPos.y = 0.0f;
 
-            movingAngleOffset = Vector3.SignedAngle(ownPos, cameraPos, Vector3.up);
+            Vector3 toCameraDir = (cameraPos - ownPos).normalized;
+
+            movingAngleOffset = Vector3.SignedAngle(Vector3.forward, toCameraDir, Vector3.up);
         }
 
         private void DeRegisterInput()
@@ -100,8 +102,8 @@ namespace Virtupad
 
             overwritingControllerInputs = false;
 
-            VRController.Instance.DeRegisterRotation(Rotate);
-            VRController.Instance.DeRegisterWalking(Move);
+            VRController.Instance?.DeRegisterRotation(Rotate);
+            VRController.Instance?.DeRegisterWalking(Move);
         }
 
         private bool Rotate(SteamVR_Action_Vector2 input)
@@ -130,7 +132,7 @@ namespace Virtupad
 
             float toMove = StudioCameraManager.Instance.MovingMetersPerSecond * Time.fixedDeltaTime;
             Vector3 moveVec = Quaternion.AngleAxis(movingAngleOffset, Vector3.up)
-                * new Vector3(-input.axis.y * toMove, 0.0f, input.axis.x * toMove);
+                * new Vector3(input.axis.x * toMove, 0.0f, input.axis.y * toMove);
             OnCamera.Body.MovePosition(OnCamera.Body.position + moveVec);
 
             return true;

@@ -15,7 +15,12 @@ namespace Virtupad
         //public VRMMouthMover VRMMouthMover { get; private set; }
         public VRMSalsa VRMSalsa { get; private set; }
         public VRMEmotionManager VRMEmotionManager { get; private set; }
+        public VRMFingerAnimator LeftFingerAnimator { get; private set; }
+        public VRMFingerAnimator RightFingerAnimator { get; private set; }
         public float Height { get; private set; }
+
+        public static event OnVRMChanged onVRMCreated;
+        public static event OnVRMChanged onVRMDeleted;
 
         private void Awake()
         {
@@ -61,6 +66,19 @@ namespace Virtupad
             VRMSalsa = gameObject.AddComponent<VRMSalsa>();
             VRMEmotionManager = gameObject.AddComponent<VRMEmotionManager>();
             VRAnimatorController.enabled = false;
+
+            LeftFingerAnimator = gameObject.AddComponent<VRMFingerAnimator>();
+            LeftFingerAnimator.onRightHand = false;
+            RightFingerAnimator = gameObject.AddComponent<VRMFingerAnimator>();
+            RightFingerAnimator.onRightHand = true;
+
+            onVRMCreated?.Invoke(this);
+        }
+
+        public void ResetFingerAnimators()
+        {
+            LeftFingerAnimator.ResetFingers();
+            RightFingerAnimator.ResetFingers();
         }
 
         public void OnTakenControl()
@@ -71,9 +89,12 @@ namespace Virtupad
         private void OnDestroy()
         {
             if (Instance == this)
+            {
                 Instance = null;
+                onVRMDeleted?.Invoke(this);
+            }
 
-            ConstructorDict.Instance?.rigMaker.CleanUp();
+            ConstructorDict.Instance?.rigMaker?.CleanUp();
         }
     }
 }
