@@ -8,6 +8,9 @@ namespace Virtupad
         public bool SnapToObject { get => snapToObject; set => snapToObject = value; }
         private bool snapToObject;
 
+        public ushort HapticFeedbackDuration { get => hapticFeedbackDuration; set => hapticFeedbackDuration = value; }
+        private ushort hapticFeedbackDuration = 1000;
+
         public List<Interacter> CurrentlyInteracting => currentlyInteracting;
 
         private List<Interacter> currentlyInteracting = new List<Interacter>();
@@ -45,5 +48,10 @@ namespace Virtupad
         public virtual void OnEndSelecting() { }
 
         protected virtual void OnLeaveHover() { }
+
+        public ushort HapticFeedbackOnSelect()
+        {
+            return HapticFeedbackDuration;
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace Virtupad
 {
     public class VRMSalsa : MonoBehaviour
     {
+        private SalsaMicInput input;
+
         private struct BlendInfo
         {
             public SkinnedMeshRenderer renderer;
@@ -21,6 +23,11 @@ namespace Virtupad
                 this.renderer = renderer;
                 this.index = index;
             }
+        }
+
+        private void Awake()
+        {
+            SalsaDict.Instance.OnMicrophoneChanged += OnMicrophoneChanged;
         }
 
         private IEnumerator Start()
@@ -141,7 +148,7 @@ namespace Virtupad
                 visme.controllerVars[0].maxShape = 1.0f;
             }
 
-            SalsaMicInput input = GetComponent<SalsaMicInput>();
+           input = GetComponent<SalsaMicInput>();
             if (input == null)
                 input = gameObject.AddComponent<SalsaMicInput>();
 
@@ -149,6 +156,7 @@ namespace Virtupad
             input.overrideSampleRate = true;
             input.linkWithSalsa = true;
             input.isAutoStart = true;
+            input.selectedMic = SalsaDict.Instance.CurrentMicrophone;
 
             SalsaMicPointerSync micSync = GetComponent<SalsaMicPointerSync>();
             if (micSync == null)
@@ -158,6 +166,18 @@ namespace Virtupad
             salsa.DistributeTriggers(LerpEasings.EasingType.SquaredIn);
             // at runtime: apply controller baking...
             salsa.UpdateExpressionControllers();
+        }
+
+        private void OnMicrophoneChanged(string changed)
+        {
+            input.StopMicrophone();
+            input.StartMicrophone(changed);
+        }
+
+        private void OnDestroy()
+        {
+            if (SalsaDict.Instance)
+                SalsaDict.Instance.OnMicrophoneChanged -= OnMicrophoneChanged;
         }
     }
 }

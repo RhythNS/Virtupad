@@ -73,7 +73,7 @@ MonoBehaviour:
   lookingInput:
     actionPath: /actions/default/in/Looking
     needsReinit: 0
-  walkingSpeed: 3
+  walkingSpeed: 1.5
   anglesPerSecond: 90
   bodiesToMove: []
   playerHeight: 1.9
@@ -207,6 +207,10 @@ PrefabInstance:
       value: Interacter
       objectReference: {fileID: 0}
     - target: {fileID: 8192840107686225086, guid: 4317fd885ce0db34999fe18cf6174f14, type: 3}
+      propertyPath: onHand
+      value: 
+      objectReference: {fileID: 3355354362040556962}
+    - target: {fileID: 8192840107686225086, guid: 4317fd885ce0db34999fe18cf6174f14, type: 3}
       propertyPath: listenForSource
       value: 2
       objectReference: {fileID: 0}
@@ -267,6 +271,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Interacter
       objectReference: {fileID: 0}
+    - target: {fileID: 8192840107686225086, guid: 4317fd885ce0db34999fe18cf6174f14, type: 3}
+      propertyPath: onHand
+      value: 
+      objectReference: {fileID: 3355354362040769852}
     - target: {fileID: 8192840107686225086, guid: 4317fd885ce0db34999fe18cf6174f14, type: 3}
       propertyPath: listenForSource
       value: 1

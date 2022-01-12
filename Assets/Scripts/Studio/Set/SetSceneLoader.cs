@@ -21,6 +21,9 @@ namespace Virtupad
         public SetDescription[] Sets => sets;
         [SerializeField] SetDescription[] sets;
 
+        public event VoidEvent OnSceneAboutToChange;
+        public event VoidEvent OnSceneChanged;
+
         private void Awake()
         {
             if (Instance)
@@ -40,6 +43,8 @@ namespace Virtupad
 
         private IEnumerator AsyncLoadUnLoad(string sceneName)
         {
+            OnSceneAboutToChange?.Invoke();
+
             SetDefinition currentDefinition = GlobalsDict.Instance.CurrentDefinition;
             if (currentDefinition != null)
             {
@@ -56,6 +61,7 @@ namespace Virtupad
                 yield return null;
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+            OnSceneChanged?.Invoke();
         }
 
         private void OperationFinished(AsyncOperation operation)

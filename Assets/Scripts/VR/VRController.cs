@@ -30,7 +30,9 @@ namespace Virtupad
         // 1 = Left Controller; 2 = HMD
         [Range(1, 2)] public int secondaryWalkingDirectionInputOption;
         [SerializeField] private SteamVR_Action_Vector2 lookingInput;
+        public float WalkingSpeed => walkingSpeed;
         [SerializeField] private float walkingSpeed;
+        public float AnglesPerSecond => anglesPerSecond;
         [SerializeField] private float anglesPerSecond = 90.0f;
 
         private List<InputListener> walkingOverwrites = new List<InputListener>();
@@ -60,8 +62,8 @@ namespace Virtupad
             bodiesToMove = new Rigidbody[]
             {
                 GetComponent<Rigidbody>(),
-                Player.instance.leftHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>(),
-                Player.instance.rightHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>()
+             //   Player.instance.leftHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>(),
+          //      Player.instance.rightHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>()
             };
 
             SaveGame saveGame = SaveFileManager.Instance.saveGame;
@@ -82,12 +84,23 @@ namespace Virtupad
 
         private void DeRegister(InputListener listener, List<InputListener> onList) => onList.Remove(listener);
 
-        public void ChangeSpeed(float movementSpeed, float rotationSpeed, int movementType)
+        public void ChangeSpeed(float movementSpeed = -1.0f, float rotationSpeed = -1.0f, int movementType = 1)
         {
-            walkingSpeed = movementSpeed;
-            InvMovementSpeed = 1.0f / movementSpeed;
-            anglesPerSecond = rotationSpeed;
-            secondaryWalkingDirectionInputOption = Mathf.Clamp(movementType, 1, 2);
+            SaveGame sg = SaveFileManager.Instance.saveGame;
+
+            if (movementSpeed != -1.0f)
+            {
+                sg.playerMovePerSecond = walkingSpeed = movementSpeed;
+                InvMovementSpeed = 1.0f / movementSpeed;
+            }
+
+            if (rotationSpeed != -1.0f)
+                sg.playerRotatePerSecond = anglesPerSecond = rotationSpeed;
+
+            if (movementType != -1)
+                sg.playerMoveType = secondaryWalkingDirectionInputOption = Mathf.Clamp(movementType, 1, 2);
+
+            SaveFileManager.Instance.Save();
         }
 
         public void SizeToModelHeight(float modelHeight)
@@ -105,6 +118,9 @@ namespace Virtupad
                 bodiesToMove[i].MovePosition(bodiesToMove[i].position + additionalVelocity);
                 bodiesToMove[i].MoveRotation(bodiesToMove[i].rotation * additionalRotation);
             }
+
+            leftHand.GetComponent<HandPhysics>().UpdateHand(default, default);
+            rightHand.GetComponent<HandPhysics>().UpdateHand(default, default);
 
             // transform.position += additionalVelocity;
             // player.GetComponentInChildren<Rigidbody>().velocity = Vector3.Scale(player.GetComponentInChildren<Rigidbody>().velocity, new Vector3(0, 1, 0)) + additionalVelocity;

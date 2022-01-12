@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Virtupad;
 
 /// <summary>
 /// Serilizable save game.
@@ -17,13 +18,31 @@ public class SaveGame
         public int previewWidth, previewHeight;
     }
 
+    [Serializable]
+    public struct CamerasOnScene
+    {
+        public string sceneName;
+        public List<StudioCamera.Definition> definitions;
+
+        public CamerasOnScene(string sceneName, List<StudioCamera.Definition> definitions)
+        {
+            this.sceneName = sceneName;
+            this.definitions = definitions;
+        }
+    }
+
+    // Vrm
     [SerializeField] public List<LoadVRM> vrms;
     [SerializeField] public bool autoLoadVRM = false;
     [SerializeField] public bool footIK = true;
+    [SerializeField] public string microphone = "";
 
     // Auto camera create setting
-
     [SerializeField] public int autoLoadSet = -1;
+    [SerializeField] public List<CamerasOnScene> camerasOnScenes = new List<CamerasOnScene>();
+
+    // ui settings
+    [SerializeField] public string customNoCameraActivePath = "";
 
     // vr controller
     [SerializeField] public float playerMovePerSecond = 1.5f;

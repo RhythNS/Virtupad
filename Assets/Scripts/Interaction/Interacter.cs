@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
     public class Interacter : MonoBehaviour
     {
+        [SerializeField] Hand onHand;
+
         [SerializeField] SteamVR_Action_Boolean interactButton;
 
         public SteamVR_Input_Sources ForSource => listenForSource;
@@ -233,7 +236,12 @@ namespace Virtupad
                 lastSelectedInteractable.LeaveHover(this);
             // have we selected something this frame?
             if (closestInteractable != null)
+            {
+                ushort haptic = closestInteractable.HapticFeedbackOnSelect();
+                if (haptic != 0)
+                    onHand.TriggerHapticPulse(haptic);
                 closestInteractable.BeginHover(this, ImpactPoint);
+            }
         }
 
         private void OnDestroy()

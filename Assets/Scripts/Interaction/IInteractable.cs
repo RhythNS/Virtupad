@@ -8,6 +8,8 @@ namespace Virtupad
 
         public void Select();
 
+        public ushort HapticFeedbackOnSelect();
+
         public void BeginHover(Interacter interacter, Vector3 impactPoint);
 
         public void StayHover(Interacter interacter, Vector3 impactPoint);

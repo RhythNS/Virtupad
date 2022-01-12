@@ -75,5 +75,9 @@ namespace Virtupad
         public virtual void OnRemove() { }
 
         public virtual void OnFollowTypeChanged() { }
+
+        public virtual void OnExternalMoved(Vector3 newPos) { }
+
+        public virtual void OnExternalRotated(Quaternion newRot) { }
     }
 }

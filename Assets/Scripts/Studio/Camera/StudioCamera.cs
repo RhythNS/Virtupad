@@ -11,9 +11,24 @@ namespace Virtupad
             Head, UpperBody, Waist, RightHand, LeftHand, RightFoot, LeftFoot
         }
 
+        [System.Serializable]
         public enum CameraType
         {
             StudioCamera, Phone
+        }
+
+        [System.Serializable]
+        public struct Definition
+        {
+            [SerializeField] public bool tracking;
+            [SerializeField] public ToTrack trackingBodyPart;
+            [SerializeField] public bool autoFollow;
+            [SerializeField] public CameraMover.TrackingSpace trackingSpace;
+            [SerializeField] public CameraMover.Type moverType;
+            [SerializeField] public int id;
+            [SerializeField] public CameraType prefabType;
+            [SerializeField] public float[] position;
+            [SerializeField] public float[] rotation;
         }
 
         public bool Tracking { get; private set; }
@@ -28,7 +43,7 @@ namespace Virtupad
 
         public bool Playing { get; private set; } = false;
         public CameraMover Mover { get; private set; }
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         public AttachGrabbable Grabbable { get; private set; }
 
         public int CurrentCameraIndex
@@ -100,12 +115,43 @@ namespace Virtupad
             previewOutput.gameObject.SetActive(false);
 
             ChangePreviewResolution(StudioCameraManager.Instance.DesiredResolution);
+        }
 
+        private void Start()
+        {
             Mover = GetComponent<CameraMover>();
             if (Mover == null)
                 SetCameraMover(StudioCameraManager.Instance.DefaultMover);
 
             StudioCameraManager.Instance.Register(this);
+        }
+
+        public Definition ToDefinition()
+        {
+            Vector3 vecPos = transform.position;
+            Vector3 vecRot = transform.rotation.eulerAngles;
+            return new Definition()
+            {
+                autoFollow = AutoFollow,
+                id = Id,
+                tracking = Tracking,
+                trackingBodyPart = TrackingBodyPart,
+                trackingSpace = TrackingSpace,
+                moverType = CameraMover.GetType(Mover),
+                prefabType = PrefabType,
+                position = new float[3] { vecPos.x, vecPos.y, vecPos.z },
+                rotation = new float[3] { vecRot.x, vecRot.y, vecRot.z }
+            };
+        }
+
+        public void FromDefinition(Definition definition)
+        {
+            Tracking = definition.tracking;
+            SetTrackingBodyPart(definition.trackingBodyPart);
+            AutoFollow = definition.autoFollow;
+            TrackingSpace = definition.trackingSpace;
+
+            SetCameraMover(definition.moverType);
         }
 
         private void ReleasePreviewTextures()
@@ -202,6 +248,22 @@ namespace Virtupad
             baseScale *= yScale;
         }
 
+        public void CopyValues(StudioCamera other)
+        {
+            Tracking = other.Tracking;
+            SmoothPostition = other.SmoothPostition;
+            TrackingBodyPart = other.TrackingBodyPart;
+            TrackingBone = other.TrackingBone;
+            SmoothRotation = other.SmoothRotation;
+            StayInAngle = other.StayInAngle;
+            AutoFollow = other.AutoFollow;
+            TrackingSpace = other.TrackingSpace;
+            Grabbable = other.Grabbable;
+            Id = other.Id;
+
+            SetCameraMover(CameraMover.GetType(other.Mover));
+        }
+
         public void SetCameraMover(CameraMover.Type type, bool autoPlay = true)
         {
             Type moverSystemType = CameraMover.GetSystemTypeForType(type);
@@ -242,9 +304,9 @@ namespace Virtupad
             Mover = newMover;
         }
 
-        public void ChangeType(CameraType cameraType)
+        public StudioCamera ChangeType(CameraType cameraType)
         {
-            // TODO:
+            return StudioCameraManager.Instance.ReplaceCamera(cameraType, this);
         }
 
         public void SetToTrack(bool shouldTrack)
@@ -288,6 +350,18 @@ namespace Virtupad
         public void SetDefaultValues()
         {
             TrackingBone = HumanBodyBones.Head;
+        }
+
+        public void RotateTo(Quaternion rot)
+        {
+            Body.MoveRotation(rot);
+            Mover?.OnExternalRotated(rot);
+        }
+
+        public void MoveTo(Vector3 pos)
+        {
+            Body.MovePosition(pos);
+            Mover?.OnExternalMoved(pos);
         }
 
         public void Play()

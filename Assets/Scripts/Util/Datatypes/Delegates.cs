@@ -5,6 +5,7 @@ using Valve.VR.InteractionSystem;
 namespace Virtupad
 {
     public delegate void BoolChanged(bool changed);
+    public delegate void StringChanged(string changed);
     public delegate void VoidEvent();
 
     public delegate int GetInt();

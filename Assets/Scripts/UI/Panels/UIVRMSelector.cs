@@ -51,8 +51,6 @@ namespace Virtupad
             Instance = this;
 
             base.Awake();
-
-            FileBrowser.OverideInstance(fileBrowser);
         }
 
         private void OnEnable()
@@ -63,6 +61,7 @@ namespace Virtupad
             lastLoadedVRMs.Init(vrms);
 
             SetCurrentLastLoadedVRMs();
+            FileBrowser.OverideInstance(fileBrowser);
         }
 
         public void LoadVRMFromFilePath(LoadVRM vrm)

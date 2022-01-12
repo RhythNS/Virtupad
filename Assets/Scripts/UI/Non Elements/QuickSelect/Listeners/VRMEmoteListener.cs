@@ -40,7 +40,7 @@ namespace Virtupad
             if (presets.Count > 0)
                 presets.ForEach(x => selections.Add(x.ToString()));
             else
-                ; // TODO:
+                selections.Add("Default");
 
             return selections;
         }

@@ -22,15 +22,7 @@ namespace Virtupad
 
         [SerializeField] private float maxAngle = 80.0f;
 
-        private State CurrentState
-        {
-            get => currentState;
-            set
-            {
-                Debug.Log("Look State changed: " + value);
-                currentState = value;
-            }
-        }
+        private State CurrentState { get => currentState; set => currentState = value; }
         [SerializeField] private State currentState = State.Forward;
 
         private Interacter interacter;
@@ -38,7 +30,6 @@ namespace Virtupad
 
         private ExtendedCoroutine currentRoutine;
         private float gazeTimer = 0;
-
 
         private void Start()
         {

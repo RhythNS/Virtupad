@@ -35,5 +35,4 @@ public class SaveFileManager : MonoBehaviour
         if (Instance == this)
             Instance = null;
     }
-
 }

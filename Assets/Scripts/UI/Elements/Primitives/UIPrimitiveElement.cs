@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace Virtupad
 {
-    public class UIPrimitiveElement : MonoBehaviour, IStayOnInteractable
+    public class UIPrimitiveElement : MonoBehaviour
     {
         [System.Serializable]
         [System.Flags]

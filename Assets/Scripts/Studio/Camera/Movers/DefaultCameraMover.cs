@@ -10,6 +10,9 @@ namespace Virtupad
         private Vector3 trackingPositionOffset;
         private Vector3 trackingDirectionOffset;
 
+        private Vector3 velocity;
+        [SerializeField] private float smoothness = 0.01f;
+
         private void OnAttachedToHand()
         {
             isGrabbed = true;
@@ -44,7 +47,27 @@ namespace Virtupad
                 return;
 
             trackingPositionOffset = toTrack.InverseTransformPoint(transform.position);
-            trackingDirectionOffset = toTrack.InverseTransformDirection((toTrack.position - transform.position).normalized);
+            trackingDirectionOffset = toTrack.InverseTransformDirection(transform.forward);
+        }
+
+        public override void OnExternalMoved(Vector3 newPos)
+        {
+            Transform toTrack = GetFollowTrans();
+
+            if (toTrack == null)
+                return;
+
+            trackingPositionOffset = toTrack.InverseTransformPoint(newPos);
+        }
+
+        public override void OnExternalRotated(Quaternion newRot)
+        {
+            Transform toTrack = GetFollowTrans();
+
+            if (toTrack == null)
+                return;
+
+            trackingDirectionOffset = toTrack.InverseTransformDirection(newRot * Vector3.forward);
         }
 
         private void Update()
@@ -52,13 +75,20 @@ namespace Virtupad
             if (isGrabbed == true)
                 return;
 
+            Vector3 toGoTo = transform.position;
+            Quaternion toRotateTo = transform.rotation;
+
             // Set position
             if (OnCamera.AutoFollow == true)
-                AutoFollow();
+                AutoFollow(ref toGoTo, ref toRotateTo);
 
             // Set rotation
             if (OnCamera.Tracking == true)
-                Track();
+                Track(ref toGoTo, ref toRotateTo);
+
+            Vector3.SmoothDamp(transform.position, toGoTo, ref velocity, smoothness);
+            transform.position = transform.position + (velocity * Time.deltaTime);
+            transform.rotation = toRotateTo;
         }
 
         private Transform GetFollowTrans()
@@ -71,18 +101,18 @@ namespace Virtupad
             };
         }
 
-        private void AutoFollow()
+        private void AutoFollow(ref Vector3 toGoTo, ref Quaternion toRotateTo)
         {
             Transform toTrack = GetFollowTrans();
 
             if (toTrack == null)
                 return;
 
-            transform.position = toTrack.TransformPoint(trackingPositionOffset);
-            transform.rotation = Quaternion.LookRotation(toTrack.TransformDirection(trackingDirectionOffset));
+            toGoTo = toTrack.TransformPoint(trackingPositionOffset);
+            toRotateTo = Quaternion.LookRotation(toTrack.TransformDirection(trackingDirectionOffset));
         }
 
-        private void Track()
+        private void Track(ref Vector3 toGoTo, ref Quaternion toRotateTo)
         {
             Transform toTrack;
 
@@ -90,7 +120,8 @@ namespace Virtupad
             toTrack = controller != null ? controller.Animator.GetBoneTransform(OnCamera.TrackingBone)
                 : Player.instance.hmdTransform;
 
-            transform.LookAt(toTrack, Vector3.up);
+            // transform.LookAt(toTrack, Vector3.up);
+            toRotateTo = Quaternion.LookRotation((toTrack.position - transform.position).normalized, Vector3.up);
         }
     }
 }

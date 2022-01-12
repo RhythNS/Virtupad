@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace Virtupad
 {
-    public class UIInteractable : Interactable
+    public class UIInteractable : Interactable, IStayOnInteractable
     {
         [System.Serializable]
         [System.Flags]

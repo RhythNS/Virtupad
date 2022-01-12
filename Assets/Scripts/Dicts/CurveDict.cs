@@ -14,6 +14,9 @@ namespace Virtupad
 
         public AnimationCurve UIOutAnimation => uiOutAnimation;
         [SerializeField] private AnimationCurve uiOutAnimation;
+        
+        public AnimationCurve CameraSmoothMove => cameraSmoothMove;
+        [SerializeField] private AnimationCurve cameraSmoothMove;
 
         private void Awake()
         {

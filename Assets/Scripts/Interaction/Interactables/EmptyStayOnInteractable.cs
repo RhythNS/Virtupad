@@ -9,6 +9,7 @@ namespace Virtupad
         private void Awake()
         {
             SnapToObject = snapTo;
+            HapticFeedbackDuration = 0;
         }
 
         public override void Select() { }

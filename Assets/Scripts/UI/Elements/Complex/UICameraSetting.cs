@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -19,6 +20,10 @@ namespace Virtupad
         }
 
         [SerializeField] private StudioCamera onCamera;
+
+        [SerializeField] private TMP_Text cameraName;
+
+        [SerializeField] private Toggle outputToDesktopToggle;
         [SerializeField] private Toggle previewToggle;
         [SerializeField] private Toggle easyRotateToggle;
         [SerializeField] private Slider fovSlider;
@@ -41,17 +46,26 @@ namespace Virtupad
         private bool overwritingControllerInputs = false;
         private float movingAngleOffset;
 
+        private bool initing = false;
+
         private void OnEnable()
         {
             forSmallPanel.gameObject.SetActive(onMainMenu == false);
             forMainMenuPanel.gameObject.SetActive(onMainMenu == true);
 
             Init();
+
+            if (StudioCameraManager.Instance && onCamera)
+                StudioCameraManager.Instance.OnActiveStudioCameraChanged += OnActiveStudioCameraChanged;
         }
 
         private void OnDisable()
         {
             DeRegisterInput();
+
+            if (StudioCameraManager.Instance)
+                StudioCameraManager.Instance.OnActiveStudioCameraChanged -= OnActiveStudioCameraChanged;
+
         }
 
         private void Init()
@@ -59,8 +73,13 @@ namespace Virtupad
             if (onCamera == null)
                 return;
 
+            initing = true;
+
             RegisterInput();
 
+            cameraName.text = "Camera " + (onCamera.Id + 1);
+
+            outputToDesktopToggle.isOn = onCamera == StudioCameraManager.Instance.ActiveCamera;
             previewToggle.isOn = onCamera.IsPreviewOutputting;
             easyRotateToggle.isOn = onCamera.Grabbable.EasyRotationLock != 0;
             fovSlider.value = onCamera.OutputCamera.fieldOfView;
@@ -73,6 +92,8 @@ namespace Virtupad
             autoTrackToggle.isOn = onCamera.Tracking;
             trackingBodyPartPanel.gameObject.SetActive(OnCamera.Tracking);
             trackingBodyPartSelector.Index = (int)OnCamera.TrackingBodyPart;
+
+            initing = false;
         }
 
         private void RegisterInput()
@@ -117,7 +138,7 @@ namespace Virtupad
             float rotatingAnglesPerSecond = StudioCameraManager.Instance.RotatingAnglesPerSecond;
             Vector2 axis = -input.axis * (rotatingAnglesPerSecond * Time.fixedDeltaTime);
             Vector3 prevAngle = OnCamera.Body.rotation.eulerAngles;
-            OnCamera.Body.MoveRotation(Quaternion.Euler(prevAngle.x + axis.y, prevAngle.y + axis.x, prevAngle.z));
+            OnCamera.RotateTo(Quaternion.Euler(prevAngle.x + axis.y, prevAngle.y + axis.x, prevAngle.z));
 
             return true;
         }
@@ -133,14 +154,32 @@ namespace Virtupad
             float toMove = StudioCameraManager.Instance.MovingMetersPerSecond * Time.fixedDeltaTime;
             Vector3 moveVec = Quaternion.AngleAxis(movingAngleOffset, Vector3.up)
                 * new Vector3(input.axis.x * toMove, 0.0f, input.axis.y * toMove);
-            OnCamera.Body.MovePosition(OnCamera.Body.position + moveVec);
+            OnCamera.MoveTo(OnCamera.Body.position + moveVec);
 
             return true;
         }
 
+        private void OnActiveStudioCameraChanged(StudioCamera newCamera)
+        {
+            outputToDesktopToggle.isOn = newCamera == onCamera;
+        }
+
+        public void OnOutputToDesktopChanged(bool newValue)
+        {
+            if (onCamera == null || initing == true)
+                return;
+
+            if (newValue == true && onCamera == StudioCameraManager.Instance.ActiveCamera)
+                return;
+            if (newValue == false && onCamera != StudioCameraManager.Instance.ActiveCamera)
+                return;
+
+            StudioCameraManager.Instance.ActiveCamera = newValue ? onCamera : null;
+        }
+
         public void OnPreviewToggleChanged(bool newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             if (newValue)
@@ -151,7 +190,7 @@ namespace Virtupad
 
         public void OnFOVChanged(float newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             onCamera.OutputCamera.fieldOfView = newValue;
@@ -160,7 +199,7 @@ namespace Virtupad
 
         public void OnAutoTrackChanged(bool newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             OnCamera.SetToTrack(newValue);
@@ -170,7 +209,7 @@ namespace Virtupad
 
         public void OnTrackingBodyPartChanged(int newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             StudioCamera.ToTrack toTrack = (StudioCamera.ToTrack)newValue;
@@ -179,16 +218,16 @@ namespace Virtupad
 
         public void OnCameraTypeChanged(int newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             StudioCamera.CameraType cameraType = (StudioCamera.CameraType)newValue;
-            OnCamera.ChangeType(cameraType);
+            OnCamera = OnCamera.ChangeType(cameraType);
         }
 
         public void OnAutoFollowChanged(bool newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             OnCamera.SetAutoFollow(newValue);
@@ -198,7 +237,7 @@ namespace Virtupad
 
         public void OnFollowTypeChanged(int newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             OnCamera.SetFollowType((CameraMover.TrackingSpace)newValue);
@@ -206,7 +245,7 @@ namespace Virtupad
 
         public void OnEasyMoveChanged(bool newValue)
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             onCamera.Grabbable.EasyRotationLock = newValue ? XYZ.X : 0;
@@ -214,7 +253,7 @@ namespace Virtupad
 
         public void OnDeletePressed()
         {
-            if (onCamera == null)
+            if (onCamera == null || initing == true)
                 return;
 
             Destroy(OnCamera.gameObject);

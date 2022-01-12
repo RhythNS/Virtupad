@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,12 @@ namespace Virtupad
                 if (activeCamera == value)
                     return;
 
+                if (value == null && prevCameras.Count > 0)
+                {
+                    value = prevCameras[0];
+                    prevCameras.RemoveAt(0);
+                }
+
                 if (activeCamera != null)
                 {
                     activeCamera.OnDeActive();
@@ -31,12 +38,6 @@ namespace Virtupad
                     if (indexOf != -1)
                         prevCameras.RemoveAt(indexOf);
                     prevCameras.Insert(0, activeCamera);
-                }
-
-                if (value == null && prevCameras.Count > 0)
-                {
-                    value = prevCameras[0];
-                    prevCameras.RemoveAt(0);
                 }
 
                 if (value != null)
@@ -100,10 +101,76 @@ namespace Virtupad
             Instance = this;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             ResolutionChange.Instance.OnResolutionChanged += OnResolutionChanged;
+            SetSceneLoader.Instance.OnSceneAboutToChange += OnSceneAboutToChange;
+            SetSceneLoader.Instance.OnSceneChanged += OnSceneChanged;
             StartCoroutine(RenderCameras());
+            yield return new WaitForEndOfFrame();
+            OnSceneChanged();
+        }
+
+        private void OnSceneChanged()
+        {
+            SaveFileManager instance = SaveFileManager.Instance;
+            if (instance == null)
+                return;
+
+            string sceneName = GlobalsDict.Instance.CurrentDefinition.SceneName;
+            int index = instance.saveGame.camerasOnScenes.FindIndex(x => x.sceneName == sceneName);
+
+            if (index == -1)
+                return;
+
+            SaveGame.CamerasOnScene camerasOnScene = instance.saveGame.camerasOnScenes[index];
+            camerasOnScene.definitions.Sort((x, y) => x.id.CompareTo(y.id));
+
+            foreach (StudioCamera.Definition definition in camerasOnScene.definitions)
+            {
+                Vector3 pos = new Vector3(definition.position[0], definition.position[1], definition.position[2]);
+                Quaternion rot = Quaternion.Euler(definition.rotation[0], definition.rotation[1], definition.rotation[2]);
+
+                StudioCamera camera = Instantiate(
+                    Array.Find(prefabCameras, x => x.cameraType == definition.prefabType).prefab, pos, rot);
+                camera.FromDefinition(definition);
+            }
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveCameras();
+        }
+
+        private void OnSceneAboutToChange()
+        {
+            SaveCameras();
+
+            // TODO: Maybe delete cameras and clean everything up
+        }
+
+        private void SaveCameras()
+        {
+            string sceneName = GlobalsDict.Instance.CurrentDefinition.SceneName;
+
+            List<StudioCamera.Definition> definitions = new List<StudioCamera.Definition>();
+            for (int i = 0; i < cameras.Count; i++)
+                definitions.Add(cameras[i].ToDefinition());
+
+            SaveFileManager instance = SaveFileManager.Instance;
+            if (instance == null)
+                return;
+
+            SaveGame.CamerasOnScene toSave = new SaveGame.CamerasOnScene(sceneName, definitions);
+
+            List<SaveGame.CamerasOnScene> camerasOnScenes = instance.saveGame.camerasOnScenes;
+            int index = camerasOnScenes.FindIndex(x => x.sceneName == sceneName);
+            if (index == -1)
+                camerasOnScenes.Add(toSave);
+            else
+                camerasOnScenes[index] = toSave;
+
+            instance.Save();
         }
 
         private IEnumerator RenderCameras()
@@ -159,16 +226,42 @@ namespace Virtupad
             Transform hmdTransform = Player.instance.hmdTransform;
             Vector3 position = hmdTransform.position + hmdTransform.forward * 2.0f;
             Quaternion rotation = Quaternion.LookRotation((hmdTransform.position - position).normalized, Vector3.up);
-            StudioCamera studioCamera = Instantiate(prefabCameras[defaultSpawningCamera].prefab, position, rotation);
+            CreateCamera(prefabCameras[defaultSpawningCamera].prefab, position, rotation);
             UIRoot.Instance.CloseRequest();
+        }
+
+        public StudioCamera ReplaceCamera(StudioCamera.CameraType newType, StudioCamera toReplace)
+        {
+            StudioCameraPrefabType cameraPrefab = Array.Find(PrefabCameras, x => x.cameraType == newType);
+            StudioCamera newCamera = CreateCamera(cameraPrefab.prefab, toReplace.Body.position, toReplace.Body.rotation);
+
+            bool wasActiveCamera = ActiveCamera == toReplace;
+            newCamera.CopyValues(toReplace);
+
+            Destroy(toReplace.gameObject);
+
+            if (wasActiveCamera)
+                ActiveCamera = newCamera;
+
+            return newCamera;
+        }
+
+        private StudioCamera CreateCamera(StudioCamera prefab, Vector3 position, Quaternion rotation)
+        {
+            StudioCamera studioCamera = Instantiate(prefab, position, rotation);
+
+            return studioCamera;
         }
 
         public Vector2 GetPreviewResolution => DesiredResolution;
 
         public void Register(StudioCamera studioCamera)
         {
-            studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;
+            if (studioCamera.Id == -1)
+                studioCamera.Id = cameras.Count == 0 ? 0 : cameras[cameras.Count - 1].Id + 1;
+
             cameras.Add(studioCamera);
+            SortCameras();
 
             if (ActiveCamera == null)
                 ActiveCamera = studioCamera;
@@ -178,15 +271,18 @@ namespace Virtupad
 
         public void DeRegister(StudioCamera studioCamera)
         {
-            cameras.Remove(studioCamera);
-            for (int i = studioCamera.Id; i < cameras.Count; i++)
-                cameras[i].Id = i;
+            if (cameras.Remove(studioCamera) == false)
+                return;
 
-            if (prevCameras.Contains(studioCamera))
-                prevCameras.Remove(studioCamera);
+            if (studioCamera.Id != -1)
+                for (int i = studioCamera.Id; i < cameras.Count; i++)
+                    cameras[i].Id = i;
 
             if (ActiveCamera == studioCamera)
                 ActiveCamera = null;
+
+            if (prevCameras.Contains(studioCamera))
+                prevCameras.Remove(studioCamera);
 
             OnCamerasChanged?.Invoke(cameras);
         }
@@ -202,6 +298,8 @@ namespace Virtupad
                 Instance = null;
             if (ResolutionChange.Instance)
                 ResolutionChange.Instance.OnResolutionChanged -= OnResolutionChanged;
+            if (SetSceneLoader.Instance)
+                SetSceneLoader.Instance.OnSceneAboutToChange -= OnSceneAboutToChange;
         }
     }
 }

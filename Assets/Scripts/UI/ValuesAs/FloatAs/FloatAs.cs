@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Virtupad
@@ -7,7 +8,7 @@ namespace Virtupad
         [System.Serializable]
         public enum ProcessValue
         {
-            None, Round, Floor
+            None, Round, Floor, RoundTwoDecimals
         }
 
         [SerializeField] protected ProcessValue processValue;
@@ -21,6 +22,9 @@ namespace Virtupad
                     break;
                 case ProcessValue.Floor:
                     value = Mathf.Floor(value);
+                    break;
+                case ProcessValue.RoundTwoDecimals:
+                    value = (float)Math.Round(value, 2);
                     break;
             }
 

@@ -19,6 +19,10 @@ namespace Virtupad
         [SerializeField] private UIElementSwitcher cameraSettingSwitcher;
         [SerializeField] private UICameraSetting cameraSetting;
 
+        [SerializeField] private Toggle noOutputOverwriteToggle;
+
+        private bool initing = false;
+
         protected override void Awake()
         {
             if (Instance)
@@ -28,18 +32,23 @@ namespace Virtupad
                 return;
             }
             Instance = this;
-            
+
             base.Awake();
         }
 
         private void OnEnable()
         {
+            initing = true;
             StudioCameraManager.Instance.ForcePreviewRender = true;
+            noOutputOverwriteToggle.isOn = UINoActiveCamera.Instance.OverwriteNoOutput;
+
+            initing = false;
         }
 
         private void OnDisable()
         {
-            StudioCameraManager.Instance.ForcePreviewRender = false;
+            if (StudioCameraManager.Instance)
+                StudioCameraManager.Instance.ForcePreviewRender = false;
         }
 
         protected override void Start()
@@ -55,6 +64,14 @@ namespace Virtupad
 
             List<StudioCamera> cameras = StudioCameraManager.Instance.Cameras;
             OnStudioCamerasChanged(cameras);
+        }
+
+        public void OnShowNoOutputChanged(bool newValue)
+        {
+            if (initing == true)
+                return;
+
+            UINoActiveCamera.Instance.OverwriteNoOutput = newValue;
         }
 
         private void OnStudioCamerasChanged(List<StudioCamera> cameras)
