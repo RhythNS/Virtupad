@@ -117,7 +117,7 @@ namespace Virtupad
             if (instance == null)
                 return;
 
-            string sceneName = GlobalsDict.Instance.CurrentDefinition.SceneName;
+            string sceneName = GlobalsDict.Instance.CurrentDefinition?.SceneName;
             int index = instance.saveGame.camerasOnScenes.FindIndex(x => x.sceneName == sceneName);
 
             if (index == -1)
@@ -151,7 +151,9 @@ namespace Virtupad
 
         private void SaveCameras()
         {
-            string sceneName = GlobalsDict.Instance.CurrentDefinition.SceneName;
+            string sceneName = GlobalsDict.Instance.CurrentDefinition?.SceneName;
+            if (string.IsNullOrEmpty(sceneName))
+                return;
 
             List<StudioCamera.Definition> definitions = new List<StudioCamera.Definition>();
             for (int i = 0; i < cameras.Count; i++)
