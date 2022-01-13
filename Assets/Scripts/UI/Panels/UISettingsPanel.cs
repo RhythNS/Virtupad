@@ -19,6 +19,9 @@ namespace Virtupad
         [SerializeField] private UISelector lipSyncSelector;
         [SerializeField] private string noMicrophoneFound = "No input sources";
 
+        [SerializeField] private Slider cameraMovementSpeedSlider;
+        [SerializeField] private Slider cameraRotationSpeedSlider;
+
         [SerializeField] private RawImage noOutputImage;
 
         [SerializeField] private UISelector screenModeSelector;
@@ -49,6 +52,10 @@ namespace Virtupad
             movementSpeedSlider.value = vrCon.WalkingSpeed;
             rotationSpeedSlider.value = vrCon.AnglesPerSecond;
             moveTypeSelector.Index = vrCon.secondaryWalkingDirectionInputOption;
+
+            StudioCameraManager cameraManager = StudioCameraManager.Instance;
+            cameraMovementSpeedSlider.value = cameraManager.MovingMetersPerSecond;
+            cameraRotationSpeedSlider.value = cameraManager.RotatingAnglesPerSecond;
 
             lipSyncSelector.selections.Clear();
             Array.ForEach(Microphone.devices, x => lipSyncSelector.selections.Add(x));
@@ -106,6 +113,22 @@ namespace Virtupad
                 return;
 
             SalsaDict.Instance.SetMicrophone(lipSyncSelector.selections[newValue]);
+        }
+
+        public void OnCameraMovementSpeedChanged(float newValue)
+        {
+            if (initing == true)
+                return;
+
+            StudioCameraManager.Instance.ChangeSpeed(movementSpeed: newValue);
+        }
+
+        public void OnCameraRotationSpeedChanged(float newValue)
+        {
+            if (initing == true)
+                return;
+
+            StudioCameraManager.Instance.ChangeSpeed(rotationSpeed: newValue);
         }
 
         public void OnScreenModeChanged(int newValue)

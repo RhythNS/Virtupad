@@ -212,7 +212,7 @@ namespace Virtupad
 
         private Transform MakeBodyPart(string name, HumanBodyBones bone)
         {
-            GameObject bodyObject = GetGameObject(name);
+            GameObject bodyObject = GetNewGameObject(name);
             bodyObject.transform.parent = transform;
             Transform boneTrans = character.GetBoneTransform(bone);
             bodyObject.transform.position = boneTrans.position;
@@ -222,10 +222,10 @@ namespace Virtupad
 
         private Transform MakeChain(string name, HumanBodyBones root, HumanBodyBones tip)
         {
-            GameObject chainObj = GetGameObject(name);
+            GameObject chainObj = GetNewGameObject(name);
             chainObj.transform.parent = transform;
 
-            GameObject targetObject = GetGameObject(name + " source");
+            GameObject targetObject = GetNewGameObject(name + " source");
 
             ChainIKConstraint chain = chainObj.AddComponent<ChainIKConstraint>();
             chain.Reset();
@@ -237,14 +237,15 @@ namespace Virtupad
 
             chain.data = data;
             chainObj.transform.position = targetObject.transform.position = data.tip.position;
+            chainObj.transform.rotation = targetObject.transform.rotation = data.tip.rotation;
             return targetObject.transform;
         }
 
         private Transform MakeOverrideTransform(string name, HumanBodyBones bone)
         {
-            GameObject overObj = GetGameObject(name);
+            GameObject overObj = GetNewGameObject(name);
             overObj.transform.parent = transform;
-            GameObject targetObject = GetGameObject(name + " source");
+            GameObject targetObject = GetNewGameObject(name + " source");
 
             OverrideTransform overrideTransform = overObj.AddComponent<OverrideTransform>();
             overrideTransform.Reset();
@@ -258,14 +259,15 @@ namespace Virtupad
 
             overrideTransform.data = data;
             overObj.transform.position = targetObject.transform.position = boneTrans.position;
+            //overObj.transform.rotation = targetObject.transform.rotation = boneTrans.rotation;
             return targetObject.transform;
         }
 
         private Transform MakeMultiRotation(string name, HumanBodyBones bone)
         {
-            GameObject multiRotObj = GetGameObject(name);
+            GameObject multiRotObj = GetNewGameObject(name);
             multiRotObj.transform.parent = transform;
-            GameObject targetObject = GetGameObject(name + " source");
+            GameObject targetObject = GetNewGameObject(name + " source");
 
             MultiRotationConstraint multiRotation = multiRotObj.AddComponent<MultiRotationConstraint>();
             multiRotation.Reset();
@@ -278,10 +280,11 @@ namespace Virtupad
 
             multiRotation.data = data;
             multiRotObj.transform.position = targetObject.transform.position = data.constrainedObject.position;
+            multiRotObj.transform.rotation = targetObject.transform.rotation = data.constrainedObject.rotation;
             return targetObject.transform;
         }
 
-        private GameObject GetGameObject(string name)
+        private GameObject GetNewGameObject(string name)
         {
             GameObject gameObject = new GameObject(name);
             gameObject.transform.parent = rigParent;

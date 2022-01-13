@@ -67,10 +67,10 @@ namespace Virtupad
         [SerializeField] private float previewResolutionMultiplier = 0.5f;
 
         public float MovingMetersPerSecond => movingMetersPerSecond;
-        [SerializeField] private float movingMetersPerSecond;
+        [SerializeField] private float movingMetersPerSecond = 1.0f;
 
         public float RotatingAnglesPerSecond => rotatingAnglesPerSecond;
-        [SerializeField] private float rotatingAnglesPerSecond;
+        [SerializeField] private float rotatingAnglesPerSecond = 90.0f;
 
         public bool ForcePreviewRender
         {
@@ -111,11 +111,27 @@ namespace Virtupad
             OnSceneChanged();
         }
 
+        public void ChangeSpeed(float movementSpeed = -1.0f, float rotationSpeed = -1.0f)
+        {
+            SaveGame sg = SaveFileManager.Instance.saveGame;
+
+            if (movementSpeed != -1.0f)
+                sg.playerMovePerSecond = movingMetersPerSecond = movementSpeed;
+
+            if (rotationSpeed != -1.0f)
+                sg.playerRotatePerSecond = rotatingAnglesPerSecond = rotationSpeed;
+
+            SaveFileManager.Instance.Save();
+        }
+
         private void OnSceneChanged()
         {
             SaveFileManager instance = SaveFileManager.Instance;
             if (instance == null)
                 return;
+
+            movingMetersPerSecond = instance.saveGame.cameraMovementSpeed;
+            rotatingAnglesPerSecond = instance.saveGame.cameraRotatePerSpeed;
 
             string sceneName = GlobalsDict.Instance.CurrentDefinition?.SceneName;
             int index = instance.saveGame.camerasOnScenes.FindIndex(x => x.sceneName == sceneName);

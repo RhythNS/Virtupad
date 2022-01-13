@@ -94,7 +94,6 @@ namespace Virtupad
             audSrc.playOnAwake = false;
             audSrc.loop = true;
             audSrc.clip = SalsaDict.Instance.EmptyClip;
-
             audSrc.Play();
 
             QueueProcessor qp = gameObject.GetComponent<QueueProcessor>();
@@ -157,6 +156,7 @@ namespace Virtupad
             input.linkWithSalsa = true;
             input.isAutoStart = true;
             input.selectedMic = SalsaDict.Instance.CurrentMicrophone;
+            input.isMuted = true;
 
             SalsaMicPointerSync micSync = GetComponent<SalsaMicPointerSync>();
             if (micSync == null)

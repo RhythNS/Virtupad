@@ -23,9 +23,11 @@ namespace Virtupad
         {
             //VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false, false);
             VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY;// | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRController.Instance.head, headOffset);
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment, false, false);
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment, false, false);
+            VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRController.Instance.head, false, false);
+            //VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment, false, false);
+            VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment, Vector3.zero, Quaternion.Euler(new Vector3(90.0f, 0.0f, -90.0f)));
+            //VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment, false, false);
+            VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment, Vector3.zero, Quaternion.Euler(new Vector3(90.0f, 0.0f, 90.0f)));
 
             ConstructorDict.Instance.LoadingCharacterAnimator.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
@@ -44,9 +46,6 @@ namespace Virtupad
                         break;
                     case VRTrackerType.Hip:
                         Transform hip = ConstructorDict.Instance.hip;
-                        //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, (trackers[i].transform.rotation * hip.rotation).eulerAngles);
-                        //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, Quaternion.Inverse(trackers[i].transform.rotation * hip.rotation).eulerAngles);
-                        //VRMapper.Instance.AddMap(hip, trackers[i].transform, hip.position - trackers[i].transform.position, Quaternion.Inverse(trackers[i].transform.rotation).eulerAngles);
                         VRMapper.Instance.AddMapTracker(hip, trackers[i].transform);
                         break;
                     default:
@@ -63,7 +62,7 @@ namespace Virtupad
 
         public static void CharacterToVRPlayer()
         {
-            ConstructorDict.Instance.LoadingCharacterAnimator.transform.position = Player.instance.transform.position;
+            ConstructorDict.Instance.LoadingCharacterAnimator.transform.position = VRController.Instance.bodyCollider.position;
             Vector3 vrRot = Player.instance.hmdTransform.rotation.eulerAngles;
             vrRot.x = 0.0f;
             vrRot.z = 0.0f;

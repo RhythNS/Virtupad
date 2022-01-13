@@ -40,6 +40,8 @@ public class SaveGame
     // Auto camera create setting
     [SerializeField] public int autoLoadSet = -1;
     [SerializeField] public List<CamerasOnScene> camerasOnScenes = new List<CamerasOnScene>();
+    [SerializeField] public float cameraMovementSpeed = 1.0f;
+    [SerializeField] public float cameraRotatePerSpeed = 1.0f;
 
     // ui settings
     [SerializeField] public string customNoCameraActivePath = "";

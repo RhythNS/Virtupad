@@ -35,6 +35,7 @@ namespace Virtupad
             if (VRAnimatorController.Instance)
                 VRAnimatorController.Instance.enabled = false;
             VRSetTracker.RegisterTrackers();
+            yield return null;
             RigMaker.Config? config = VRSetTracker.AutoAssignTrackers();
             if (config.HasValue == false)
                 yield break;

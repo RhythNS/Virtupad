@@ -17,14 +17,16 @@ namespace Virtupad
         {
             public Transform source, constrain;
             public Vector3 offsetPos;
-            public Vector3 offsetRot;
+            public Quaternion offsetRot;
+            public bool useSecondaryRotOffset;
 
-            public MapTransform(Transform constrain, Transform source, Vector3 offsetPos, Vector3 offsetRot)
+            public MapTransform(Transform constrain, Transform source, Vector3 offsetPos, Quaternion offsetRot, bool useSecondaryRotOffset)
             {
                 this.source = source;
                 this.constrain = constrain;
                 this.offsetPos = offsetPos;
                 this.offsetRot = offsetRot;
+                this.useSecondaryRotOffset = useSecondaryRotOffset;
             }
         }
 
@@ -61,16 +63,17 @@ namespace Virtupad
                 return;
 
             Vector3 offsetPos = constrain.position - source.position;
+            Quaternion rotOffset = constrain.rotation * Quaternion.Inverse(source.rotation);
             maps.Add(new MapTransform(constrain, source, usePosOffset ? offsetPos : Vector3.zero,
-                useRotationOffset ? constrain.rotation.eulerAngles : Vector3.zero));
+                useRotationOffset ? rotOffset : Quaternion.identity, false));
         }
 
-        public void AddMap(Transform constrain, Transform source, Vector3 posOffset, Vector3 rotOffset)
+        public void AddMap(Transform constrain, Transform source, Vector3 posOffset, Quaternion rotOffset)
         {
             if (MapCheck(constrain, source) == false)
                 return;
 
-            maps.Add(new MapTransform(constrain, source, posOffset, rotOffset));
+            maps.Add(new MapTransform(constrain, source, posOffset, rotOffset, true));
         }
 
         public void AddMap(Transform constrain, Transform source, VRMapperSpecificOffset specificOffset)
@@ -85,7 +88,7 @@ namespace Virtupad
                 return;
 
             Vector3 offsetPos = constrain.position - source.position;
-            Vector3 offsetRot = constrain.rotation.eulerAngles;
+            Vector3 offsetRot = (source.rotation * Quaternion.Inverse(constrain.rotation)).eulerAngles;
             if (specificOffset.HasFlag(VRMapperSpecificOffset.PosX) == false)
                 offsetPos.x = 0.0f;
             if (specificOffset.HasFlag(VRMapperSpecificOffset.PosY) == false)
@@ -99,7 +102,7 @@ namespace Virtupad
             if (specificOffset.HasFlag(VRMapperSpecificOffset.RotZ) == false)
                 offsetRot.z = 0.0f;
 
-            maps.Add(new MapTransform(constrain, source, offsetPos, offsetRot));
+            maps.Add(new MapTransform(constrain, source, offsetPos, Quaternion.Euler(offsetRot), false));
         }
 
         public void AddMapTracker(Transform constrain, Transform source)
@@ -108,7 +111,7 @@ namespace Virtupad
                 return;
 
             Vector3 offsetPos = constrain.position - source.position;
-            trackerMaps.Add(new MapTrackerTransform(constrain, source, offsetPos, constrain.rotation * Quaternion.Inverse(source.rotation)));
+            trackerMaps.Add(new MapTrackerTransform(constrain, source, offsetPos, source.rotation * Quaternion.Inverse(constrain.rotation)));
         }
 
         private bool MapCheck(Transform constrain, Transform source)
@@ -137,7 +140,8 @@ namespace Virtupad
             for (int i = 0; i < maps.Count; i++)
             {
                 maps[i].constrain.position = maps[i].source.position + maps[i].offsetPos;
-                maps[i].constrain.rotation = maps[i].source.rotation * Quaternion.Euler(maps[i].offsetRot);
+                maps[i].constrain.rotation = maps[i].useSecondaryRotOffset ? 
+                    maps[i].source.rotation * maps[i].offsetRot : maps[i].offsetRot * maps[i].source.rotation;
             }
             for (int i = 0; i < trackerMaps.Count; i++)
             {
