@@ -26,6 +26,9 @@ namespace Virtupad
 
         public override void LooseFocus(bool closing)
         {
+            if (gameObject.activeInHierarchy == false)
+                return;
+
             if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
                 hideOrShowingCoroutine.Stop(false);
 

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using uDesktopDuplication;
 using UnityEngine;
@@ -23,6 +21,8 @@ namespace Virtupad
         [SerializeField] private Toggle displayDesktopToggle;
 
         [SerializeField] private Transform resizePanel;
+
+        [SerializeField] private Transform keyboardOffset;
 
         public void Open()
         {
@@ -71,7 +71,7 @@ namespace Virtupad
 
         public void ToggleKeyboard()
         {
-            VRKeys.Keyboard.Instance.ToggleEnable();
+            VRKeys.Keyboard.Instance.ToggleEnable(keyboardOffset.position, keyboardOffset.rotation, keyboardOffset.lossyScale);
         }
 
         public void ToggleResize()

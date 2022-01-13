@@ -44,7 +44,7 @@ namespace Virtupad
 
             VRToRig.CharacterToTPose();
             VRToRig.CharacterToVRPlayer();
-            VRController.Instance.SizeToModelHeight(VRMController.Instance.Height);
+            VRController.Instance.SizeToModelHeight(ConstructorDict.Instance.vrmController.GetHeight());
 
             for (int i = 0; i < seconds; i++)
             {

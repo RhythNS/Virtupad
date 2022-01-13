@@ -249,6 +249,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  cameraSmoothMove:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &4331071301417253539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +320,9 @@ MonoBehaviour:
     vrms: []
     autoLoadVRM: 0
     footIK: 1
+    microphone: 
     autoLoadSet: -1
+    camerasOnScenes: []
     customNoCameraActivePath: 
     playerMovePerSecond: 1.5
     playerRotatePerSecond: 90
@@ -360,7 +368,7 @@ MonoBehaviour:
   - layout:
       spaceButtonLabel: SPACE
       enterButtonLabel: ENTER
-      cancelButtonLabel: CANCEL
+      cancelButtonLabel: CLOSE
       shiftButtonLabel: SHIFT
       backspaceButtonLabel: BACKSPACE
       clearButtonLabel: CLEAR

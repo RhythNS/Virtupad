@@ -40,6 +40,7 @@ namespace Virtupad
 
         [SerializeField] private Rigidbody[] bodiesToMove;
 
+        private bool isCustomPlayerHeight = false;
         public float playerHeight = 1.9f;
 
         public static float InvMovementSpeed { get; private set; }
@@ -103,9 +104,24 @@ namespace Virtupad
             SaveFileManager.Instance.Save();
         }
 
+        public void AutoSetPlayerHeight()
+        {
+
+            Vector3 headDir = head.transform.position - Player.instance.transform.position;
+            headDir.x = 0.0f;
+            headDir.z = 0.0f;
+            playerHeight = headDir.magnitude;
+        }
+
         public void SizeToModelHeight(float modelHeight)
         {
+            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+            if (isCustomPlayerHeight == false)
+                AutoSetPlayerHeight();
+
             float toScale = modelHeight / playerHeight;
+            Debug.Log("s:" + toScale + ", m:" + modelHeight + ", p:" + playerHeight);
             transform.localScale = new Vector3(toScale, toScale, toScale);
         }
 

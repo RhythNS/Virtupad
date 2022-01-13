@@ -4,25 +4,10 @@ using UnityEngine;
 
 namespace Virtupad
 {
-    public class MonitorInWorld : Interactable
+    public class MonitorInWorld : MonoBehaviour
     {
         public UIMonitorPanel Panel => panel;
         [SerializeField] private UIMonitorPanel panel;
-
-        private Collider OwnCollider => ownCollider;
-        [SerializeField] private Collider ownCollider;
-
-        private void Awake()
-        {
-            SnapToObject = true;
-
-            Panel.screenActiveChanged += ScreenActiveChanged;
-        }
-
-        private void ScreenActiveChanged(bool active)
-        {
-            ownCollider.enabled = active == false;
-        }
 
         private void Start()
         {
@@ -32,32 +17,16 @@ namespace Virtupad
 
         private void OnInteractBegin()
         {
-            if (Panel.Screen.gameObject.activeInHierarchy)
-            {
-                panel.Open();
-                return;
-            }
+            panel.Open();
         }
 
         private void OnInteractEnd()
         {
-            if (Panel.Screen.gameObject.activeInHierarchy)
-            {
-                panel.Close();
-                return;
-            }
-        }
-
-        public override void Select()
-        {
-            panel.Open();
+            panel.Close();
         }
 
         private void OnDestroy()
         {
-            if (Panel)
-                Panel.screenActiveChanged -= ScreenActiveChanged;
-
             InteracterEvents instance = InteracterEvents.Instance;
             if (!instance)
                 return;

@@ -112,8 +112,12 @@ namespace VRKeys
             Disable();
         }
 
-        public void ToggleEnable()
+        public void ToggleEnable(Vector3 position, Quaternion rotation, Vector3 scale)
         {
+            transform.position = position;
+            transform.rotation = rotation;
+            transform.localScale = scale;
+
             if (disabled == true)
                 Enable();
             else

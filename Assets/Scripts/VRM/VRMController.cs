@@ -86,6 +86,12 @@ namespace Virtupad
             VRAnimatorController.enabled = true;
         }
 
+        public float GetHeight()
+        {
+            Vector3 headPos = Animator.GetBoneTransform(HumanBodyBones.Head).position;
+            return transform.InverseTransformVector(headPos).y;
+        }
+
         private void OnDestroy()
         {
             if (Instance == this)
