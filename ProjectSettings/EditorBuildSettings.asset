@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sets/Appartement.unity
     guid: cfdb83285a039674fbe5a6ed704abcc6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Sets/Stage.unity
     guid: a17ef716e60312a43bcef5ddf4b7dd82
   - enabled: 1

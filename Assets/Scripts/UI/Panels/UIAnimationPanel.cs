@@ -32,6 +32,8 @@ namespace Virtupad
             if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
                 hideOrShowingCoroutine.Stop(false);
 
+            OnHidingAnimationStarted();
+
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve
                     (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationTime),
@@ -40,12 +42,24 @@ namespace Virtupad
                 );
         }
 
+        protected virtual void OnHidingAnimationStarted()
+        {
+
+        }
+
+        protected virtual void OnShowingAnimationStarting()
+        {
+
+        }
+
         public override void RegainFocus(UIRegainFocusMessage msg)
         {
             gameObject.SetActive(true);
 
             if (hideOrShowingCoroutine != null && hideOrShowingCoroutine.IsFinshed == false)
                 hideOrShowingCoroutine.Stop(false);
+
+            OnShowingAnimationStarting();
 
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve

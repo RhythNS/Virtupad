@@ -76,7 +76,7 @@ namespace Virtupad
 
         public bool Move(Direction direction)
         {
-            Debug.Log("UI wants to move " + direction);
+            // Debug.Log("UI wants to move " + direction);
 
             if (SelectedElement == null)
             {

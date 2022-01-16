@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3025604598090003451}
   - component: {fileID: 3025604598090003448}
   - component: {fileID: 3025604598090003450}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: QuickSelectElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}

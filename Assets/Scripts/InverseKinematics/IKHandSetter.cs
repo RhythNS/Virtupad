@@ -5,13 +5,15 @@ namespace Virtupad
     public class IKHandSetter : MonoBehaviour
     {
         private Animator animator;
-        private Transform rightHand, leftHand;
+        [SerializeField] private Transform rightHand, leftHand;
 
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            rightHand = ConstructorDict.Instance.rightArm;
-            leftHand = ConstructorDict.Instance.leftArm;
+            if (!rightHand)
+                rightHand = ConstructorDict.Instance.rightArm;
+            if (!leftHand)
+                leftHand = ConstructorDict.Instance.leftArm;
         }
 
         private void OnAnimatorIK(int layerIndex)

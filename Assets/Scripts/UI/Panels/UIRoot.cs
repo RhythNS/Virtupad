@@ -17,6 +17,8 @@ namespace Virtupad
         [SerializeField] private UIMenuSelectionPanel selectionPanel;
 
         private Transform toTrack;
+        private Vector3 forwardVec;
+        // private Transform toTrackRot;
 
         protected override void Awake()
         {
@@ -33,20 +35,20 @@ namespace Virtupad
             gameObject.SetActive(false);
         }
 
-        protected override void OnEnable()
-        {
-            toTrack = VRController.Instance?.bodyCollider;
-
-            base.OnEnable();
-        }
-
         private void Update()
         {
             if (toTrack == null)
                 return;
 
-            transform.position = toTrack.position + toTrack.TransformDirection(forwardTrackingPosition);
-            transform.rotation = toTrack.rotation * trackingRotation;
+            transform.position = toTrack.position + forwardVec;
+        }
+
+        protected override void OnShowingAnimationStarting()
+        {
+            toTrack = VRController.Instance?.bodyCollider;
+            Quaternion rot = Quaternion.AngleAxis(VRController.Instance.head.rotation.eulerAngles.y, Vector3.up);
+            transform.rotation = rot * trackingRotation;
+            forwardVec = rot * forwardTrackingPosition;
         }
 
         protected override void OnAnimationFinished()

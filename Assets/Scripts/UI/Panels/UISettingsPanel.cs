@@ -63,8 +63,8 @@ namespace Virtupad
 
             resolutionSelector.selections.Clear();
             Resolution currentResolution = Screen.currentResolution;
-            int selectedIndex = 0;
             resolutions = Screen.resolutions;
+            int selectedIndex = resolutions.Length - 1;
             for (int i = 0; i < resolutions.Length; i++)
             {
                 Resolution res = resolutions[i];

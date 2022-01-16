@@ -22,12 +22,16 @@ namespace Virtupad
         public static void AssignTrackers()
         {
             //VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRDevicesDict.Instance.head, false, false);
-            VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY;// | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.head, VRController.Instance.head, false, false);
+           // VRMapperSpecificOffset headOffset = VRMapperSpecificOffset.RotY;// | VRMapperSpecificOffset.PosX | VRMapperSpecificOffset.PosY | VRMapperSpecificOffset.PosZ;
+            VRMapper.Instance.AddMapNoOffset(ConstructorDict.Instance.head, VRController.Instance.head);
+            
             //VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment, false, false);
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment, Vector3.zero, Quaternion.Euler(new Vector3(90.0f, 0.0f, -90.0f)));
+            VRMapper.Instance.AddMapCustomRotation(ConstructorDict.Instance.rightArm, VRController.Instance.rightHandAttachment,
+                Quaternion.Euler(new Vector3(90.0f, 0.0f, -90.0f)));
+            
             //VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment, false, false);
-            VRMapper.Instance.AddMap(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment, Vector3.zero, Quaternion.Euler(new Vector3(90.0f, 0.0f, 90.0f)));
+            VRMapper.Instance.AddMapCustomRotation(ConstructorDict.Instance.leftArm, VRController.Instance.leftHandAttachment,
+                Quaternion.Euler(new Vector3(90.0f, 0.0f, 90.0f)));
 
             ConstructorDict.Instance.LoadingCharacterAnimator.runtimeAnimatorController = ConstructorDict.Instance.UpperBody;
 
@@ -39,10 +43,10 @@ namespace Virtupad
                     case VRTrackerType.Unknown:
                         break;
                     case VRTrackerType.LeftFoot:
-                        VRMapper.Instance.AddMap(ConstructorDict.Instance.leftLeg, trackers[i].transform);
+                        VRMapper.Instance.AddMapTracker(ConstructorDict.Instance.leftLeg, trackers[i].transform);
                         break;
                     case VRTrackerType.RightFoot:
-                        VRMapper.Instance.AddMap(ConstructorDict.Instance.rightLeg, trackers[i].transform);
+                        VRMapper.Instance.AddMapTracker(ConstructorDict.Instance.rightLeg, trackers[i].transform);
                         break;
                     case VRTrackerType.Hip:
                         Transform hip = ConstructorDict.Instance.hip;

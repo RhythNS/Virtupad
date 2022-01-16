@@ -109,7 +109,8 @@ namespace Virtupad
                 return;
 
             toGoTo = toTrack.TransformPoint(trackingPositionOffset);
-            toRotateTo = Quaternion.LookRotation(toTrack.TransformDirection(trackingDirectionOffset));
+            if (trackingDirectionOffset != Vector3.zero)
+                toRotateTo = Quaternion.LookRotation(toTrack.TransformDirection(trackingDirectionOffset));
         }
 
         private void Track(ref Vector3 toGoTo, ref Quaternion toRotateTo)

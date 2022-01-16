@@ -8,6 +8,7 @@ namespace Virtupad
 
         [SerializeField] private Vector3 forwardTrackingPosition = new Vector3(0.0f, 0.8f, 1.25f);
         [SerializeField] private Quaternion trackingRotation;
+        private Vector3 forwardVec;
 
         public UICameraSetting CameraSetting => CameraSetting;
         [SerializeField] private UICameraSetting cameraSetting;
@@ -38,9 +39,9 @@ namespace Virtupad
         protected override void OnEnable()
         {
             toTrack = VRController.Instance?.bodyCollider;
-
-            if (toTrack != null)
-                transform.rotation = toTrack.rotation * trackingRotation;
+            Quaternion rot = Quaternion.AngleAxis(VRController.Instance.head.rotation.eulerAngles.y, Vector3.up);
+            transform.rotation = rot * trackingRotation;
+            forwardVec = rot * forwardTrackingPosition;
 
             base.OnEnable();
         }
@@ -58,8 +59,13 @@ namespace Virtupad
             if (toTrack == null)
                 return;
 
-            transform.position = toTrack.position + toTrack.TransformDirection(forwardTrackingPosition);
+            transform.position = toTrack.position + forwardVec;
             //transform.rotation = toTrack.rotation * trackingRotation;
+        }
+
+        protected override void OnHidingAnimationStarted()
+        {
+            cameraSetting.DeRegisterInput();
         }
 
         public void Close()

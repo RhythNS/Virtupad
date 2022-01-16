@@ -101,6 +101,7 @@ namespace Virtupad
 
             Grabbable = GetComponent<AttachGrabbable>();
             Body = GetComponent<Rigidbody>();
+            Body.sleepThreshold = 0.0f;
 
             Array.ForEach(previewCameras, x => x.enabled = false);
             Array.ForEach(outputCameras, x => x.enabled = false);
@@ -204,11 +205,11 @@ namespace Virtupad
 
             NormalizeScale(ref outputSize);
 
-            Vector2Int outputSizeInt = Vector2Int.RoundToInt(outputSize);
+            //Vector2Int outputSizeInt = Vector2Int.RoundToInt(outputSize);
             Vector2Int baseResInt = Vector2Int.RoundToInt(baseRes);
 
             if (previewCanResize == true)
-                previewOutput.localScale = new Vector3(outputSizeInt.x, 0.00001f, outputSizeInt.y);
+                previewOutput.localScale = new Vector3(outputSize.x, 0.00001f, outputSize.y);
 
             for (int i = 0; i < outputCameras.Length; i++)
             {

@@ -31,7 +31,7 @@ namespace Virtupad
                 return;
             }
 
-            Instance = this;
+            Instance = this; 
         }
 
         private void OnDestroy()

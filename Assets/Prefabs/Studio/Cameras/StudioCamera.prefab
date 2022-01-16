@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6681653405913561731}
   - component: {fileID: 6681653405913561729}
   - component: {fileID: 6681653405913561728}
-  m_Layer: 20
+  m_Layer: 9
   m_Name: Preview Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6681653407037607788}
   - component: {fileID: 6681653407037607789}
-  m_Layer: 20
+  m_Layer: 9
   m_Name: Preview Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 70255927
+    m_Bits: 3146807
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6681653407270242528}
   - component: {fileID: 6681653407270242529}
-  m_Layer: 20
+  m_Layer: 9
   m_Name: Output Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,7 +217,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 70255927
+    m_Bits: 3146807
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 7568528904831739277}
   - component: {fileID: 7568528904831739283}
   - component: {fileID: 7568528904831739282}
-  m_Layer: 20
+  m_Layer: 9
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

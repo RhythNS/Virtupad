@@ -41,6 +41,9 @@ namespace Virtupad
         [SerializeField] private Transform forSmallPanel;
         [SerializeField] private Transform forMainMenuPanel;
 
+        [SerializeField] private SteamVR_Action_Vector2 walkingInput;
+        [SerializeField] private SteamVR_Action_Vector2 lookingInput;
+
         public UnityEvent shouldClose;
 
         private bool overwritingControllerInputs = false;
@@ -96,7 +99,7 @@ namespace Virtupad
             initing = false;
         }
 
-        private void RegisterInput()
+        public void RegisterInput()
         {
             DeRegisterInput();
 
@@ -116,7 +119,7 @@ namespace Virtupad
             movingAngleOffset = Vector3.SignedAngle(Vector3.forward, toCameraDir, Vector3.up);
         }
 
-        private void DeRegisterInput()
+        public void DeRegisterInput()
         {
             if (overwritingControllerInputs == false)
                 return;
@@ -127,6 +130,23 @@ namespace Virtupad
             VRController.Instance?.DeRegisterWalking(Move);
         }
 
+        private void Update()
+        {
+            if (onCamera == null || overwritingControllerInputs == false)
+                return;
+
+            float toMove = StudioCameraManager.Instance.MovingMetersPerSecond * Time.deltaTime;
+            Vector3 moveVec = Quaternion.AngleAxis(movingAngleOffset, Vector3.up)
+                * new Vector3(walkingInput.axis.x * toMove, 0.0f, walkingInput.axis.y * toMove);
+            //.MoveTo(OnCamera.Body.position + moveVec);
+            onCamera.transform.position = onCamera.transform.position + moveVec;
+
+            float rotatingAnglesPerSecond = StudioCameraManager.Instance.RotatingAnglesPerSecond;
+            Vector2 axis = -lookingInput.axis * (rotatingAnglesPerSecond * Time.deltaTime);
+            Vector3 prevAngle = OnCamera.transform.rotation.eulerAngles;
+            onCamera.transform.rotation = Quaternion.Euler(prevAngle.x + axis.y, prevAngle.y + axis.x, prevAngle.z);
+        }
+
         private bool Rotate(SteamVR_Action_Vector2 input)
         {
             if (onCamera == null)
@@ -134,12 +154,6 @@ namespace Virtupad
                 DeRegisterInput();
                 return false;
             }
-
-            float rotatingAnglesPerSecond = StudioCameraManager.Instance.RotatingAnglesPerSecond;
-            Vector2 axis = -input.axis * (rotatingAnglesPerSecond * Time.fixedDeltaTime);
-            Vector3 prevAngle = OnCamera.Body.rotation.eulerAngles;
-            OnCamera.RotateTo(Quaternion.Euler(prevAngle.x + axis.y, prevAngle.y + axis.x, prevAngle.z));
-
             return true;
         }
 
@@ -150,12 +164,6 @@ namespace Virtupad
                 DeRegisterInput();
                 return false;
             }
-
-            float toMove = StudioCameraManager.Instance.MovingMetersPerSecond * Time.fixedDeltaTime;
-            Vector3 moveVec = Quaternion.AngleAxis(movingAngleOffset, Vector3.up)
-                * new Vector3(input.axis.x * toMove, 0.0f, input.axis.y * toMove);
-            OnCamera.MoveTo(OnCamera.Body.position + moveVec);
-
             return true;
         }
 
@@ -248,7 +256,7 @@ namespace Virtupad
             if (onCamera == null || initing == true)
                 return;
 
-            onCamera.Grabbable.EasyRotationLock = newValue ? XYZ.X : 0;
+            onCamera.Grabbable.EasyRotationLock = newValue ? XYZ.Z : 0;
         }
 
         public void OnDeletePressed()

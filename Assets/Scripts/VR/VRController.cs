@@ -39,6 +39,7 @@ namespace Virtupad
         private List<InputListener> rotationOverwrites = new List<InputListener>();
 
         [SerializeField] private Rigidbody[] bodiesToMove;
+        [SerializeField] private HandPhysics[] handsToMove;
 
         private bool isCustomPlayerHeight = false;
         public float playerHeight = 1.9f;
@@ -67,8 +68,29 @@ namespace Virtupad
           //      Player.instance.rightHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>()
             };
 
+            handsToMove = new HandPhysics[]
+            {
+                leftHand.GetComponent<HandPhysics>(),
+                rightHand.GetComponent<HandPhysics>()
+            };
+
             SaveGame saveGame = SaveFileManager.Instance.saveGame;
             ChangeSpeed(saveGame.playerMovePerSecond, saveGame.playerRotatePerSecond, saveGame.playerMoveType);
+
+            VRMController.onVRMCreated += OnVRMCreated;
+            VRMController.onVRMDeleted += OnVRMDeleted;
+        }
+
+        private void OnVRMDeleted(VRMController newController)
+        {
+            leftHand.ShowController(true);
+            rightHand.ShowController(true);
+        }
+
+        private void OnVRMCreated(VRMController newController)
+        {
+            leftHand.HideController(true);
+            rightHand.HideController(true);
         }
 
         public void RegisterWalking(InputListener listener) => Register(listener, walkingOverwrites);
@@ -127,16 +149,22 @@ namespace Virtupad
 
         private void FixedUpdate()
         {
-            Quaternion additionalRotation = GetRotation();
+            float additionalRotation = GetRotation();
             Vector3 additionalVelocity = GetWalkingVelocity();
+
+            Quaternion q = Quaternion.AngleAxis(additionalRotation, Vector3.up);
+
+            //.RotateAround(new Vector3(HeadTransform.position.x, 0, HeadTransform.position.z), Vector3.up, 45.0f);
             for (int i = 0; i < bodiesToMove.Length; i++)
             {
                 bodiesToMove[i].MovePosition(bodiesToMove[i].position + additionalVelocity);
-                bodiesToMove[i].MoveRotation(bodiesToMove[i].rotation * additionalRotation);
+                //  bodiesToMove[i].MoveRotation(bodiesToMove[i].rotation * additionalRotation);
+                bodiesToMove[i].MovePosition(q * (bodiesToMove[i].position - bodyCollider.position) + bodyCollider.position);
+                bodiesToMove[i].MoveRotation(bodiesToMove[i].transform.rotation * q);
             }
 
-            leftHand.GetComponent<HandPhysics>().UpdateHand(default, default);
-            rightHand.GetComponent<HandPhysics>().UpdateHand(default, default);
+            for (int i = 0; i < handsToMove.Length; i++)
+                handsToMove[i].UpdateHand(default, default);
 
             // transform.position += additionalVelocity;
             // player.GetComponentInChildren<Rigidbody>().velocity = Vector3.Scale(player.GetComponentInChildren<Rigidbody>().velocity, new Vector3(0, 1, 0)) + additionalVelocity;
@@ -161,24 +189,28 @@ namespace Virtupad
             return walkingDirection * (walkingSpeed * Time.fixedDeltaTime);
         }
 
-        private Quaternion GetRotation()
+        private float GetRotation()
         {
             for (int i = 0; i < rotationOverwrites.Count; i++)
             {
                 if (rotationOverwrites[i].Invoke(lookingInput) == true)
-                    return Quaternion.identity;
+                    return 0.0f;
             }
 
             Vector2 lookingDirection = lookingInput.axis;
             float angle = lookingDirection.x * anglesPerSecond * Time.fixedDeltaTime;
+            return angle;
 
-            return Quaternion.AngleAxis(angle, Vector3.up);
+            //return Quaternion.AngleAxis(angle, Vector3.up);
         }
 
         private void OnDestroy()
         {
             if (Instance == this)
                 Instance = null;
+
+            VRMController.onVRMCreated -= OnVRMCreated;
+            VRMController.onVRMDeleted -= OnVRMDeleted;
         }
 
         private void OnDrawGizmos()

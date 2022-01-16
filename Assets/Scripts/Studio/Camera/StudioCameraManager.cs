@@ -85,8 +85,8 @@ namespace Virtupad
         }
         private int currentForcePreviewRenderRequests = 0;
 
-        public Vector2 DesiredResolution => new Vector2((float)Screen.width * previewResolutionMultiplier,
-            (float)Screen.height * previewResolutionMultiplier);
+        public Vector2 DesiredResolution => new Vector2(((float)Screen.width) * previewResolutionMultiplier,
+            ((float)Screen.height) * previewResolutionMultiplier);
 
         private ExtendedCoroutine resolutionChange;
 
@@ -116,10 +116,10 @@ namespace Virtupad
             SaveGame sg = SaveFileManager.Instance.saveGame;
 
             if (movementSpeed != -1.0f)
-                sg.playerMovePerSecond = movingMetersPerSecond = movementSpeed;
+                sg.cameraMovementSpeed = movingMetersPerSecond = movementSpeed;
 
             if (rotationSpeed != -1.0f)
-                sg.playerRotatePerSecond = rotatingAnglesPerSecond = rotationSpeed;
+                sg.cameraRotatePerSpeed = rotatingAnglesPerSecond = rotationSpeed;
 
             SaveFileManager.Instance.Save();
         }

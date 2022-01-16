@@ -820,6 +820,12 @@ MonoBehaviour:
   onMainMenu: 0
   forSmallPanel: {fileID: 3418477931389334506}
   forMainMenuPanel: {fileID: 7184138271218204139}
+  walkingInput:
+    actionPath: /actions/default/in/Walking
+    needsReinit: 0
+  lookingInput:
+    actionPath: /actions/default/in/Looking
+    needsReinit: 0
   shouldClose:
     m_PersistentCalls:
       m_Calls: []

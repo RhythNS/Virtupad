@@ -12,6 +12,7 @@ namespace Virtupad
 
         private void OnRectTransformDimensionsChange()
         {
+            Cursor.visible = false;
             OnResolutionChanged?.Invoke(new Vector2Int(Screen.width, Screen.height));
         }
 
