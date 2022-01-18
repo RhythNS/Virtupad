@@ -109,16 +109,33 @@ namespace Virtupad
             {
                 UICameraSelection selection = buttonPanel.GetChild(i).GetComponent<UICameraSelection>();
 
-                selection.uiPos = new Vector2Int(i % colNum, rowNum - (i / colNum) - 1);
+                selection.uiPos = new Vector2Int(i, 0);
                 cameraParent.AddChild(selection);
                 selection.Init(cameras[i]);
             }
 
             if (showCameraAddButton == true)
             {
-                cameraAddButton.uiPos = new Vector2Int((cameras.Count) % colNum, rowNum - ((cameras.Count) / colNum) - 1);
+                cameraAddButton.uiPos = new Vector2Int(0, 1);
                 cameraParent.AddChild(cameraAddButton);
+                cameraAddButton.GetComponent<UIAnimator>().AutoCalcStartAndEndPoint();
             }
+
+            ExtendedCoroutine.ActionAtEndOfFrame(this, () =>
+            {
+                for (int i = 0; i < buttonPanel.childCount; i++)
+                {
+                    UIAnimator animator = buttonPanel.GetChild(i).GetComponent<UIAnimator>();
+                    if (!animator)
+                        continue;
+
+                    Vector3 pos = animator.transform.localPosition;
+                    pos.z = 0.0f;
+                    animator.SetStartAndCalcEndPoint(pos);
+
+                    animator.enabled = true;
+                }
+            });
         }
 
         public void OnChangeCamera(StudioCamera studioCamera)

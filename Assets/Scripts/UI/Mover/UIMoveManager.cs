@@ -32,12 +32,14 @@ namespace Virtupad
 
         private void Start()
         {
+            /*
             if (UIMover == null && TryGetComponent(out uIMover) == false)
                 return;
             UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
+             */
             uiMainMenuInput.AddOnStateDownListener(OnMainMenuDown, SteamVR_Input_Sources.Any);
         }
-
+        /*
         public void AddMover(Type type)
         {
             if (type.IsSubclassOf(typeof(UIMover)) == false)
@@ -55,6 +57,7 @@ namespace Virtupad
             UIMover = (UIMover)gameObject.AddComponent(type);
             UIMover.SubscribeToEvents(uiMoveInput, uiSelectInput);
         }
+         */
 
         private void OnMainMenuDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
         {
@@ -77,17 +80,19 @@ namespace Virtupad
         public bool Move(Direction direction)
         {
             // Debug.Log("UI wants to move " + direction);
+            return true;
+            /*
+                if (SelectedElement == null)
+                {
+                    if (LowestPrevSelected == null)
+                        return false;
 
-            if (SelectedElement == null)
-            {
-                if (LowestPrevSelected == null)
-                    return false;
+                    LowestPrevSelected.Select();
+                    return true;
+                }
 
-                LowestPrevSelected.Select();
-                return true;
-            }
-
-            return SelectedElement.Move(direction);
+                return SelectedElement.Move(direction);
+             */
         }
 
         public void Click()
@@ -100,8 +105,10 @@ namespace Virtupad
         {
             if (Instance == this)
                 Instance = null;
+            /*
             if (UIMover)
                 UIMover.UnSubscribeFromEvents(uiMoveInput, uiSelectInput);
+             */
 
             uiMainMenuInput.RemoveAllListeners(SteamVR_Input_Sources.Any);
         }

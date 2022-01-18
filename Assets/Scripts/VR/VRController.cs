@@ -18,8 +18,7 @@ namespace Virtupad
         public Transform rightHandAttachment;
 
         public Transform bodyCollider;
-        private Transform player;
-
+        
         public List<VRTracker> trackers = new List<VRTracker>();
 
         public Transform SteamVRObjects => steamVRObjects;
@@ -41,6 +40,8 @@ namespace Virtupad
         [SerializeField] private Rigidbody[] bodiesToMove;
         [SerializeField] private HandPhysics[] handsToMove;
 
+        [SerializeField] private Collider[] toIgnore;
+
         private bool isCustomPlayerHeight = false;
         public float playerHeight = 1.9f;
 
@@ -60,7 +61,6 @@ namespace Virtupad
 
         private void Start()
         {
-            player = Player.instance.transform;
             bodiesToMove = new Rigidbody[]
             {
                 GetComponent<Rigidbody>(),
@@ -73,6 +73,10 @@ namespace Virtupad
                 leftHand.GetComponent<HandPhysics>(),
                 rightHand.GetComponent<HandPhysics>()
             };
+
+            Collider col = bodyCollider.GetComponent<Collider>();
+            for (int i = 0; i < toIgnore.Length; i++)
+                Physics.IgnoreCollision(col, toIgnore[i], true);
 
             SaveGame saveGame = SaveFileManager.Instance.saveGame;
             ChangeSpeed(saveGame.playerMovePerSecond, saveGame.playerRotatePerSecond, saveGame.playerMoveType);
@@ -143,7 +147,6 @@ namespace Virtupad
                 AutoSetPlayerHeight();
 
             float toScale = modelHeight / playerHeight;
-            Debug.Log("s:" + toScale + ", m:" + modelHeight + ", p:" + playerHeight);
             transform.localScale = new Vector3(toScale, toScale, toScale);
         }
 

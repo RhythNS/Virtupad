@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 6964966415697653377}
   - component: {fileID: 6964966415697653383}
   - component: {fileID: 6964966415697653382}
+  - component: {fileID: 162422186966222014}
   m_Layer: 20
   m_Name: StudioCamera
   m_TagString: Untagged
@@ -306,6 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8277d6ff4ddcb4649a8bef5f49c7d73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identifer: {fileID: 162422186966222014}
   currentCameraIndex: 0
   outputCameras:
   - {fileID: 6681653407270242529}
@@ -385,6 +387,19 @@ MonoBehaviour:
   easyRotationDefaultAngle: {x: 0, y: 0, z: 0}
   easyRotationLock: 0
   toMove: {fileID: 7568528904831739277}
+--- !u!114 &162422186966222014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964966415697653376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd2ffc821ca4b447bb8772b4736ddd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 5
 --- !u!1 &7568528904831739276
 GameObject:
   m_ObjectHideFlags: 0

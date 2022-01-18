@@ -21,5 +21,7 @@ namespace Virtupad
         public void OnStaySelecting(Vector3 impactPoint);
 
         public void OnEndSelecting();
+
+        public HelpID GetHelpID();
     }
 }

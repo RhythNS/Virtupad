@@ -37,7 +37,7 @@ namespace Virtupad
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve
                     (transform, closingScale, CurveDict.Instance.UIOutAnimation, animationTime),
-                OnHidden,
+                OnHidingAnimationFinished,
                 true
                 );
         }
@@ -64,16 +64,16 @@ namespace Virtupad
             hideOrShowingCoroutine = new ExtendedCoroutine(this,
                 EnumeratorUtil.ScaleInSecondsCurve
                     (transform, normalScale, CurveDict.Instance.UIInAnimation, animationTime),
-                OnAnimationFinished, true
+                OnShowingAnimationFinished, true
                 );
         }
 
-        protected virtual void OnAnimationFinished()
+        protected virtual void OnShowingAnimationFinished()
         {
             OnInit();
         }
 
-        protected virtual void OnHidden()
+        protected virtual void OnHidingAnimationFinished()
         {
             gameObject.SetActive(false);
 

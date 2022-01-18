@@ -73,7 +73,7 @@ namespace Virtupad
             LooseFocus(true);
         }
 
-        protected override void OnHidden()
+        protected override void OnHidingAnimationFinished()
         {
             gameObject.SetActive(false);
         }

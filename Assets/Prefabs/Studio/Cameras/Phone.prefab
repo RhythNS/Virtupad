@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5940629988231515809}
   - component: {fileID: 4665875794837584278}
   - component: {fileID: 4665875794837584279}
+  - component: {fileID: 4393148496332843755}
   m_Layer: 20
   m_Name: Phone
   m_TagString: Untagged
@@ -77,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8277d6ff4ddcb4649a8bef5f49c7d73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identifer: {fileID: 4393148496332843755}
   currentCameraIndex: 0
   outputCameras:
   - {fileID: 4665875795877860477}
@@ -158,6 +160,19 @@ MonoBehaviour:
   easyRotationDefaultAngle: {x: 0, y: 0, z: 0}
   easyRotationLock: 0
   toMove: {fileID: 7367268841561535194}
+--- !u!114 &4393148496332843755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4665875794837584272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd2ffc821ca4b447bb8772b4736ddd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 5
 --- !u!1 &4665875795635878853
 GameObject:
   m_ObjectHideFlags: 0

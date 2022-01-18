@@ -27,6 +27,7 @@ namespace Virtupad
 
         public event BoolChanged DownChanged;
 
+        public IInteractable LastSelectedInteractable => lastSelectedInteractable;
         private IInteractable lastSelectedInteractable;
 
         private bool beginStopSelectRequest = false;

@@ -51,9 +51,9 @@ namespace Virtupad
             forwardVec = rot * forwardTrackingPosition;
         }
 
-        protected override void OnAnimationFinished()
+        protected override void OnShowingAnimationFinished()
         {
-            base.OnAnimationFinished();
+            base.OnShowingAnimationFinished();
             mainSwitcher.OnInit();
             selectionPanel.OnInit();
         }

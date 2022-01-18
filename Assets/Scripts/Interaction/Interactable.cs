@@ -15,6 +15,8 @@ namespace Virtupad
 
         private List<Interacter> currentlyInteracting = new List<Interacter>();
 
+        [SerializeField] private HelpIdentifier identifer;
+
         public abstract void Select();
 
         public void BeginHover(Interacter interacter, Vector3 impactPoint)
@@ -53,5 +55,7 @@ namespace Virtupad
         {
             return HapticFeedbackDuration;
         }
+
+        public HelpID GetHelpID() => identifer == null ? HelpID.Unknown : identifer.ID;
     }
 }

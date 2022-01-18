@@ -15,7 +15,8 @@ namespace Virtupad
         [SerializeField] protected float percentagePerSecond = 1.0f;
         [SerializeField] private UIPrimitiveElement toAnimate;
 
-        protected Vector3 startPoint;
+        [SerializeField] private bool manualStartPoint = false;
+        [SerializeField] protected Vector3 startPoint;
         protected Vector3 endPoint;
 
         protected State currentState;
@@ -24,8 +25,6 @@ namespace Virtupad
 
         protected ExtendedCoroutine moveCoroutine;
 
-        private bool wasInited = false;
-
         protected virtual AnimationCurve GetCurve() => CurveDict.Instance.SelectedPosCurve;
 
         protected virtual void Awake()
@@ -33,31 +32,30 @@ namespace Virtupad
             if (!toAnimate)
                 toAnimate = transform.GetComponent<UIPrimitiveElement>();
 
-            toAnimate.OnInitEvent += OnInit;
+            endPoint = startPoint + localEndPoint;
         }
 
-        private void OnInit()
+        public void SetStartAndCalcEndPoint(Vector3 startPoint)
         {
-            startPoint = toAnimate.transform.localPosition;
+            this.startPoint = startPoint;
             endPoint = startPoint + localEndPoint;
+        }
 
-            wasInited = true;
+        public void AutoCalcStartAndEndPoint()
+        {
+            if (manualStartPoint == false && toAnimate != null)
+                startPoint = toAnimate.transform.localPosition;
+            endPoint = startPoint + localEndPoint;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (wasInited == false)
-                return;
-
             currentState = State.MovingClicked;
             StartMoveCoroutine();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (wasInited == false)
-                return;
-
             currentState = State.MovingIdle;
             StartMoveCoroutine();
         }
@@ -104,20 +102,13 @@ namespace Virtupad
 
         private void OnDisable()
         {
-            if (Mathf.Approximately(startPoint.x, 0.0f) == false || Mathf.Approximately(startPoint.y, 0.0f) == false)
-                toAnimate.transform.localPosition = startPoint;
+            toAnimate.transform.localPosition = startPoint;
 
             if (moveCoroutine != null && moveCoroutine.IsFinshed == false)
                 moveCoroutine.Stop(false);
 
             moveCoroutine = null;
             atPercentage = 0.0f;
-        }
-
-        private void OnDestroy()
-        {
-            if (toAnimate)
-                toAnimate.OnInitEvent -= OnInit;
         }
 
         protected void OnDrawGizmos()

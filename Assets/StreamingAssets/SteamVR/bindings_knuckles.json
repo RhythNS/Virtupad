@@ -152,7 +152,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/interact"
+                     "output" : "/actions/default/in/mainmenu"
                   }
                },
                "mode" : "button",
@@ -161,7 +161,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/interact"
+                     "output" : "/actions/default/in/mainmenu"
                   }
                },
                "mode" : "button",
@@ -169,9 +169,6 @@
             },
             {
                "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/mainmenu"
-                  },
                   "position" : {
                      "output" : "/actions/default/in/walking"
                   }
@@ -181,9 +178,6 @@
             },
             {
                "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/mainmenu"
-                  },
                   "position" : {
                      "output" : "/actions/default/in/looking"
                   }

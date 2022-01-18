@@ -168,6 +168,8 @@ MonoBehaviour:
   localEndPoint: {x: 0, y: 0, z: 0.03}
   percentagePerSecond: 1
   toAnimate: {fileID: 2390927846940114228}
+  manualStartPoint: 0
+  startPoint: {x: 0, y: 0, z: 0}
   atPercentage: 0
 --- !u!114 &2390927846940114638
 MonoBehaviour:
@@ -181,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b686c29ff9670469daad15be388aeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useAutoSize: 1
+  useAutoSize: 0
   sizer: 0
   element: {fileID: 2390927846940114228}
   fromOffset: {x: -0, y: -0, z: -0}
@@ -197,7 +199,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 0}
+  m_Size: {x: 220, y: 220, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2390927848368289659
 GameObject:
