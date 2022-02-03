@@ -51,11 +51,13 @@
     },
     {
       "name": "/actions/default/in/ChangeInteractable",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/Interact",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/Walking",
@@ -68,15 +70,17 @@
     {
       "name": "/actions/default/in/MoveUIElement",
       "type": "vector2",
-      "requirement": "suggested"
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/SelectUIElement",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/mainMenu",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/quickSelect",

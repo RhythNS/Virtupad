@@ -62,7 +62,7 @@ namespace Virtupad
 
         private void GetPositionAndRotation(out Vector3 position, out Quaternion rotation)
         {
-            position = Player.instance.transform.position + Player.instance.transform.forward;
+            position = Player.instance.transform.position - new Vector3(0.0f, -10.0f, 0.0f);
             rotation = Quaternion.identity;
         }
 

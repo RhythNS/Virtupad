@@ -41,7 +41,6 @@ namespace Virtupad
                     break;
                 case RigMaker.Config.FourPoints:
                     toEnable.Add(hip);
-                    toEnable.Add(hip);
                     break;
                 case RigMaker.Config.FivePoints:
                     toEnable.Add(leftFoot);

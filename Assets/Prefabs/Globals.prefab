@@ -131,7 +131,7 @@ MonoBehaviour:
   rigMaker: {fileID: 0}
   vrmController: {fileID: 0}
   tPoseController: {fileID: 9100000, guid: c0c564f8cd0b84c4ba1b76cf4ba80ec2, type: 2}
-  fullBody: {fileID: 9100000, guid: 927782a2531ae0b4e94306050dfbcf02, type: 2}
+  fullBody: {fileID: 9100000, guid: a082a174160b8d34c9a26ad1ce737d68, type: 2}
   upperBody: {fileID: 9100000, guid: dd0cb670fb7de88479e5cb2d18ee6908, type: 2}
 --- !u!114 &8683602039922489663
 MonoBehaviour:
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a724c2f92924384e89d4686578e96cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyClip: {fileID: 8300000, guid: be7ce50a3d5c057459eba3f954cdbff3, type: 3}
+  emptyClip: {fileID: 8300000, guid: 49c29ef908984444ebabf5195188b9a6, type: 3}
 --- !u!114 &967851030718722207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,7 +328,8 @@ MonoBehaviour:
     customNoCameraActivePath: 
     playerMovePerSecond: 1.5
     playerRotatePerSecond: 90
-    playerMoveType: 1
+    movementMode: 0
+    rotationMode: 0
 --- !u!114 &4098422726681812854
 MonoBehaviour:
   m_ObjectHideFlags: 0

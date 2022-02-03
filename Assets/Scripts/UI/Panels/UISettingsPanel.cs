@@ -15,6 +15,7 @@ namespace Virtupad
         [SerializeField] private Slider movementSpeedSlider;
         [SerializeField] private Slider rotationSpeedSlider;
         [SerializeField] private UISelector moveTypeSelector;
+        [SerializeField] private UISelector rotateTypeSelector;
 
         [SerializeField] private UISelector lipSyncSelector;
         [SerializeField] private string noMicrophoneFound = "No input sources";
@@ -51,7 +52,8 @@ namespace Virtupad
             VRController vrCon = VRController.Instance;
             movementSpeedSlider.value = vrCon.WalkingSpeed;
             rotationSpeedSlider.value = vrCon.AnglesPerSecond;
-            moveTypeSelector.Index = vrCon.secondaryWalkingDirectionInputOption;
+            moveTypeSelector.Index = (int)vrCon.MovementMode;
+            rotateTypeSelector.Index = (int)vrCon.RotationMode;
 
             StudioCameraManager cameraManager = StudioCameraManager.Instance;
             cameraMovementSpeedSlider.value = cameraManager.MovingMetersPerSecond;
@@ -83,6 +85,13 @@ namespace Virtupad
             initing = false;
         }
 
+        public void ApplyResolutionChanges()
+        {
+            Screen.fullScreenMode = (FullScreenMode)screenModeSelector.Index;
+            int resIndex = resolutionSelector.Index;
+            Screen.SetResolution(resolutions[resIndex].width, resolutions[resIndex].height, Screen.fullScreenMode, resolutions[resIndex].refreshRate);
+        }
+
         public void OnMovementSpeedChanged(float newValue)
         {
             if (initing == true)
@@ -104,7 +113,15 @@ namespace Virtupad
             if (initing == true)
                 return;
 
-            VRController.Instance.ChangeSpeed(movementType: newValue);
+            VRController.Instance.ChangeSpeed(movementMode: (VRControllerMovementMode)newValue);
+        }
+
+        public void OnRotationTypeChanged(int newValue)
+        {
+            if (initing == true)
+                return;
+
+            VRController.Instance.ChangeSpeed(rotationMode: (VRControllerRotationMode)newValue);
         }
 
         public void OnLipSyncChanged(int newValue)
@@ -129,27 +146,6 @@ namespace Virtupad
                 return;
 
             StudioCameraManager.Instance.ChangeSpeed(rotationSpeed: newValue);
-        }
-
-        public void OnScreenModeChanged(int newValue)
-        {
-            if (initing == true)
-                return;
-
-            Screen.fullScreenMode = (FullScreenMode)newValue;
-        }
-
-        public void OnResolutionChanged(int newValue)
-        {
-            if (initing == true)
-                return;
-
-            if (resolutionCoroutine != null && resolutionCoroutine.IsFinshed == false)
-                resolutionCoroutine.Stop(false);
-
-            resolutionCoroutine = ExtendedCoroutine.ActionAfterSeconds(this, 3.0f,
-                () => Screen.SetResolution(resolutions[newValue].width, resolutions[newValue].height, Screen.fullScreenMode, resolutions[newValue].refreshRate)
-                );
         }
 
         public void ResetCustomNoCameraImage()

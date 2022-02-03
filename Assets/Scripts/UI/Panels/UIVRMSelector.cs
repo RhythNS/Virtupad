@@ -150,9 +150,25 @@ namespace Virtupad
             {
                 UILoadVRMElement loadElement = lastLoadedGroup.transform.GetChild(i).GetComponent<UILoadVRMElement>();
 
-                loadElement.uiPos = new Vector2Int(i % colNum, rowNum - (i / colNum) - 1);
+                loadElement.uiPos = new Vector2Int(i, 0);
                 lastLoadedVRMsPanel.AddChild(loadElement);
             }
+
+            ExtendedCoroutine.ActionAtEndOfFrame(this, () =>
+            {
+                for (int i = 0; i < lastLoadedGroup.transform.childCount; i++)
+                {
+                    UIAnimator animator = lastLoadedGroup.transform.GetChild(i).GetComponent<UIAnimator>();
+                    if (!animator)
+                        continue;
+
+                    Vector3 pos = animator.transform.localPosition;
+                    pos.z = 0.0f;
+                    animator.SetStartAndCalcEndPoint(pos);
+
+                    animator.enabled = true;
+                }
+            });
         }
 
         private void CreateOrDeletePrefabs(int count)

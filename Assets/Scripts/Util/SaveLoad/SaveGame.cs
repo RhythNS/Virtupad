@@ -49,5 +49,6 @@ public class SaveGame
     // vr controller
     [SerializeField] public float playerMovePerSecond = 1.5f;
     [SerializeField] public float playerRotatePerSecond = 90.0f;
-    [SerializeField] public int playerMoveType = 1;
+    [SerializeField] public VRControllerMovementMode movementMode = VRControllerMovementMode.HMD;
+    [SerializeField] public VRControllerRotationMode rotationMode = VRControllerRotationMode.Constant;
 }

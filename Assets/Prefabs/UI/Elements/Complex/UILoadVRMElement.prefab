@@ -259,7 +259,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0, y: 0, z: 0}
+  m_Size: {x: 226.55, y: 177.8, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6167914955329522103
 MonoBehaviour:
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   identifer: {fileID: 2117077846904491627}
-  useAutoSize: 1
+  useAutoSize: 0
   sizer: 0
   element: {fileID: 6571161354833234130}
   fromOffset: {x: -0, y: -0, z: -0}

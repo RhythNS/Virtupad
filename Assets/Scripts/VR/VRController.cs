@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -6,6 +7,19 @@ using Valve.VR.InteractionSystem;
 namespace Virtupad
 {
     public delegate bool InputListener(SteamVR_Action_Vector2 input);
+
+    public enum VRControllerRotationMode
+    {
+        Constant,
+        Snap,
+        SnapFade
+    }
+
+    public enum VRControllerMovementMode
+    {
+        HMD,
+        Controller
+    }
 
     public class VRController : MonoBehaviour
     {
@@ -18,17 +32,24 @@ namespace Virtupad
         public Transform rightHandAttachment;
 
         public Transform bodyCollider;
-        
+
         public List<VRTracker> trackers = new List<VRTracker>();
 
         public Transform SteamVRObjects => steamVRObjects;
         [SerializeField] private Transform steamVRObjects;
 
         [SerializeField] private SteamVR_Action_Vector2 primaryWalkingDirectionInput;
-
-        // 1 = Left Controller; 2 = HMD
-        [Range(1, 2)] public int secondaryWalkingDirectionInputOption;
         [SerializeField] private SteamVR_Action_Vector2 lookingInput;
+
+        public VRControllerMovementMode MovementMode { get; private set; } = VRControllerMovementMode.HMD;
+        public VRControllerRotationMode RotationMode { get; private set; } = VRControllerRotationMode.Constant;
+        private bool snapTurnWaitingForReset = false;
+        private ExtendedCoroutine snapTurning;
+
+        [SerializeField] private float snapDeadZoneSquared = 0.1f * 0.1f;
+        [SerializeField] private float snapNeededForTurnSquared = 0.6f * 0.6f;
+        [SerializeField] private float fadeTime = 0.1f;
+
         public float WalkingSpeed => walkingSpeed;
         [SerializeField] private float walkingSpeed;
         public float AnglesPerSecond => anglesPerSecond;
@@ -64,8 +85,8 @@ namespace Virtupad
             bodiesToMove = new Rigidbody[]
             {
                 GetComponent<Rigidbody>(),
-             //   Player.instance.leftHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>(),
-          //      Player.instance.rightHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>()
+                // Player.instance.leftHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>(),
+                // Player.instance.rightHand.GetComponent<HandPhysics>().handCollider.GetComponent<Rigidbody>()
             };
 
             handsToMove = new HandPhysics[]
@@ -79,7 +100,7 @@ namespace Virtupad
                 Physics.IgnoreCollision(col, toIgnore[i], true);
 
             SaveGame saveGame = SaveFileManager.Instance.saveGame;
-            ChangeSpeed(saveGame.playerMovePerSecond, saveGame.playerRotatePerSecond, saveGame.playerMoveType);
+            ChangeSpeed(saveGame.playerMovePerSecond, saveGame.playerRotatePerSecond, saveGame.movementMode, saveGame.rotationMode, false);
 
             VRMController.onVRMCreated += OnVRMCreated;
             VRMController.onVRMDeleted += OnVRMDeleted;
@@ -111,7 +132,7 @@ namespace Virtupad
 
         private void DeRegister(InputListener listener, List<InputListener> onList) => onList.Remove(listener);
 
-        public void ChangeSpeed(float movementSpeed = -1.0f, float rotationSpeed = -1.0f, int movementType = 1)
+        public void ChangeSpeed(float movementSpeed = -1.0f, float rotationSpeed = -1.0f, VRControllerMovementMode? movementMode = null, VRControllerRotationMode? rotationMode = null, bool save = true)
         {
             SaveGame sg = SaveFileManager.Instance.saveGame;
 
@@ -124,15 +145,18 @@ namespace Virtupad
             if (rotationSpeed != -1.0f)
                 sg.playerRotatePerSecond = anglesPerSecond = rotationSpeed;
 
-            if (movementType != -1)
-                sg.playerMoveType = secondaryWalkingDirectionInputOption = Mathf.Clamp(movementType, 1, 2);
+            if (movementMode != null)
+                sg.movementMode = MovementMode = movementMode.Value;
 
-            SaveFileManager.Instance.Save();
+            if (rotationMode != null)
+                sg.rotationMode = RotationMode = rotationMode.Value;
+
+            if (save == true)
+                SaveFileManager.Instance.Save();
         }
 
         public void AutoSetPlayerHeight()
         {
-
             Vector3 headDir = head.transform.position - Player.instance.transform.position;
             headDir.x = 0.0f;
             headDir.z = 0.0f;
@@ -184,10 +208,22 @@ namespace Virtupad
             Vector2 walkingDirection2D = primaryWalkingDirectionInput.axis;
             Vector3 walkingDirection = new Vector3(walkingDirection2D.x, 0, walkingDirection2D.y);
 
-            if (secondaryWalkingDirectionInputOption == 1)
-                walkingDirection = Vector3.Scale(leftHand.transform.rotation * walkingDirection, new Vector3(1, 0, 1)).normalized;
-            else if (secondaryWalkingDirectionInputOption == 2)
-                walkingDirection = Vector3.Scale(head.rotation * walkingDirection, new Vector3(1, 0, 1)).normalized;
+            switch (MovementMode)
+            {
+                case VRControllerMovementMode.HMD:
+                    walkingDirection = Vector3.Scale(head.rotation * walkingDirection, new Vector3(1, 0, 1)).normalized;
+                    break;
+
+                case VRControllerMovementMode.Controller:
+                    SteamVR_Input_Sources source = primaryWalkingDirectionInput.activeDevice;
+                    Hand activeHand = source == SteamVR_Input_Sources.RightHand ? rightHand : leftHand;
+                    walkingDirection = Vector3.Scale(activeHand.transform.rotation * walkingDirection, new Vector3(1, 0, 1)).normalized;
+                    break;
+
+                default:
+                    walkingDirection = Vector3.zero;
+                    break;
+            }
 
             return walkingDirection * (walkingSpeed * Time.fixedDeltaTime);
         }
@@ -197,14 +233,74 @@ namespace Virtupad
             for (int i = 0; i < rotationOverwrites.Count; i++)
             {
                 if (rotationOverwrites[i].Invoke(lookingInput) == true)
+                {
+                    snapTurnWaitingForReset = false;
                     return 0.0f;
+                }
             }
 
             Vector2 lookingDirection = lookingInput.axis;
-            float angle = lookingDirection.x * anglesPerSecond * Time.fixedDeltaTime;
-            return angle;
+            float angle = 0.0f;
+            switch (RotationMode)
+            {
+                case VRControllerRotationMode.Constant:
+                    angle = lookingDirection.x * anglesPerSecond * Time.fixedDeltaTime;
+                    break;
 
-            //return Quaternion.AngleAxis(angle, Vector3.up);
+                case VRControllerRotationMode.Snap:
+                case VRControllerRotationMode.SnapFade:
+                    lookingDirection.y = 0.0f;
+
+                    if (snapTurnWaitingForReset == true)
+                    {
+                        if (lookingDirection.sqrMagnitude < snapDeadZoneSquared)
+                            snapTurnWaitingForReset = false;
+                        break;
+                    }
+
+                    if (lookingDirection.sqrMagnitude < snapNeededForTurnSquared)
+                        break;
+
+                    snapTurnWaitingForReset = true;
+
+                    if (snapTurning != null && snapTurning.IsFinshed == false)
+                        break;
+
+                    snapTurning = new ExtendedCoroutine(this, DoSnapTurn(anglesPerSecond * (lookingDirection.x < 0.0f ? -1 : 1)));
+                    break;
+
+                default:
+                    break;
+            }
+
+            return angle;
+        }
+
+        private IEnumerator DoSnapTurn(float angle)
+        {
+            Player player = Player.instance;
+
+            if (RotationMode == VRControllerRotationMode.SnapFade)
+            {
+                SteamVR_Fade.Start(Color.clear, 0);
+
+                Color tColor = Color.black;
+                tColor = tColor.linear * 0.6f;
+                SteamVR_Fade.Start(tColor, fadeTime);
+                yield return new WaitForSeconds(fadeTime);
+            }
+
+            Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+            player.trackingOriginTransform.position -= playerFeetOffset;
+            player.transform.Rotate(Vector3.up, angle);
+            playerFeetOffset = Quaternion.Euler(0.0f, angle, 0.0f) * playerFeetOffset;
+            player.trackingOriginTransform.position += playerFeetOffset;
+
+            if (RotationMode == VRControllerRotationMode.SnapFade)
+            {
+                SteamVR_Fade.Start(Color.clear, fadeTime);
+                yield return new WaitForSeconds(fadeTime);
+            }
         }
 
         private void OnDestroy()

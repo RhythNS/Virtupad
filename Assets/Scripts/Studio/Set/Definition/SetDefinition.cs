@@ -1,12 +1,23 @@
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace Virtupad
 {
     public class SetDefinition : MonoBehaviour
     {
+        private void Awake()
+        {
+            SetSceneLoader.Instance.OnSceneChanged += OnSceneChanged;
+        }
+
         private void Start()
         {
             GlobalsDict.Instance.CurrentDefinition = this;
+        }
+
+        private void OnSceneChanged()
+        {
+            Player.instance.GetComponent<Rigidbody>().MovePosition(startPoint);
         }
 
         public string SceneName => sceneName;
@@ -29,6 +40,8 @@ namespace Virtupad
         {
             if (GlobalsDict.Instance && GlobalsDict.Instance.CurrentDefinition == this)
                 GlobalsDict.Instance.CurrentDefinition = null;
+            if (SetSceneLoader.Instance)
+                SetSceneLoader.Instance.OnSceneChanged -= OnSceneChanged;
         }
 
         private void OnValidate()

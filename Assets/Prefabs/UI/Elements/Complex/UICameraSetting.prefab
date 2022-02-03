@@ -3774,7 +3774,7 @@ PrefabInstance:
       objectReference: {fileID: 1928120351369090824}
     - target: {fileID: 7521622115064380882, guid: d0d6683cc93a4634c9b823f9e0c00c41, type: 3}
       propertyPath: uiPos.y
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7521622115064380886, guid: d0d6683cc93a4634c9b823f9e0c00c41, type: 3}
       propertyPath: m_Name
